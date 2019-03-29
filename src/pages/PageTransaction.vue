@@ -7,10 +7,15 @@
       h2 Transaction Details
 
       div(class="table")
-        tm-list-item(dt="Transaction hash" :dd="transaction.txhash")
+        tm-list-item(dt="Transaction hash")
+          template(slot="dd")
+            span {{ transaction.txhash }}
+            i.material-icons.copy filter_none
         tm-list-item.status(dt="Status")
           template(slot="dd")
-            span SUCCESS | 100/100
+            span.title Success
+            span.divider
+            span 100/100
         tm-list-item(dt="Block")
           template(slot="dd")
             router-link(:to="{ name: 'block', params: { block: transaction.height }}") {{ transaction.height }}
@@ -24,7 +29,8 @@
             //- vue-json-pretty(:data="transaction.tx")
             div.msgBox
               p {{ m.value.from_address}}
-              p.type {{ m.type }}
+              div.type
+                p {{ m.type }}
               p {{ `to ${m.value.to_address}` }}
 
     template(v-else)
@@ -40,6 +46,9 @@ import AppNotFound from "../components/AppNotFound";
 import AppLoading from "../components/AppLoading";
 
 export default {
+  beforeCreate: function() {
+      document.body.className = 'page';
+  },
   name: "page-Tx",
   components: {
     AppHeader,
@@ -73,9 +82,11 @@ export default {
 
 <style lang="stylus">
 @require '../styles/variables'
-
 .tx-container
-  padding 40px 80px
+  width 100%
+  max-width 1440px
+  margin 0 auto
+  padding 40px
   color #2043b5 !important
 
 .tx-container h2
@@ -83,85 +94,158 @@ export default {
   font-weight 500
   margin-bottom 20px
 
+.tx-container h2 span
+  font-weight 300
+  font-size 23px
+  padding-left 6px
+
 .tx-container .table
   border solid 1px #d8ddf0
-  border-radius 3px
+  border-radius 5px
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+ 
+.tx-container .table .tm-li-dl
+  display table
+  table-layout fixed
+  width 100%
+  min-height 60px
 
-.tx-container .rawData .tm-li-dl,
-.tx-container .rawData .tm-li-dt
-  height auto
-  align-items: stretch;
+.tx-container .table .tm-li-dl .tm-li-dt
+  display table-cell
+  vertical-align middle
+
+.tx-container .table .tm-li-dl .tm-li-dd
+  display table-cell
+  padding 15px 30px
+  vertical-align middle
+  white-space normal
+  text-overflow unset
+  word-break break-all
+  line-height 1.5
+
+.tx-container .tx-hash span
+  margin-right 10px
+  display inline-block
+  vertical-align middle
+
+.tx-container .tx-hash a
+  position relative
+  width 22px
+  height 22px
+  display inline-block
+  color #2845AE
+  vertical-align middle
+  margin-top -2px
+  margin-right 6px;
+  border-radius 50%
+  background-color #edf4fe
+  text-align center
+  transition .1s
+
+.tx-container .tx-hash a:hover
+  color #fff
+  background #2845AE
+
+.tx-container .tx-hash a i
+  line-height 22px
 
 .tx-container .rawData .tm-li-dd.tm-li-dd-flush > div
   height auto
   display block
-  border-radius: 2px;
-  border: solid 1px #e6e6e6;
-  background-color: #fafafa !important;
-  margin: 30px 30px 30px 0;
-  padding 15px
+  border-radius: 5px;
+  border: solid 1px #D8DDF0;
+  background-color: #FBFDFF !important;
+  margin: 10px 0;
+  padding 13px 20px
   overflow auto
+  font-size 15px
 
 .tx-container .rawData .tm-li-dd.tm-li-dd-flush > div.msgBox p
-  height: 30px;
-  line-height: 30px;
+  line-height: 1.5;
+  margin: 7px 0 8px;
+  min-height 20px
 
+.tx-container .rawData .tm-li-dd.tm-li-dd-flush > div.msgBox div.type
+  padding-left 0
+  display block
 
-.tx-container .rawData .tm-li-dd.tm-li-dd-flush > div.msgBox p.type
+.tx-container .rawData .tm-li-dd.tm-li-dd-flush > div.msgBox div.type p
   border-radius: 13px;
+  height: 26px;
+  overflow: hidden;
   background-color: rgba(253, 154, 2, 0.1);
   font-size: 12px;
   font-weight: 500;
   font-style: normal;
   font-stretch: normal;
-  line-height: normal;
+  line-height: 26px;
   letter-spacing: -0.3px;
-  color: #fd9a02;
-  padding 10px
-  margin-top 10px
-  margin-bottom 10px
-
-.tx-container .status .tm-li-dd span
-  border-radius 15.5px
-  background-color #1daa8e
-  height 30px
-  line-height 30px
+  color: rgba(253, 154, 2, 1);
+  padding 0 15px
   display inline-block
-  letter-spacing -0.3px
-  color #ffffff
-  font-size: 13px;
-  font-weight: 100;
-  padding 0 20px
+
+.tx-container .status span
+  color #1daa8e
+
+.tx-container .status .title
+  font-weight 500
+
+.tx-container .status .divider
+  display inline-block
+  background-color: #D8DDF0;
+  width: 1px;
+  height: 16px;
+  vertical-align: middle;
+  margin -2px 8px 0
+
+.copy
+  position relative
+  width 22px
+  height 22px
+  display inline-block
+  color #2845AE
+  vertical-align middle
+  margin-top -2px
+  margin-left 6px;
+  border-radius 50%
+  background-color #edf4fe
+  text-align center
+  transition .1s
+  font-size 12px
+  line-height 22px
+  cursor pointer
 
 @media screen and (max-width: 900px)
   .tx-container
-    padding 20px 15px
+    padding 50px 15px
 
   .tx-container h2
-    padding 30px 0
+    padding 40px 0 30px
     border-bottom 1px solid #d8ddf0
-
-  .tx-container .tm-li-dl
-    flex-direction column
-    height 90px
-    line-height 45px
-    align-items flex-start
-    padding 0
-
-  .tx-container .tm-li-dt
-    background none
-    padding-left 0px
-    height 45px
-    flex-grow 1
+    margin 0
 
   .tx-container .table
+    box-shadow none
     border 0
 
-  .tx-container .tm-li-dd, .tm-li-dd.tm-li-dd-flush
-    padding-left 0px
-    flex-grow 1
+  .tx-container .table .tm-li-dl
+    display block
+    padding 0
+    height auto
+    line-height 1.5
+
+  .tx-container .table .tm-li-dl .tm-li-dt
+    display block
+    background transparent
+    padding 20px 0 10px
+    word-wrap break-word
+    white-space unset
     font-size 15px
-    width 100%
+
+  .tx-container .table .tm-li-dl .tm-li-dd, .tm-li-dd.tm-li-dd-flush
+    display block
+    padding 0 0 20px
+    font-size 15px
     word-wrap break-word
     white-space unset
 

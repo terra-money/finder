@@ -7,8 +7,8 @@
       h2 Transactions
         span for Block {{ `#${$route.params.block}` }}
         p
-          span A total of {{ txs.length }} transactions found
-          app-page(:totalRow="txs.length", class="appPage")
+          span.total A total of {{ txs.length }} transactions found
+          app-page(:totalRow="txs.length", v-if="(txs.length) > 10" class="appPage")
 
       ul.tx-table
         li.title
@@ -37,7 +37,7 @@
             li
               p.time {{ fromNow(blockTime) }}
 
-      app-page(:totalRow="txs.length", class="appPage")
+      app-page(:totalRow="txs.length", v-if="(txs.length) > 10" class="appPage")
 
     template(v-else)
       app-not-found
@@ -55,6 +55,9 @@ import utility from "../scripts/utility";
 const { txToHash, fromNow } = utility;
 
 export default {
+  beforeCreate: function() {
+      document.body.className = 'page';
+  },
   name: "page-Txs",
   components: {
     AppHeader,
@@ -115,153 +118,208 @@ export default {
 @require '../styles/variables'
 
 .txs-container
+  width 100%
+  max-width 1440px
+  margin 0 auto
+  padding 40px
   color #2043b5 !important
-  padding 40px 80px
-
-.txs-container .row
-  display flex
-  align-items flex-start
-  font-size 14px
-  height 60px
-  border-top solid 1px #d8ddf0
-
-.txs-container .row li
-  height 60px
-.txs-container .title
-  background-color #d8ddf0
-  height 60px
-  line-height 60px
-  background-color rgba(84, 147, 247, 0.1)
-  font-weight 500
-
-.txs-container .txhash, .block, .time, .type, .txfee
-  display inline-block
-  text-overflow ellipsis
-  white-space nowrap
-  overflow hidden
-  padding-left 30px
-
-.txs-container .txhash
-  width 470px
-
-.txs-container .block
-  width 190px
-
-.txs-container .time
-  width 190px
-
-.txs-container .type
-  width 230px
-
-.txs-container .txfee
-  width 220px
-
-.txs-container .txhash a
-  letter-spacing -0.3px
-  color #5493f7
-
-.txs-container .type span
-  border-radius: 13px;
-  background-color: rgba(253, 154, 2, 0.1);
-  font-size: 12px;
-  font-weight: 500;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: -0.3px;
-  color: #fd9a02;
-  padding 10px
-
-.txs-container .tx-table
-  border-radius 3px
-  border solid 1px #d8ddf0
-  line-height 60px
-  min-width 1300px
-  margin-bottom 30px
 
 .txs-container h2
   font-size 24px
   font-weight 500
   margin-bottom 20px
 
-.txs-container h2 > span
-  font-weight lighter
+.txs-container h2 span
+  font-weight 300
+  font-size 23px
   padding-left 6px
+
+.txs-container h2
+  font-size 24px
+  font-weight 500
+  margin-bottom 20px
 
 .txs-container h2 p
   margin-top 20px
   height 40px
-  display flex
-  flex-direction row
-  justify-content flex-start
-  align-items center
+  display block
+  position relative
 
-.txs-container h2 p span
-  font-weight lighter
+.txs-container h2 p span.total
+  position: absolute;
+  font-weight: 400;
+  top: 0;
+  left: 0;
   font-size 15px
   height 40px
   line-height 40px
 
-
 .txs-container .appPage
-  display flex
-  flex-direction row
-  flex-grow 1
-  justify-self flex-end
-  justify-content flex-end
+  height 40px;
+  line-height 40px;
+  font-size: 0;
 
-  height 40px
-  line-height 40px
+.txs-container .row
+  display table
+  font-size 14px
+  min-height 60px
+  border-top solid 1px #d8ddf0
+  width 100%
+  table-layout fixed
+  min-width: 850px
 
-@media screen and (max-width: 900px)
+.txs-container .row li
+  padding 15px
+  display table-cell
+  vertical-align middle
+  line-height 1
+
+.txs-container .row li:first-child
+  padding-left 30px
+
+.txs-container .row li:last-child
+  padding-left 30px
+
+.txs-container .row li
+  width 13%
+
+.txs-container .row li:first-child
+  width 48%
+
+.txs-container .tx-table .title
+  border-radius 3px 3px 0 0
+  font-weight 500
+
+ .txs-container .tx-table .title .row
+  border-top 0
+  background-color rgba(84, 147, 247, 0.1)
+
+.txs-container .txhash, .block, .time, .type, .txfee
+  display inline-block
+  text-overflow ellipsis
+  white-space nowrap
+  overflow hidden
+  width 100%
+
+.txs-container .type span
+  border-radius: 13px;
+  height: 26px;
+  overflow: hidden;
+  background-color: rgba(253, 154, 2, 0.1);
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 26px;
+  letter-spacing: -0.3px;
+  color: rgba(253, 154, 2, 1);
+  padding 0 15px
+  display inline-block
+  vertical-align middle
+
+.txs-container .tx-table
+  border-radius 5px
+  border solid 1px #d8ddf0
+  width 100%
+  margin-bottom 30px
+  background #fff
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  min-width unset
+
+@media screen and (max-width: 1280px)
+  .txs-container .row li
+    width 15%
+
+  .txs-container .row li:first-child
+    width 40%
+
+  .txs-container .type span
+    font-size 11px
+    padding 0 10px
+
+@media screen and (max-width: 1024px)
+  .txs-container .row
+    min-height 50px
+    font-size 13px
+    
+  .txs-container .row li
+    width 15%
+
+  .txs-container .row li:first-child
+    width 40%
+
+  .txs-container .type span
+    font-size 11px
+    padding 0 10px
+
+  .txs-container .row li
+    padding 10px
+
+  .txs-container .row li:first-child
+    padding-left 20px
+
+  .txs-container .row li:last-child
+    padding-left 20px
+
+@media screen and (max-width: 767px)
   .txs-container
-    padding 20px 15px
+    padding 50px 15px
 
   .txs-container h2
-    padding 30px 0
-    padding-bottom: 120px;
-    margin-bottom 10px
+    padding 40px 0 30px
+    margin 0
 
   .txs-container h2 span
     display block
+    padding 0
 
   .txs-container h2 p
+    height auto
+
+  .txs-container h2 p span.total
+    position static
     display block
+    padding 0
+    top: unset;
+    left: unset;
+    font-size: 14px;
+    height: auto;
+    line-height: 1.3;
 
   div.v-pagination > ul
     margin-top 50px
+    position relative
 
   div.v-pagination > ul > li.v-pagination__list
-    position relative
+    position absolute
+    left 0
+    top 0
 
   div.v-pagination > ul > li.v-pagination__list span
     position absolute
-    top: -40px;
+    top: -15px;
+    left: 0;
+    font-size: 9px;
+    line-height: 12px;
 
-  .txs-container .tx-table
-    width: 100%;
-    overflow-x: auto;
-    min-width unset
-    margin-bottom 10px
+  div.v-pagination > ul > li.v-pagination__list select
+    margin 0
 
-  .txs-container .txhash
-    width 220px
+  div.v-pagination > ul > li.v-pagination__list:after
+    right: unset;
+    left: 35px;
 
-  .txs-container .block
-    width 150px
+  .txs-container .tx-table .title .row
+    border-top 0
 
-  .txs-container .time
-    width 150px
+  .txs-container .row li
+    width 18%
 
-  .txs-container .type
-    width 170px
+  .txs-container .row li:nth-child(2)
+    width 20%
 
-  .txs-container .txfee
-    width 170px
-
-  .txs-container .title
-    width 860px
-
-  .txs-container .row
-    width 860px
+  .txs-container .row li:first-child
+    width 26%
 </style>

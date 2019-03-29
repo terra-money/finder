@@ -66,14 +66,13 @@ export default {
 
 .tm-btn__container
   font-family sans
-  font-size 1rem !important
+  font-size 1rem
   font-weight 400
   height 2em
   line-height 1
-  color var(--bright, #333) !important
-  padding 0 0.75em
+  color var(--bright, #333)
+  padding 0 10px
   margin 0
-  background var(--app-bg, #fff)
   border 0
   border-radius 0.25rem
   cursor pointer

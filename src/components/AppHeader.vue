@@ -1,18 +1,19 @@
 <template lang="pug">
   div(class='header')
-    div(class='logo-container')
-      router-link(to="/" exact): img(src="../assets/images/logo.svg")
-    tm-form-struct(:submit="search")
-      tm-form-group
-        .tm-modal-search
-          tm-field#search-input(
-            type="text"
-            placeholder="Search by block number, transaction hash"
-            required
-            v-model="query"
-            autocomplete="off"
-            title="1 to 60 characters")
-          tm-btn(type="submit" icon="search")
+    div(class='header-inner')
+      div(class='logo-container')
+        router-link(to="/" exact): img(src="../assets/images/logo.svg")
+      tm-form-struct(:submit="search")
+        tm-form-group
+          .tm-modal-search
+            tm-field#search-input(
+              type="text"
+              placeholder="block number or transaction hash"
+              required
+              v-model="query"
+              autocomplete="off"
+              title="1 to 60 characters")
+            tm-btn(type="submit" icon="search")
 </template>
 
 <script>
@@ -53,15 +54,27 @@ export default {
 
 .header
   position relative
-  background #2043b5
+  background #0C3694
+  height 80px
+  box-shadow 0 2px 4px 0 rgba(0, 0, 0, 0.1)
+
+.header-inner
+  width 100%
+  margin 0 auto
+  max-width 1440px
+  position relative
 
 .header .logo-container
-  padding 26px 40px
   display inline-block
+
+.header .logo-container a
+  display block
+  padding 28px 40px
+  line-height 1
 
 .header .logo-container img
   width 160px
-  height 25px
+  height 21px
 
 .header .tm-form
   position absolute
@@ -69,6 +82,8 @@ export default {
   right 40px
   display inline-flex
   height 40px
+  width 50%
+  max-width 640px
 
 .header .tm-form-group__field
   position relative
@@ -94,36 +109,60 @@ export default {
 
 .header .tm-form-group input
   border 0px
-  border-bottom 1px solid #FFFFFF
-  font-family Gotham
+  border-bottom 1px solid rgba(255,255,255,.9)
   font-size 16px
   height 40px
-  line-height 40px
-  color #FFFFFF
-  background #2043b5
+  color #fff
+  background transparent
+  padding-left 10px !important
+  padding-right 45px !important
+  border-radius 0 !important
 
 .header .tm-btn
   position absolute
-  right: 10px;
+  right: 0;
   bottom: 1px;
+  height: 40px;
+  outline: 0;
 
-.header .btn__container
-  background-color: #ffffff !important
-
-@media screen and (max-width: 900px)
-  .header
-    display flex
-    flex-direction column
-
+@media screen and (max-width: 767px)
   .header .logo-container
     display block
 
-  .header .tm-form-group input
-    border-bottom : solid 1px #2043b5;
+  .header
+    height 44px
+
+  .header .logo-container
+    height 45px
+    line-height 45px
+    padding 0
+    display flex
+    flex-direction row
+    justify-content center
+    align-items center
+
+  .header .logo-container img
+    height 15px
+    width 116px
+
+  .header .logo-container a
+    padding 13px
 
   .header .tm-form
-    top 80px
+    top 54px
+    right 0
+    padding 0
+    width 100%
+    padding: 0 15px
+    max-width none
 
+  .header .tm-form-group input
+    border-radius 0 !important
+    background #fff
+    color #2043b5
+    border-bottom : solid 1px rgba(32, 67, 181, .8);
+    padding-left 5px !important
+    padding-right 35px !important
 
   .header .tm-form-group input::-webkit-input-placeholder
     color: #2043b5;
@@ -136,33 +175,4 @@ export default {
 
   .header .tm-form-group input:-ms-input-placeholder
     color: #2043b5;
-
-  .header
-    background #ffffff
-
-  .header .logo-container
-    height 45px
-    line-height 45px
-    padding 0
-    display flex
-    flex-direction row
-    justify-content center
-    align-items center
-    background #2043b5
-
-  .header .logo-container img
-    height 18px
-    width 115px
-
-  .header .tm-form
-    position inherit
-    top 0
-    right 0
-    justify-self center
-    align-self center
-    padding 20px 15px
-
-@media screen and (min-width: 900px)
-  .header .tm-form
-    width 640px
 </style>

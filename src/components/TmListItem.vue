@@ -251,13 +251,12 @@ export default {
     overflow visible
 
 .tm-li-dt
-  width 220px
+  width 240px
   background-color rgba(84, 147, 247, 0.1)
   padding 0
   padding-left 30px
   font-size 16px
   font-weight 500
-
   max-width width-side
   // flex 2
 
