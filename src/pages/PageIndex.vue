@@ -2,7 +2,7 @@
   div(class='main-container')
     div(class='content-container')
       div(class='logo-container')
-        img(src="../assets/images/logo.svg")
+        img(src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/logo.svg")
       tm-form-struct(:submit="search")
         tm-form-group
           .tm-modal-search
@@ -15,8 +15,8 @@
               title="1 to 60 characters")
             tm-btn(type="submit" icon="search")
     div(class="background-cover")
-    <video playsinline autoplay muted loop id="background" poster="../assets/images/terrafinder.jpg">
-      <source src="../assets/video/terrafinder.mp4" type="video/mp4">
+    <video playsinline autoplay muted loop id="background" poster="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/terrafinder.jpg">
+      <source src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/terrafinder.mp4" type="video/mp4">
     </video>
 
 </template>
@@ -151,7 +151,7 @@ input:-webkit-autofill
   height auto
   z-index -100
   transform translateX(-50%) translateY(-50%)
-  background #01040d url('../assets/images/terrafinder.jpg') no-repeat
+  background #01040d url('https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/terrafinder.jpg') no-repeat
   background-size cover
   background-position center
 

@@ -2,7 +2,7 @@
   div(class='header')
     div(class='header-inner')
       div(class='logo-container')
-        router-link(to="/" exact): img(src="../assets/images/logo.svg")
+        router-link(to="/" exact): img(src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/logo.svg")
       tm-form-struct(:submit="search")
         tm-form-group
           .tm-modal-search

@@ -4,7 +4,7 @@
       h1 Search not found
       p Sorry, we are unable to find #[span “keyword”] in  terra space.
       p Please input correct block number or transaction hash.
-      img(src="../assets/images/earth.svg")
+      img(src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/earth.svg")
       router-link(to="/" exact): span Back to Home
 </template>
 
