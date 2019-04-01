@@ -92,20 +92,16 @@ export default {
   padding 0
 
 .header .tm-form-group input::-webkit-input-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,.3)
 
 .header .tm-form-group input:-moz-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,.3)
 
 .header .tm-form-group input::-moz-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,.3)
 
 .header .tm-form-group input:-ms-input-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,.3)
 
 .header .tm-form-group input
   border 0px
@@ -165,14 +161,14 @@ export default {
     padding-right 35px !important
 
   .header .tm-form-group input::-webkit-input-placeholder
-    color: #2043b5;
+    color: rgba(32, 67, 181,.3);
 
   .header .tm-form-group input:-moz-placeholder
-    color: #2043b5;
+    color: rgba(32, 67, 181,.3);
 
   .header .tm-form-group input::-moz-placeholder
-    color: #2043b5;
+    color: rgba(32, 67, 181,.3);
 
   .header .tm-form-group input:-ms-input-placeholder
-    color: #2043b5;
+    color: rgba(32, 67, 181,.3);
 </style>

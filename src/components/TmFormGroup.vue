@@ -42,7 +42,7 @@ export default {
     bottom 0.5rem
     left 1rem
     font-size xs
-    color var(--dim)
+    color rgba(0,0,0,.3)
 
 .tm-form-group__sub-label ~ .tm-form-group__label
   line-height 1rem
@@ -57,7 +57,7 @@ export default {
 .tm-form-group__label
   display block
   line-height 2rem
-  color var(--txt)
+  color #2043b5
   text-align left
 
 @media (min-width: 768px)

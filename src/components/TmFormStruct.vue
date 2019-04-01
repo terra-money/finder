@@ -64,16 +64,16 @@ export default {
 .tm-form-header
   display flex
   flex-flow column nowrap
-  border-bottom px solid var(--bc)
+  border-bottom px solid rgba(0,0,0,.05)
   position relative
   padding 1rem 0
 
 .tm-form-title
   line-height 1rem
-  color var(--bright)
+  color #fff
 
 .tm-form-subtitle
-  color var(--dim)
+  color rgba(0,0,0,.3)
   font-size sm
   line-height 1rem
 

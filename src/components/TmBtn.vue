@@ -70,7 +70,7 @@ export default {
   font-weight 400
   height 2em
   line-height 1
-  color var(--bright, #333)
+  color #fff
   padding 0 10px
   margin 0
   border 0
@@ -83,10 +83,10 @@ export default {
   -webkit-appearance none
 
 .tm-btn__container:hover:enabled
-  color var(--txt, #333)
+  color #2043b5
   text-decoration none
-  border-color var(--bc, #ddd)
-  background var(--app-fg, #eee)
+  border-color rgba(0,0,0,.05)
+  background #fff
 
 .tm-btn__icon
   font-size 1em
@@ -109,7 +109,7 @@ export default {
 .tm-btn[disabled]
   opacity 0.333
   user-select none
-  color var(--dim, #666) !important
+  color rgba(0,0,0,.3) !important
 
   &:focus:enabled
     outline none
@@ -145,7 +145,7 @@ export default {
   padding 0 1rem
 
 .tm-btn__container.tm-btn--primary
-  background var(--primary, #99f)
+  background #0C3694
   border-color hsla(0,0,100%,0.15)
   i.fa, i.material-icons
     color hsla(0,0,100%,0.667)
@@ -153,17 +153,17 @@ export default {
     color #fff
 
 .tm-btn__container.tm-btn--success
-  border-color var(--success-bc, #0f0)
+  border-color #1DAA8E
   .tm-btn__value
-    color var(--bright, #000)
+    color #fff
 
 .tm-btn__container.tm-btn--warning
-  border-color var(--warning-bc, #f90)
+  border-color #FF5561
   .tm-btn__value
-    color var(--bright, #000)
+    color #fff
 
 .tm-btn__container.tm-btn--danger
-  border-color var(--danger-bc, #f00)
+  border-color #FF5561
   .tm-btn__value
-    color var(--bright, #000)
+    color #fff
 </style>

@@ -95,7 +95,7 @@ input:-webkit-autofill
 
 .main-container .tm-form-group input
   border 0px
-  border-bottom 1px solid #FFFFFF
+  border-bottom 1px solid #FFFFFF !important
   font-size 22px
   font-family 'Gotham A', 'Gotham B', 'Helvetica Neue', 'Arial', sans-serif
   height 50px
@@ -109,23 +109,19 @@ input:-webkit-autofill
 
 
 .main-container .tm-form-group input::-webkit-input-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,0.3)
   letter-spacing -0.3px
 
 .main-container .tm-form-group input:-moz-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,0.3)
   letter-spacing -0.3px
 
 .main-container .tm-form-group input::-moz-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,.3)
   letter-spacing -0.3px
 
 .main-container .tm-form-group input:-ms-input-placeholder
-  color #ffffff
-  opacity 0.3
+  color rgba(255,255,255,.3)
   letter-spacing -0.3px
 
 .main-container .tm-btn
