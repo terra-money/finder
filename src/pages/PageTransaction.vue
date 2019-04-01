@@ -10,7 +10,9 @@
         tm-list-item(dt="Transaction hash")
           template(slot="dd")
             span {{ transaction.txhash }}
-            i.material-icons.copy filter_none
+            span.copy
+              i.material-icons filter_none
+              span.copied.on
         tm-list-item.status(dt="Status")
           template(slot="dd")
             span.title Success
@@ -200,13 +202,19 @@ export default {
 
 .copy
   position relative
+  display inline-block
   width 22px
   height 22px
-  display inline-block
-  color #2845AE
-  vertical-align middle
   margin-top -2px
   margin-left 6px;
+
+.copy i
+  position relative
+  width 22px
+  height 22px
+  display block
+  color #2845AE
+  vertical-align middle
   border-radius 50%
   background-color #edf4fe
   text-align center
@@ -214,6 +222,48 @@ export default {
   font-size 12px
   line-height 22px
   cursor pointer
+
+.copied
+  position absolute
+  top -24px
+  left 50%
+  margin-left: -28px
+  width 56px
+  height 22px
+  text-align center
+  background #1daa8e
+  line-height 20px
+  font-size 11px
+  color #fff
+  border-radius 2px
+  z-index 100
+  opacity 0
+  transition .2s
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  pointer-events none
+
+.copied.on
+  opacity 1
+
+.copied:after
+  content 'Copied!'
+
+.copied:before
+  content ''
+  display block
+  position absolute
+  background #1daa8e
+  width 10px
+  height 10px
+  top 14px
+  left 50%
+  margin-left -5px
+  z-index -1
+  transform rotate(45deg)
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+
+.tm-li-dd.tm-li-dd-flush
+  overflow visible
 
 @media screen and (max-width: 900px)
   .tx-container
