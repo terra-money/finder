@@ -16,7 +16,7 @@ const state = {
 const actions = {
   async queryTxs({ dispatch, commit }, block) {
     commit("setTxsLoading", true);
-
+    commit("setError", {});
     try {
       const len = block.data.txs.length || 0;
       const promiseArr = [];
@@ -38,7 +38,7 @@ const actions = {
   },
   async queryTx({ commit }, hash) {
     commit("setTxLoading", true);
-
+    commit("setError", {});
     let url = `${configState.lcd}/txs/${hash}`;
 
     try {

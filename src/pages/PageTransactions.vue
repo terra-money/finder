@@ -39,7 +39,7 @@
 
       app-page(:totalRow="txs.length", v-if="(txs.length) > 10" class="appPage")
 
-    template(v-else)
+    template(v-else-if="tx.error && !tx.txsLoading")
       app-not-found
 </template>
 
@@ -56,7 +56,7 @@ const { txToHash, fromNow } = utility;
 
 export default {
   beforeCreate: function() {
-      document.body.className = 'page';
+    document.body.className = "page";
   },
   name: "page-Txs",
   components: {

@@ -11,6 +11,7 @@ const state = {
 const actions = {
   async fetchBlock({ state, commit }, blockHeight) {
     commit("setLoading", true);
+    commit("setError", {});
     try {
       if (configState.localDev) {
         let url = `${configState.rpc}/block?height=${blockHeight}`;

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "clipboard": "^2.0.4",
     "global": "^4.3.2",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",

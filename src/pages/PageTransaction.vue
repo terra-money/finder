@@ -10,9 +10,9 @@
         tm-list-item(dt="Transaction hash")
           template(slot="dd")
             span {{ transaction.txhash }}
-            span.copy
+            span.copy(:data-clipboard-text="transaction.txhash" v-on:click="copy")
               i.material-icons filter_none
-              span.copied.on
+              span.copied(:class="{ on: clicked }" )
         tm-list-item.status(dt="Status")
           template(slot="dd")
             span.title Success
@@ -35,23 +35,28 @@
                 p {{ m.type }}
               p {{ `to ${m.value.to_address}` }}
 
-    template(v-else)
+    template(v-else-if="tx.error && !tx.txLoading")
       app-not-found
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { isEmpty } from "lodash";
+import Clipboard from "clipboard";
 import TmListItem from "../components/TmListItem";
 import AppHeader from "../components/AppHeader";
 import AppNotFound from "../components/AppNotFound";
 import AppLoading from "../components/AppLoading";
+import { setTimeout } from "timers";
 
 export default {
   beforeCreate: function() {
-      document.body.className = 'page';
+    document.body.className = "page";
   },
   name: "page-Tx",
+  data: () => ({
+    clicked: false
+  }),
   components: {
     AppHeader,
     TmListItem,
@@ -68,10 +73,19 @@ export default {
   },
   methods: {
     ...mapActions(["queryTx"]),
-    isEmpty
+    isEmpty,
+    copy() {
+      this.clicked = true;
+      setTimeout(() => {
+        this.clicked = false;
+      }, 1500);
+    }
   },
   async created() {
     await this.queryTx(this.$route.params.hash);
+  },
+  mounted() {
+    new Clipboard(".copy");
   },
   watch: {
     // eslint-disable-next-line

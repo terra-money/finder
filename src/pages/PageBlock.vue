@@ -30,7 +30,7 @@
           template(slot="dd")
             router-link(:to="{ name: 'block', params: { block: parseInt(blockData.header.height) - 1 }}") {{ blockData.last_commit.block_id.hash }}
 
-    template(v-else)
+    template(v-else-if="block.error && !block.loading")
       app-not-found
 </template>
 
@@ -48,7 +48,7 @@ const { format } = utility;
 
 export default {
   beforeCreate: function() {
-      document.body.className = 'page';
+    document.body.className = "page";
   },
   name: "page-block",
   components: {

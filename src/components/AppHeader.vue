@@ -39,7 +39,7 @@ export default {
   methods: {
     search() {
       if (isNaN(Number(this.query))) {
-        this.$router.push({ path: `/transaction/${this.query}` });
+        this.$router.push({ path: `/tx/${this.query}` });
       } else {
         this.$router.push({ path: `/blocks/${this.query}` });
       }

@@ -2,7 +2,7 @@
   div(class="not-found")
     div
       h1 Search not found
-      p Sorry, we are unable to find #[span “keyword”] in  terra space.
+      p Sorry, we are unable to find #[span "{{ keyword }}"] in  terra space.
       p Please input correct block number or transaction hash.
       img(src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/earth.svg")
       router-link(to="/" exact): span Back to Home
@@ -11,9 +11,15 @@
 <script>
 export default {
   beforeCreate: function() {
-      document.body.className = 'page';
+    document.body.className = "page";
   },
-  name: "app-not-found"
+  name: "app-not-found",
+  computed: {
+    keyword() {
+      const key = Object.keys(this.$route.params)[0];
+      return this.$route.params[key];
+    }
+  }
 };
 </script>
 
