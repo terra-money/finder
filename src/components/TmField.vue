@@ -63,7 +63,7 @@ input(v-else
 
 <script>
 // import flatpickr from 'flatpickr'
-import countries from "../scripts/countries.json";
+import countries from "../scripts/countries.json"
 export default {
   name: "tm-field",
   props: [
@@ -81,39 +81,39 @@ export default {
   ],
   computed: {
     css() {
-      let value = "tm-field";
+      let value = "tm-field"
       if (this.type === "select" || this.type === "countries") {
-        value += " tm-field-select";
+        value += " tm-field-select"
       }
       if (this.type === "toggle") {
-        value += " tm-field-toggle";
+        value += " tm-field-toggle"
       }
-      if (this.size) value += ` tm-field-size-${this.size}`;
-      if (this.theme) value += ` tm-field-theme-${this.theme}`;
-      return value;
+      if (this.size) value += ` tm-field-size-${this.size}`
+      if (this.theme) value += ` tm-field-theme-${this.theme}`
+      return value
     },
     toggleClass() {
       return {
         unchecked: !this.value
-      };
+      }
     },
     toggleLongerWord() {
       return this.toggleOptions.checked.length >
         this.toggleOptions.unchecked.length
         ? this.toggleOptions.checked
-        : this.toggleOptions.unchecked;
+        : this.toggleOptions.unchecked
     },
     selectPlaceholder() {
-      if (this.placeholder) return this.placeholder;
-      else return "Select option...";
+      if (this.placeholder) return this.placeholder
+      else return "Select option..."
     },
     toggleOptions() {
       if (this.options && this.options.checked && this.options.unchecked)
-        return this.options;
+        return this.options
       return {
         checked: "on",
         unchecked: "off"
-      };
+      }
     }
   },
   data: () => ({
@@ -121,45 +121,45 @@ export default {
   }),
   methods: {
     toggle() {
-      this.value = !this.value;
+      this.value = !this.value
     },
     updateValue(value) {
-      let formattedValue = this.forceMinMax(value.trim());
+      let formattedValue = this.forceMinMax(value.trim())
       // so that the user can type in "-" and it isn't removed
       if (formattedValue) {
         // so the actual text box displays the correct number
-        this.$refs.numTextInput.value = formattedValue;
+        this.$refs.numTextInput.value = formattedValue
       }
       // Emit the number value through the input event
-      this.$emit("input", formattedValue);
+      this.$emit("input", formattedValue)
     },
     onChange(...args) {
-      if (this.change) return this.change(...args);
+      if (this.change) return this.change(...args)
     },
     onKeyup(...args) {
-      this.$refs.numTextInput.val = this.formattedValue;
-      if (this.keyup) return this.keyup(...args);
+      this.$refs.numTextInput.val = this.formattedValue
+      if (this.keyup) return this.keyup(...args)
     },
     onKeydown(...args) {
-      if (this.keydown) return this.keydown(...args);
+      if (this.keydown) return this.keydown(...args)
     },
     forceMinMax(value) {
-      if (this.type !== "number") return value;
-      value = value ? Number(value) : value;
+      if (this.type !== "number") return value
+      value = value ? Number(value) : value
       if (this.max && value > this.max) {
-        value = Number(this.max);
+        value = Number(this.max)
       } else if (this.min && value && value < this.min) {
-        value = Number(this.min);
+        value = Number(this.min)
       }
-      return value;
+      return value
     }
   },
   mounted() {
-    let el = this.$el;
+    let el = this.$el
     if (this.type === "number") {
       el.addEventListener("focus", function() {
-        el.select();
-      });
+        el.select()
+      })
     }
     /* if (this.type === 'datetime') {
       this.picker = flatpickr(el, {
@@ -170,7 +170,7 @@ export default {
       // console.log('its a datetime!', el)
     } */
   }
-};
+}
 </script>
 
 <style lang="stylus">

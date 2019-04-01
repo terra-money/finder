@@ -11,16 +11,16 @@
 <script>
 export default {
   beforeCreate: function() {
-    document.body.className = "page";
+    document.body.className = "page"
   },
   name: "app-not-found",
   computed: {
     keyword() {
-      const key = Object.keys(this.$route.params)[0];
-      return this.$route.params[key];
+      const key = Object.keys(this.$route.params)[0]
+      return this.$route.params[key]
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

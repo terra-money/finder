@@ -19,12 +19,12 @@ export default {
   name: "tm-btn",
   computed: {
     btnClass() {
-      let value = "tm-btn__container";
-      if (this.iconPos) value += ` tm-btn__icon-${this.iconPos}`;
-      if (this.size) value += ` tm-btn--size-${this.size}`;
-      if (this.theme) value += ` tm-btn--theme-${this.theme}`;
-      if (this.color) value += ` tm-btn--${this.color}`;
-      return value;
+      let value = "tm-btn__container"
+      if (this.iconPos) value += ` tm-btn__icon-${this.iconPos}`
+      if (this.size) value += ` tm-btn--size-${this.size}`
+      if (this.theme) value += ` tm-btn--theme-${this.theme}`
+      if (this.color) value += ` tm-btn--${this.color}`
+      return value
     }
   },
   props: [
@@ -38,7 +38,7 @@ export default {
     "to",
     "color"
   ]
-};
+}
 </script>
 
 <style lang="stylus">

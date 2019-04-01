@@ -1,4 +1,8 @@
-# finder
+# Terra Finder 
+
+![banner](./terra-finder.png)
+
+The Terra Finder is a tool to search through blocks, transactions, and accounts on the Terra blockchain. 
 
 ## Project setup
 ```

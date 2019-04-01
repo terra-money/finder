@@ -40,18 +40,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { isEmpty } from "lodash";
-import Clipboard from "clipboard";
-import TmListItem from "../components/TmListItem";
-import AppHeader from "../components/AppHeader";
-import AppNotFound from "../components/AppNotFound";
-import AppLoading from "../components/AppLoading";
-import { setTimeout } from "timers";
+import { mapGetters, mapActions } from "vuex"
+import { isEmpty } from "lodash"
+import Clipboard from "clipboard"
+import TmListItem from "../components/TmListItem"
+import AppHeader from "../components/AppHeader"
+import AppNotFound from "../components/AppNotFound"
+import AppLoading from "../components/AppLoading"
+import { setTimeout } from "timers"
 
 export default {
   beforeCreate: function() {
-    document.body.className = "page";
+    document.body.className = "page"
   },
   name: "page-Tx",
   data: () => ({
@@ -66,34 +66,34 @@ export default {
   computed: {
     ...mapGetters(["tx", "block"]),
     transaction() {
-      const hash = this.$route.params.hash;
+      const hash = this.$route.params.hash
 
-      return this.tx.txs[hash];
+      return this.tx.txs[hash]
     }
   },
   methods: {
     ...mapActions(["queryTx"]),
     isEmpty,
     copy() {
-      this.clicked = true;
+      this.clicked = true
       setTimeout(() => {
-        this.clicked = false;
-      }, 1500);
+        this.clicked = false
+      }, 1500)
     }
   },
   async created() {
-    await this.queryTx(this.$route.params.hash);
+    await this.queryTx(this.$route.params.hash)
   },
   mounted() {
-    new Clipboard(".copy");
+    new Clipboard(".copy")
   },
   watch: {
     // eslint-disable-next-line
     $route(to, from) {
-      this.queryTx(this.$route.params.hash);
+      this.queryTx(this.$route.params.hash)
     }
   }
-};
+}
 </script>
 
 <style lang="stylus">
@@ -119,7 +119,7 @@ export default {
   border solid 1px #d8ddf0
   border-radius 5px
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
- 
+
 .tx-container .table .tm-li-dl
   display table
   table-layout fixed

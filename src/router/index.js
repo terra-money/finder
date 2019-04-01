@@ -1,19 +1,19 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from "vue"
+import Router from "vue-router"
 
-import Index from "../pages/PageIndex";
-import Block from "../pages/PageBlock";
-import Transactions from "../pages/PageTransactions";
-import Transaction from "../pages/PageTransaction";
+import Index from "../pages/PageIndex"
+import Block from "../pages/PageBlock"
+import Transactions from "../pages/PageTransactions"
+import Transaction from "../pages/PageTransaction"
 
-Vue.use(Router);
+Vue.use(Router)
 
 const routes = [
   { path: "/", component: Index },
   { path: "/blocks/:block", name: "block", component: Block },
   { path: "/txs/:block", name: "txs", component: Transactions },
   { path: "/tx/:hash", name: "tx", component: Transaction }
-];
+]
 
 export default new Router({
   mode: "history",
@@ -22,12 +22,12 @@ export default new Router({
     if (to.hash) {
       return {
         selector: to.hash
-      };
+      }
     }
     if (savedPosition) {
-      return savedPosition;
+      return savedPosition
     } else {
-      return { x: 0, y: 0 };
+      return { x: 0, y: 0 }
     }
   }
-});
+})

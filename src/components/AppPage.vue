@@ -59,7 +59,7 @@ export default {
     pageSizeMenu: {
       type: [Array, Boolean],
       default: function() {
-        return [10, 20, 50, 100];
+        return [10, 20, 50, 100]
       }
     },
     align: {
@@ -89,83 +89,83 @@ export default {
         "v-pagination--center": this.align === "center"
       },
       pageInfo: "#pageNumber# of #totalPage#"
-    };
+    }
   },
   computed: {
     pageNumbers: function() {
       let start,
         end,
         nums = [],
-        half = Math.floor(this.pageNumberSize / 2);
+        half = Math.floor(this.pageNumberSize / 2)
       if (this.totalPage < this.pageNumberSize) {
-        start = 1;
-        end = this.totalPage;
+        start = 1
+        end = this.totalPage
       } else if (this.currentPage <= half) {
-        start = 1;
-        end = this.pageNumberSize;
+        start = 1
+        end = this.pageNumberSize
       } else if (this.currentPage >= this.totalPage - half) {
-        start = this.totalPage - this.pageNumberSize + 1;
-        end = this.totalPage;
+        start = this.totalPage - this.pageNumberSize + 1
+        end = this.totalPage
       } else {
-        start = this.currentPage - half;
-        end = start + this.pageNumberSize - 1;
+        start = this.currentPage - half
+        end = start + this.pageNumberSize - 1
       }
       for (let i = start; i <= end; i++) {
-        nums.push(i);
+        nums.push(i)
       }
-      return nums;
+      return nums
     }
   },
   watch: {
     totalRow() {
-      this.calcTotalPage();
+      this.calcTotalPage()
     }
   },
   methods: {
     goPage(pNum) {
-      this.currentPage = pNum;
+      this.currentPage = pNum
       this.$emit("page-change", {
         pageNumber: pNum,
         pageSize: Number(this.pageSize)
-      });
-      this.calcTotalPage();
+      })
+      this.calcTotalPage()
     },
     calcTotalPage() {
-      this.totalPage = Math.ceil(this.totalRow / this.pageSize);
+      this.totalPage = Math.ceil(this.totalRow / this.pageSize)
     },
     switchPage(pNum) {
-      if (this.disabled) return;
-      let num = 1;
+      if (this.disabled) return
+      let num = 1
       if (typeof pNum === "string") {
         switch (pNum) {
           case "first":
-            if (this.currentPage === 1) return;
-            if (this.currentPage !== 1) num = 1;
-            break;
+            if (this.currentPage === 1) return
+            if (this.currentPage !== 1) num = 1
+            break
           case "previous":
-            if (this.currentPage === 1) return;
-            if (this.currentPage !== 1) num = this.currentPage - 1;
-            break;
+            if (this.currentPage === 1) return
+            if (this.currentPage !== 1) num = this.currentPage - 1
+            break
           case "next":
-            if (this.currentPage === this.totalPage) return;
-            if (this.currentPage !== this.totalPage) num = this.currentPage + 1;
-            break;
+            if (this.currentPage === this.totalPage) return
+            if (this.currentPage !== this.totalPage) num = this.currentPage + 1
+            break
           case "last":
-            if (this.currentPage === this.totalPage) return;
-            if (this.currentPage !== this.totalPage) num = this.totalPage;
-            break;
+            if (this.currentPage === this.totalPage) return
+            if (this.currentPage !== this.totalPage) num = this.totalPage
+            break
         }
-      } else if (typeof pNum === "number") num = pNum;
-      this.goPage(num);
+      } else if (typeof pNum === "number") num = pNum
+      this.goPage(num)
     },
     switchLength() {
-      this.goPage(1);
+      this.goPage(1)
     }
   },
   mounted() {
-    this.goPage(1);
+    this.goPage(1)
   }
-};
+}
 </script>
 
 <style>
@@ -232,7 +232,7 @@ div.v-pagination > ul > li > a {
   float: left;
   text-decoration: none;
   color: #333;
-  transition: .1s;
+  transition: 0.1s;
   color: #2043b5;
 }
 div.v-pagination > ul > li > a i {
@@ -241,12 +241,12 @@ div.v-pagination > ul > li > a i {
   margin-top: -3px;
 }
 div.v-pagination > ul > li > a:hover {
-  background-color: rgba(32, 67, 181, .1);
+  background-color: rgba(32, 67, 181, 0.1);
 }
 div.v-pagination > ul > li.disabled > a {
   cursor: default;
   background-color: #fff;
-  color: rgba(32, 67, 181, .3);
+  color: rgba(32, 67, 181, 0.3);
 }
 
 div.v-pagination > ul > li.v-pagination__list {
@@ -286,17 +286,17 @@ div.v-pagination > ul > li.v-pagination__list select {
   position: relaitve;
   outline: 0;
 }
- div.v-pagination > ul > li.v-pagination__list:after {
+div.v-pagination > ul > li.v-pagination__list:after {
   position: absolute;
   right: 25px;
   top: 50%;
   margin-top: -8px;
   pointer-events: none;
-  content: 'arrow_drop_down';
-  font-family: 'Material Icons';
+  content: "arrow_drop_down";
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
-  font-size: 16px;  /* Preferred icon size */
+  font-size: 16px; /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -316,10 +316,10 @@ div.v-pagination > ul > li.v-pagination__list select {
   -moz-osx-font-smoothing: grayscale;
 
   /* Support for IE. */
-  font-feature-settings: 'liga';
- }
+  font-feature-settings: "liga";
+}
 div.v-pagination > ul > li.v-pagination__list select[disabled] {
-  color: rgba(32, 67, 181, .3);
+  color: rgba(32, 67, 181, 0.3);
 }
 div.v-pagination.v-pagination--no-border > ul {
   box-shadow: none;

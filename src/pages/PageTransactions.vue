@@ -44,19 +44,19 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { isEmpty } from "lodash";
-import AppHeader from "../components/AppHeader";
-import AppPage from "../components/AppPage";
-import AppNotFound from "../components/AppNotFound";
-import AppLoading from "../components/AppLoading";
-import utility from "../scripts/utility";
+import { mapGetters, mapActions } from "vuex"
+import { isEmpty } from "lodash"
+import AppHeader from "../components/AppHeader"
+import AppPage from "../components/AppPage"
+import AppNotFound from "../components/AppNotFound"
+import AppLoading from "../components/AppLoading"
+import utility from "../scripts/utility"
 
-const { txToHash, fromNow } = utility;
+const { txToHash, fromNow } = utility
 
 export default {
   beforeCreate: function() {
-    document.body.className = "page";
+    document.body.className = "page"
   },
   name: "page-Txs",
   components: {
@@ -68,29 +68,29 @@ export default {
   computed: {
     ...mapGetters(["tx", "block"]),
     txs() {
-      const blockHeight = this.$route.params.block;
-      const txs = [];
+      const blockHeight = this.$route.params.block
+      const txs = []
 
       if (this.block.blocks[blockHeight]) {
-        const blockData = this.block.blocks[blockHeight].block;
+        const blockData = this.block.blocks[blockHeight].block
 
-        const len = blockData.data.txs.length || 0;
+        const len = blockData.data.txs.length || 0
         for (let i = 0; i < len; i++) {
-          let hash = txToHash(blockData.data.txs[i]);
+          let hash = txToHash(blockData.data.txs[i])
 
-          txs.push(this.tx.txs[hash]);
+          txs.push(this.tx.txs[hash])
         }
       }
 
-      return txs;
+      return txs
     },
     blockMeta() {
-      const blockHeight = this.$route.params.block;
+      const blockHeight = this.$route.params.block
 
-      return this.block.blocks[blockHeight].block_meta;
+      return this.block.blocks[blockHeight].block_meta
     },
     blockTime() {
-      return this.blockMeta.header.time;
+      return this.blockMeta.header.time
     }
   },
   methods: {
@@ -99,19 +99,19 @@ export default {
     isEmpty
   },
   async mounted() {
-    const blockHeight = this.$route.params.block;
+    const blockHeight = this.$route.params.block
     if (!this.block.blocks[blockHeight]) {
-      await this.fetchBlock(blockHeight);
+      await this.fetchBlock(blockHeight)
     }
-    await this.queryTxs(this.block.blocks[blockHeight].block);
+    await this.queryTxs(this.block.blocks[blockHeight].block)
   },
   watch: {
     // eslint-disable-next-line
     $route(to, from) {
-      this.queryTxs(this.block.blocks[this.$route.params.block]);
+      this.queryTxs(this.block.blocks[this.$route.params.block])
     }
   }
-};
+}
 </script>
 
 <style lang="stylus">
@@ -243,7 +243,7 @@ export default {
   .txs-container .row
     min-height 50px
     font-size 13px
-    
+
   .txs-container .row li
     width 15%
 

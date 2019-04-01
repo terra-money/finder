@@ -12,21 +12,21 @@ export const state = {
     process.env.VUE_APP_LOCAL_DEV !== undefined
       ? "ws://localhost:26657"
       : "wss://soju.terra.money:36657"
-};
+}
 
 const mutations = {
   SET_CONFIG_BLOCKCHAIN_SELECT(state, value) {
-    state.blockchainSelect = value;
+    state.blockchainSelect = value
   },
   setActiveMenu(state, value) {
-    state.activeMenu = value;
+    state.activeMenu = value
   },
   SET_CONFIG_DESKTOP(state, value) {
-    state.desktop = value;
+    state.desktop = value
   }
-};
+}
 
 export default {
   state,
   mutations
-};
+}

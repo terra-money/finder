@@ -22,15 +22,15 @@
 </template>
 
 <script>
-import { isNaN } from "lodash";
-import TmFormGroup from "../components/TmFormGroup";
-import TmFormStruct from "../components/TmFormStruct";
-import TmBtn from "../components/TmBtn";
-import TmField from "../components/TmField";
+import { isNaN } from "lodash"
+import TmFormGroup from "../components/TmFormGroup"
+import TmFormStruct from "../components/TmFormStruct"
+import TmBtn from "../components/TmBtn"
+import TmField from "../components/TmField"
 
 export default {
   beforeCreate: function() {
-      document.body.className = 'home';
+    document.body.className = "home"
   },
   name: "page-index",
   components: {
@@ -45,13 +45,13 @@ export default {
   methods: {
     search() {
       if (isNaN(Number(this.query))) {
-        this.$router.push({ path: `/tx/${this.query}` });
+        this.$router.push({ path: `/tx/${this.query}` })
       } else {
-        this.$router.push({ path: `/blocks/${this.query}` });
+        this.$router.push({ path: `/blocks/${this.query}` })
       }
     }
   }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -192,9 +192,8 @@ input:-webkit-autofill
 
   .main-container .tm-btn
     right 11px
-    
+
 @media (max-height: 700px) and (min-width: 768px)
   .main-container .tm-form
     margin-bottom -130px
-
 </style>

@@ -21,19 +21,19 @@ export default {
   name: "tm-form-struct",
   computed: {
     cssClass() {
-      let value = "tm-form";
-      if (this.width === "narrow") value += " tm-form-narrow";
-      return value;
+      let value = "tm-form"
+      if (this.width === "narrow") value += " tm-form-narrow"
+      return value
     },
     hasHeader() {
-      return this.$slots["title"] || this.$slots["subtitle"];
+      return this.$slots["title"] || this.$slots["subtitle"]
     },
     hasFooter() {
-      return this.$slots["footer"];
+      return this.$slots["footer"]
     }
   },
   props: ["width", "submit"]
-};
+}
 </script>
 
 <style lang="stylus">

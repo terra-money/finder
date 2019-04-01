@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import TmFormGroup from "./TmFormGroup";
-import TmFormStruct from "./TmFormStruct";
-import TmBtn from "./TmBtn";
-import TmField from "./TmField";
+import { mapGetters } from "vuex"
+import TmFormGroup from "./TmFormGroup"
+import TmFormStruct from "./TmFormStruct"
+import TmBtn from "./TmBtn"
+import TmField from "./TmField"
 export default {
   name: "app-header",
   components: {
@@ -39,14 +39,14 @@ export default {
   methods: {
     search() {
       if (isNaN(Number(this.query))) {
-        this.$router.push({ path: `/tx/${this.query}` });
+        this.$router.push({ path: `/tx/${this.query}` })
       } else {
-        this.$router.push({ path: `/blocks/${this.query}` });
+        this.$router.push({ path: `/blocks/${this.query}` })
       }
     }
   },
   mounted() {}
-};
+}
 </script>
 
 <style lang="stylus">

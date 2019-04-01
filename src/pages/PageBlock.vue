@@ -35,20 +35,20 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { isEmpty } from "lodash";
-import utility from "../scripts/utility";
-import TmListItem from "../components/TmListItem";
+import { mapGetters, mapActions } from "vuex"
+import { isEmpty } from "lodash"
+import utility from "../scripts/utility"
+import TmListItem from "../components/TmListItem"
 
-import AppHeader from "../components/AppHeader";
-import AppNotFound from "../components/AppNotFound";
-import AppLoading from "../components/AppLoading";
+import AppHeader from "../components/AppHeader"
+import AppNotFound from "../components/AppNotFound"
+import AppLoading from "../components/AppLoading"
 
-const { format } = utility;
+const { format } = utility
 
 export default {
   beforeCreate: function() {
-    document.body.className = "page";
+    document.body.className = "page"
   },
   name: "page-block",
   components: {
@@ -68,7 +68,7 @@ export default {
           },
           header: {}
         }
-      );
+      )
     },
     blockMeta() {
       return (
@@ -78,11 +78,11 @@ export default {
             hash: ``
           }
         }
-      );
+      )
     }
   },
   async created() {
-    await this.fetchBlock(this.$route.params.block);
+    await this.fetchBlock(this.$route.params.block)
   },
   methods: {
     ...mapActions(["fetchBlock", "setBlockLoadedFalse"]),
@@ -92,11 +92,11 @@ export default {
   watch: {
     // eslint-disable-next-line
     $route(to, from) {
-      this.setBlockLoadedFalse();
-      this.fetchBlock(this.$route.params.block);
+      this.setBlockLoadedFalse()
+      this.fetchBlock(this.$route.params.block)
     }
   }
-};
+}
 </script>
 
 <style lang="stylus">
@@ -122,7 +122,7 @@ export default {
   border solid 1px #d8ddf0
   border-radius 5px
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
- 
+
 .block-container .table .tm-li-dl
   display table
   table-layout fixed

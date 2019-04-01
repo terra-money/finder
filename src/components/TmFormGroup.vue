@@ -12,13 +12,13 @@ export default {
   name: "tm-form-group",
   computed: {
     cssClass() {
-      let value = "tm-form-group";
-      if (this.error) value += " tm-form-group--error";
-      return value;
+      let value = "tm-form-group"
+      if (this.error) value += " tm-form-group--error"
+      return value
     }
   },
   props: ["error", "field-id", "field-label", "sub-label"]
-};
+}
 </script>
 
 <style lang="stylus">

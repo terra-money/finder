@@ -74,7 +74,7 @@ transition(name="proposal")
 </template>
 
 <script>
-import TmBtn from "./TmBtn.vue";
+import TmBtn from "./TmBtn.vue"
 export default {
   name: "tm-list-item",
   props: [
@@ -95,12 +95,12 @@ export default {
   computed: {
     spinClass() {
       if (this.spin) {
-        return "fa-spin";
+        return "fa-spin"
       }
-      return null;
+      return null
     }
   }
-};
+}
 </script>
 
 <style lang="stylus">

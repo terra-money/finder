@@ -1,18 +1,18 @@
-import Vue from "vue";
+import Vue from "vue"
 import Vuelidate from "vuelidate"
-import App from "./App.vue";
+import App from "./App.vue"
 
 // sync store and router...
-import { sync } from "vuex-router-sync";
-import router from "./router";
-import store from "./store";
-sync(store, router);
-Vue.use(Vuelidate);
+import { sync } from "vuex-router-sync"
+import router from "./router"
+import store from "./store"
+sync(store, router)
+Vue.use(Vuelidate)
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount("#app");
+}).$mount("#app")
