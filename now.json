@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "name": "finder",
+  "alias": "finder.terra.money",
+  "builds": [
+     { "src": "package.json", "use": "@now/static-build" }
+  ],
+  "routes": [
+     { "src": "/service-worker.js", "headers": { "cache-control": "s-maxage=0" } },
+     { "handle": "filesystem" },
+     { "src": ".*", "dest": "/index.html"}
+  ]
+}
