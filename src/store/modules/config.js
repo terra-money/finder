@@ -4,14 +4,14 @@ export const state = {
   desktop: false,
   localDev: process.env.VUE_APP_LOCAL_DEV !== undefined,
   rpc:
-    process.env.VUE_APP_LOCAL_DEV !== undefined
-      ? "http://localhost:26657"
-      : "https://soju.terra.money:36657",
+    process.env.LCD_URL !== undefined
+      ? "https://soju.terra.money:36657"
+      : process.env.LCD_URL,
   lcd: "https://soju.terra.money:1317",
   wss:
-    process.env.VUE_APP_LOCAL_DEV !== undefined
-      ? "ws://localhost:26657"
-      : "wss://soju.terra.money:36657"
+    process.env.RPC_URL !== undefined
+      ? "wss://soju.terra.money:36657"
+      : process.env.RPC_URL
 };
 
 const mutations = {
