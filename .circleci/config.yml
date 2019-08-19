@@ -18,7 +18,7 @@ jobs:
             else
               VERSION=`git rev-parse --short HEAD`
             fi
-            docker build -t ${AWS_RESOURCE_NAME_PREFIX}:${VERSION} .
+            docker build -t ${AWS_RESOURCE_NAME_PREFIX}:${VERSION} --build-arg SENTRY_DSN=${SENTRY_DSN} .
             mkdir -p docker-image
             docker save -o docker-image/image.tar ${AWS_RESOURCE_NAME_PREFIX}:${VERSION}
             echo $VERSION > docker-image/version

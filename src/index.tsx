@@ -9,9 +9,12 @@ import App from "./layouts/App";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
 
-Sentry.init({
-  dsn: "https://837ad343b375465da7604dd7209cc2b3@sentry.io/1523799"
-});
+if (
+  process.env.REACT_APP_SENTRY_DSN &&
+  /^http/.test(process.env.REACT_APP_SENTRY_DSN)
+) {
+  Sentry.init({ dsn: process.env.SENTRY_DSN });
+}
 
 ReactDOM.render(
   <Router>
