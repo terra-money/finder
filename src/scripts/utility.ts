@@ -2,8 +2,10 @@ import { formatToTimeZone } from "date-fns-timezone";
 import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 import networksConfig from "../config/networks";
 import { isInteger } from "./math";
+import { isEmpty } from "lodash";
 
 export const DEFAULT_NETWORK = `columbus-2`;
+export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const BASE_DENOM = `uluna`;
 
 export function handleSearch(keyword: string, network: string) {
@@ -34,7 +36,9 @@ export function sliceMsgType(msg: string) {
 }
 
 export function fcdUrl(key: string) {
-  return networksConfig.filter(n => n.key === key)[0].fcd;
+  return isEmpty(networksConfig.filter(n => n.key === key))
+    ? DEFAULT_FCD
+    : networksConfig.filter(n => n.key === key)[0].fcd;
 }
 
 export function getNetwork() {
@@ -57,7 +61,11 @@ export function isTerraAddress(keyword: string) {
 }
 
 export function isValidatorAddress(keyword: string) {
-  if (keyword && keyword.length === 51 && keyword.indexOf("terravaloper") > -1) {
+  if (
+    keyword &&
+    keyword.length === 51 &&
+    keyword.indexOf("terravaloper") > -1
+  ) {
     return true;
   }
   return false;
