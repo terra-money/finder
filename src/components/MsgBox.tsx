@@ -1,7 +1,11 @@
 import React from "react";
 import s from "./Msg.module.scss";
 import Coin from "../components/Coin";
-import { sliceMsgType, isTerraAddress } from "../scripts/utility";
+import {
+  sliceMsgType,
+  isTerraAddress,
+  isValidatorAddress
+} from "../scripts/utility";
 import format from "../scripts/format";
 import Finder from "./Finder";
 import { isArray } from "lodash";
@@ -17,6 +21,15 @@ export default (msg: Msg) => {
             <p key={JSON.stringify(msg.value[key])}>
               <span>{key}</span>
               <Finder q="account" v={msg.value[key]}>
+                {msg.value[key]}
+              </Finder>
+            </p>
+          );
+        } else if (isValidatorAddress(msg.value[key])) {
+          return (
+            <p key={JSON.stringify(msg.value[key])}>
+              <span>{key}</span>
+              <Finder q="validator" v={msg.value[key]}>
                 {msg.value[key]}
               </Finder>
             </p>

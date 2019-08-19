@@ -56,6 +56,13 @@ export function isTerraAddress(keyword: string) {
   return false;
 }
 
+export function isValidatorAddress(keyword: string) {
+  if (keyword && keyword.length === 51 && keyword.indexOf("terravaloper") > -1) {
+    return true;
+  }
+  return false;
+}
+
 export function prependProtocol(url: string) {
   if (url.indexOf("http") > -1) {
     return url;
