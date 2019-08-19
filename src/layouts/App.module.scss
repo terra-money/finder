@@ -1,0 +1,13 @@
+@import "../styles/variables";
+
+.content {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px;
+  color: $brand !important;
+  @media (max-width: $breakpoint) {
+    padding: 50px 15px;
+    padding-top: 85px;
+  }
+}

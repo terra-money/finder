@@ -1,0 +1,72 @@
+@import "../styles/variables.scss";
+
+.header {
+  position: relative;
+  background: #0c3694;
+  height: 80px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  @media (max-width: $breakpoint) {
+    height: 44px;
+  }
+}
+
+.inner {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1440px;
+  position: relative;
+}
+
+.logo {
+  display: inline-block;
+  @media (max-width: $breakpoint) {
+    display: block;
+    height: 45px;
+    line-height: 45px;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  a {
+    display: block;
+    padding: 28px 40px;
+    line-height: 1;
+    @media (max-width: $breakpoint) {
+      padding: 13px 15px;
+    }
+  }
+  img {
+    width: 160px;
+    height: 21px;
+    @media (max-width: $breakpoint) {
+      height: 15px;
+      width: 116px;
+    }
+  }
+}
+
+.search {
+  position: absolute;
+  top: 20px;
+  right: 230px;
+  width: 34%;
+  max-width: 640px;
+  margin-left: -320px;
+  @media (max-width: $breakpoint) {
+    top: 55px;
+    right: 0;
+    width: 100%;
+  }
+}
+
+.networks {
+  position: absolute;
+  top: 24px;
+  right: 40px;
+  @media (max-width: $breakpoint) {
+    top: 8px;
+    right: 15px;
+  }
+}

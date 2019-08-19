@@ -1,0 +1,24 @@
+@import "../../styles/list";
+
+.success {
+  color: $green;
+  font-weight: 500;
+}
+
+.fail {
+  color: $red;
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+.failedMsg {
+  background: #fff8f9;
+  padding: 15px;
+  font-weight: 400;
+  font-size: 15px;
+  border: 1px solid #ffe6e7;
+  border-radius: 5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  color: $red;
+}

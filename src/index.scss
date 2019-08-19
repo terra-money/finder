@@ -1,0 +1,39 @@
+@import "./styles/material-icons.scss";
+@import "./styles/mixins";
+@import "./styles/variables";
+@import "./styles/material-icons";
+@import "./styles/reboot.scss";
+@import "./styles/components";
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  margin-top: 0px;
+  > span {
+    font-weight: 300;
+    font-size: 23px;
+    padding-left: 6px;
+  }
+}
+
+.type {
+  display: inline-block;
+  border-radius: 13px;
+  height: 26px;
+  background-color: rgba(40, 69, 174, 0.1);
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 26px;
+  letter-spacing: -0.3px;
+  color: #2845ae;
+  padding: 0 15px;
+  vertical-align: middle;
+}

@@ -1,0 +1,44 @@
+@import "../styles/variables.scss";
+
+.msgBox {
+  height: auto;
+  display: block;
+  border-radius: 5px;
+  border: 1px solid $line;
+  background-color: #fbfdff !important;
+  margin: 25px;
+  padding: 0 20px;
+  overflow: auto;
+  font-size: 15px;
+  .type {
+    padding: 20px;
+    line-height: 1;
+    font-weight: 500;
+    font-size: 16px;
+    border-bottom: 1px solid $line;
+    margin-left: -20px;
+    margin-right: -20px;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+  }
+  p {
+    line-height: 1.5;
+    margin: 20px 0;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    @media (max-width: $breakpoint) {
+      display: flex;
+      flex-direction: column;
+    }
+    span {
+      display: table-cell;
+    }
+    span:first-child {
+      width: 200px;
+      font-weight: 500;
+      font-size: 14px;
+      padding-right: 20px;
+    }
+  }
+}

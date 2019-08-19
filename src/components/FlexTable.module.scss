@@ -1,0 +1,38 @@
+@import "../styles/mixins";
+@import "../styles/variables";
+
+.table {
+  border: solid 1px $line;
+  border-radius: 5px;
+  word-break: break-all;
+  width: 100%;
+  min-width: 800px;
+  .head {
+    font-size: 13px;
+    font-weight: 500;
+    background: $table-head;
+  }
+
+  .body {
+    font-size: 14px;
+    & > .row:last-child > .cell {
+      border-bottom: 0;
+    }
+  }
+
+  tr th:first-child {
+    padding-left: 30px;
+  }
+  tr td:first-child {
+    padding-left: 30px;
+  }
+}
+
+.cell {
+  padding: 20px 0px;
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid $line;
+}

@@ -1,0 +1,22 @@
+$app-fg: #11152c;
+$app-bg: #2043b5;
+$brand: #2043b5;
+$link: #2845ae;
+$link-bg: #5493f7;
+$line: #d8ddf0;
+$bg-hover: fade-out($brand, 0.98);
+$a-bg: #edf4fe;
+
+$green: #1daa8e;
+$red: #ff5561;
+$orange: #fd9a02;
+$navy: #0c3694;
+$sky: #5493f7;
+$table-head: rgba(84, 147, 247, 0.1);
+/* Sizes */
+$breakpoint: 768px;
+$breakpoint-large: 1024px;
+$gutter: 20px;
+$gutter-large: 30px;
+$radius: 5px;
+$max-width: (1180px + (2 * $gutter-large));

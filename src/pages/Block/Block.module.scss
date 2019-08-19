@@ -1,0 +1,63 @@
+@import "../../styles/variables.scss";
+@import "../../styles/list";
+
+.height {
+  & > span {
+    margin-right: 10px;
+  }
+  a {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    color: $link;
+    vertical-align: middle;
+    margin-top: -2px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background-color: $a-bg;
+    text-align: center;
+    -webkit-transition: 0.1s;
+    transition: 0.1s;
+    i {
+      line-height: 22px;
+      position: absolute;
+      left: 3px;
+      top: 0px;
+      font-size: 16px;
+    }
+  }
+}
+
+.txs {
+  line-height: 30px;
+  height: 30px;
+  .button {
+    display: inline-block;
+    line-height: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    font-size: 15px;
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    background-color: $link-bg;
+    padding-left: 20px;
+    padding-right: 16px;
+    color: #fff;
+    text-decoration: none;
+    -webkit-transition: background-color 0.1s;
+    transition: background-color 0.1s;
+    white-space: nowrap;
+    i {
+      vertical-align: middle;
+      margin-top: -3px;
+    }
+  }
+  .none {
+    background-color: rgba(84, 147, 247, 0.5);
+    padding: 0 20px;
+    cursor: default;
+  }
+}

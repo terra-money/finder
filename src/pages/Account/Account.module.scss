@@ -1,0 +1,23 @@
+@import "../../styles/list";
+
+.copy {
+  display: inline-block;
+}
+
+.cardTitle {
+  background: $table-head;
+}
+
+.cardBodyContainer {
+  overflow-x: auto;
+}
+
+.success {
+  color: $green;
+  font-weight: 500;
+}
+
+.fail {
+  color: $red;
+  font-weight: 500;
+}

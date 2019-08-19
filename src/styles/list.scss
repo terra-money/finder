@@ -1,0 +1,57 @@
+@import "variables.scss";
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $line;
+  border-radius: 5px;
+  @media (max-width: $breakpoint) {
+    border: none;
+    border-radius: 0px;
+    border-top: 1px solid $line;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid $line;
+    min-height: 60px;
+    line-height: 60px;
+    @media (max-width: $breakpoint) {
+      flex-direction: column;
+      min-height: 50px;
+      line-height: 50px;
+    }
+    .head {
+      font-weight: 500;
+      padding-left: 30px;
+      min-width: 240px;
+      background-color: $table-head;
+      display: flex;
+      align-items: center;
+      @media (max-width: $breakpoint) {
+        background: none;
+        padding-left: 0px;
+      }
+    }
+    .body {
+      padding: 0 30px;
+      word-break: break-all;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      overflow-x: auto;
+      width: 100%;
+      .bodyContainer {
+        width: 100%;
+        & > article {
+          margin: 15px 0;
+        }
+      }
+      @media (max-width: $breakpoint) {
+        padding: 0 0 20px;
+      }
+    }
+  }
+}
