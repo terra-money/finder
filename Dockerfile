@@ -1,12 +1,12 @@
 FROM node:lts-alpine as builder
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json yarn.lock ./
 RUN yarn install
 COPY . .
 RUN yarn run build
 
 FROM nginx:stable-alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
 
 ARG rpcUrl="http:\\/\\/localhost:26657"
 ARG lcdUrl="http:\\/\\/localhost:1317"

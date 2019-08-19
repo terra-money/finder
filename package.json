@@ -2,43 +2,6 @@
   "name": "finder-react",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@sentry/browser": "^5.5.0",
-    "@types/classnames": "^2.2.9",
-    "@types/jest": "24.0.15",
-    "@types/lodash": "^4.14.136",
-    "@types/luxon": "^1.15.2",
-    "@types/node": "12.6.2",
-    "@types/react": "16.8.23",
-    "@types/react-copy-to-clipboard": "^4.2.6",
-    "@types/react-dom": "16.8.4",
-    "axios": "^0.19.0",
-    "bignumber.js": "^9.0.0",
-    "classnames": "^2.2.6",
-    "core-js": "^3.1.4",
-    "date-fns": "^1.30.1",
-    "date-fns-timezone": "^0.1.4",
-    "husky": "^3.0.0",
-    "lint-staged": "^9.2.0",
-    "lodash": "^4.17.14",
-    "luxon": "^1.17.2",
-    "node-sass": "^4.12.0",
-    "prettier": "^1.18.2",
-    "react": "^16.8.6",
-    "react-app-polyfill": "^1.0.1",
-    "react-copy-to-clipboard": "^5.0.1",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
-    "source-map-explorer": "^2.0.1",
-    "typescript": "3.5.3"
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --double-quote --write",
-      "git add"
-    ]
-  },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
@@ -47,6 +10,12 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --double-quote --write",
+      "git add"
+    ]
   },
   "husky": {
     "hooks": {
@@ -68,11 +37,43 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "@sentry/browser": "^5.5.0",
+    "axios": "^0.19.0",
+    "bignumber.js": "^9.0.0",
+    "classnames": "^2.2.6",
+    "core-js": "^3.1.4",
+    "date-fns": "^1.30.1",
+    "date-fns-timezone": "^0.1.4",
+    "lodash": "^4.17.14",
+    "luxon": "^1.17.2",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.1",
+    "react-copy-to-clipboard": "^5.0.1",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "source-map-explorer": "^2.0.1",
+    "typescript": "^3.4"
+  },
   "devDependencies": {
+    "@babel/core": "^7",
     "@storybook/addon-actions": "^5.1.9",
     "@storybook/addon-links": "^5.1.9",
     "@storybook/addons": "^5.1.9",
     "@storybook/react": "^5.1.9",
-    "@types/react-router-dom": "^4.3.4"
+    "@types/classnames": "^2.2.9",
+    "@types/jest": "24.0.15",
+    "@types/lodash": "^4.14.136",
+    "@types/luxon": "^1.15.2",
+    "@types/node": "12.6.2",
+    "@types/react": "16.8.23",
+    "@types/react-copy-to-clipboard": "^4.2.6",
+    "@types/react-dom": "16.8.4",
+    "@types/react-router-dom": "^4.3.4",
+    "husky": "^3.0.4",
+    "lint-staged": "^9.2.0",
+    "prettier": "^1.18.2"
   }
 }
