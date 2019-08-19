@@ -16,9 +16,5 @@ export default [
   {
     key: "columbus-1",
     fcd: "https://columbus-1-fcd.terra.dev"
-  },
-  {
-    key: "soju",
-    fcd: "https://soju-0008-lcd.terra.dev"
   }
 ];
