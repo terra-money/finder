@@ -84,6 +84,17 @@
   margin-bottom: -130px;
   width: 640px;
   max-width: 640px;
+  padding: 0.5rem 1rem;
+  input {
+    font-weight: 300;
+    height: 50px;
+  }
+  button {
+    height: 49px;
+  }
+  button i {
+    font-size: 24px;
+  }
   @media (max-width: $breakpoint) {
     display: block;
     margin: 0 auto;
@@ -110,7 +121,11 @@
     input:-ms-input-placeholder {
       color: rgba(255, 255, 255, 0.3);
     }
+    button {
+      height: 44px;
+    }
     button i {
+      font-size: 21px;
       color: #fff;
     }
   }

@@ -86,7 +86,7 @@ input {
 
 form {
   display: inline-flex;
-  height: 40px;
+  min-height: 40px;
   @media (max-width: $breakpoint) {
     top: 54px;
     right: 0;
