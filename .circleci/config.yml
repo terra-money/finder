@@ -1,0 +1,53 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Deploy Docker image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              VERSION="stable"
+            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              VERSION="develop"
+            else
+              VERSION=`git rev-parse --short HEAD`
+            fi
+            docker build -t ${AWS_RESOURCE_NAME_PREFIX}:${VERSION} .
+            mkdir -p docker-image
+            docker save -o docker-image/image.tar ${AWS_RESOURCE_NAME_PREFIX}:${VERSION}
+            echo $VERSION > docker-image/version
+      - persist_to_workspace:
+          root: .
+          paths: docker-image
+
+  deploy:
+    docker:
+      - image: wilson208/circleci-awscli
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - setup_remote_docker
+      - run: |
+          VERSION=$(cat ~/repo/docker-image/version)
+          eval $(aws --region ${AWS_DEFAULT_REGION} ecr --no-include-email get-login)
+          docker load --input ~/repo/docker-image/image.tar
+          docker tag ${AWS_RESOURCE_NAME_PREFIX}:${VERSION} ${AWS_ECR_URL}/${AWS_RESOURCE_NAME_PREFIX}:${VERSION}
+          docker push ${AWS_ECR_URL}/${AWS_RESOURCE_NAME_PREFIX}:${VERSION}
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - build
+      - deploy:
+          filters:
+            branches:
+              only: /^(master|develop|feature).*/
+          requires:
+            - build
