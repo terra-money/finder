@@ -36,6 +36,10 @@ input[type="search"] {
   -webkit-appearance: none;
 }
 
+input::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
 input {
   width: 100%;
   border: 0px;
@@ -43,11 +47,11 @@ input {
   font-size: 16px;
   height: 40px;
   color: #fff;
-  font-weight: 300;
   background: transparent;
   padding-left: 10px !important;
   padding-right: 45px !important;
   border-radius: 0 !important;
+  word-break: normal;
   @media (max-width: $breakpoint) {
     border-radius: 0 !important;
     background: #fff;
@@ -62,13 +66,20 @@ input {
   position: absolute;
   right: 0;
   bottom: 1px;
-  height: 40px;
+  height: 39px;
   outline: 0;
   cursor: pointer;
+  margin: 0;
   i {
     color: #fff;
+    padding: 0 5px 0 10px;
+    font-size: 21px;
+    line-height: 39px;
     @media (max-width: $breakpoint) {
       color: $brand;
+      padding: 0 3px 0 5px;
+      font-size: 19px;
+      line-height: 42px;
     }
   }
 }

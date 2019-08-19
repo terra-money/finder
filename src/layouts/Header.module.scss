@@ -55,7 +55,8 @@
   max-width: 640px;
   margin-left: -320px;
   @media (max-width: $breakpoint) {
-    top: 55px;
+    top: 54px;
+    max-width: none;
     right: 0;
     width: 100%;
   }

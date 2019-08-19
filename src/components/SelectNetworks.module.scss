@@ -13,9 +13,11 @@
   text-overflow: ellipsis;
   background: transparent;
   appearance: none;
+  text-transform: capitalize;
   option {
     color: $brand;
     background: #fff;
+    text-transform: capitalize;
   }
   @media (max-width: $breakpoint) {
     height: 28px !important;
@@ -25,15 +27,15 @@
 
 .addon {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 1px;
+  bottom: 1px;
+  right: 1px;
   display: block;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  height: 34px;
   width: 34px;
   border-left: 1px solid hsla(0, 0%, 100%, 0.3) !important;
   background: transparent;
@@ -42,15 +44,14 @@
   line-height: 34px;
   pointer-events: none;
   @media (max-width: $breakpoint) {
-    height: 28px !important;
+    width: 27px !important;
   }
   i {
     font-size: 18px;
     vertical-align: middle;
     margin-top: -2px;
     @media (max-width: $breakpoint) {
-      height: 26px;
-      width: 27px;
+      height: 24px;
     }
   }
 }
