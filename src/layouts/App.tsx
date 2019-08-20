@@ -5,13 +5,16 @@ import Header from "./Header";
 import { withRouter } from "react-router-dom";
 import NetworkContext from "../contexts/NetworkContext";
 import useNetwork from "../hooks/useNetwork";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 const App = () => {
   return (
     <section className={s.main}>
       <NetworkContext.Provider value={useNetwork()}>
         <Header />
-        <section className={s.content}>{routes}</section>
+        <section className={s.content}>
+          <ErrorBoundary>{routes}</ErrorBoundary>
+        </section>
       </NetworkContext.Provider>
     </section>
   );

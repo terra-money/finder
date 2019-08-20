@@ -40,8 +40,11 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
     logs.map(log => {
       if (!log.log) return null;
       const tax = get(JSON.parse(log.log), "tax");
+
+      if (!tax) return null;
       const taxArray: string[] = tax.split(",");
 
+      if (!taxArray || isEmpty(taxArray)) return null;
       taxArray.map(tax => {
         const denom = taxDenom(taxNumber(tax), tax);
         result[denom] = Number(taxNumber(tax)) + Number(result[denom] || 0);
@@ -56,7 +59,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
         denom: key
       })} `;
     });
-    console.log(resultArr.join(","));
+
     return resultArr.join(",");
   }
   return (
