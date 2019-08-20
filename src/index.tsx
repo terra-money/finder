@@ -13,7 +13,7 @@ if (
   process.env.REACT_APP_SENTRY_DSN &&
   /^http/.test(process.env.REACT_APP_SENTRY_DSN)
 ) {
-  Sentry.init({ dsn: process.env.SENTRY_DSN });
+  Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 }
 
 ReactDOM.render(
