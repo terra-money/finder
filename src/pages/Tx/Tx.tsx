@@ -37,21 +37,21 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
 
     if (isEmpty(logs)) return ``;
 
-    logs.map(log => {
-      if (!log.log) return null;
+    logs.forEach(log => {
+      if (!log.log) return;
       const tax = get(JSON.parse(log.log), "tax");
 
-      if (!tax) return null;
+      if (!tax || typeof tax !== "string") return;
       const taxArray: string[] = tax.split(",");
 
-      if (!taxArray || isEmpty(taxArray)) return null;
-      taxArray.map(tax => {
+      if (!taxArray || taxArray.length === 0) return;
+
+      taxArray.forEach(tax => {
         const denom = taxDenom(taxNumber(tax), tax);
         result[denom] = Number(taxNumber(tax)) + Number(result[denom] || 0);
-        return null;
       });
-      return null;
     });
+
     if (isEmpty(result)) return ``;
     const resultArr = Object.keys(result).map(key => {
       return `${format.coin({
