@@ -12,8 +12,8 @@ import WithFetch from "../../HOCs/WithFetch";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 
-function isSendTx(tx: ITx) {
-  const type = get(tx, "tx.value.msg[0].type");
+function isSendTx(response: TxResponse) {
+  const type = get(response, "tx.value.msg[0].type");
   return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
 }
 
@@ -33,9 +33,9 @@ function getAmountAndDenom(tax: string) {
   };
 }
 
-function getTaxTotal(tx: ITx) {
+function getTaxTotal(response: TxResponse) {
   const result: { [key: string]: number } = {};
-  const logs = get(tx, "logs");
+  const logs = get(response, "logs");
 
   if (!isArray(logs)) {
     return ``;
@@ -86,7 +86,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
 
   return (
     <WithFetch url={`/txs/${hash}`} loading={<Loading />}>
-      {(tx: ITx) => (
+      {(response: TxResponse) => (
         <>
           <h2 className="title">Transaction Details</h2>
 
@@ -95,9 +95,9 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               <div className={s.head}>Transaction hash</div>
               <div className={s.body}>
                 <div>
-                  {tx.txhash}
+                  {response.txhash}
                   <Copy
-                    text={tx.txhash}
+                    text={response.txhash}
                     style={{ display: "inline-block", position: "absolute" }}
                   ></Copy>
                 </div>
@@ -106,13 +106,13 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Status</div>
               <div className={s.body}>
-                {get(tx, "logs[0].success") ? (
+                {get(response, "logs[0].success") ? (
                   <span className={s.success}>Success</span>
                 ) : (
                   <>
                     <p className={s.fail}>Failed</p>
                     <p className={s.failedMsg}>
-                      {get(tx, "logs[0].log") || get(tx, "raw_log")}
+                      {get(response, "logs[0].log") || get(response, "raw_log")}
                     </p>
                   </>
                 )}
@@ -121,52 +121,52 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Block</div>
               <div className={s.body}>
-                <Finder q="blocks" v={tx.height}>
-                  {tx.height}
+                <Finder q="blocks" v={response.height}>
+                  {response.height}
                 </Finder>
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Timestamp</div>
               <div className={s.body}>
-                {fromISOTime(tx.timestamp.toString())} (UTC)
+                {fromISOTime(response.timestamp.toString())} (UTC)
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Transaction fee</div>
               <div className={s.body}>
-                {tx.tx.value.fee.amount
+                {response.tx.value.fee.amount
                   ? format.coin({
-                      amount: get(tx, `tx.value.fee.amount[0].amount`),
-                      denom: get(tx, `tx.value.fee.amount[0].denom`)
+                      amount: get(response, `tx.value.fee.amount[0].amount`),
+                      denom: get(response, `tx.value.fee.amount[0].denom`)
                     })
                   : "0 Luna"}
               </div>
             </div>
-            {isSendTx(tx) && (
+            {isSendTx(response) && (
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
-                <div className={s.body}>{getTaxTotal(tx)}</div>
+                <div className={s.body}>{getTaxTotal(response)}</div>
               </div>
             )}
             <div className={s.row}>
               <div className={s.head}>Gas (Used/Requested)</div>
               <div className={s.body}>
-                {parseInt(tx.gas_used).toLocaleString()}/
-                {parseInt(tx.gas_wanted).toLocaleString()}
+                {parseInt(response.gas_used).toLocaleString()}/
+                {parseInt(response.gas_wanted).toLocaleString()}
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Memo</div>
               <div className={s.body}>
-                {tx.tx.value.memo ? tx.tx.value.memo : "-"}
+                {response.tx.value.memo ? response.tx.value.memo : "-"}
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Message</div>
               <div className={s.body}>
                 <div style={{ overflowX: "hidden", width: "100%" }}>
-                  {tx.tx.value.msg.map(MsgBox)}
+                  {response.tx.value.msg.map(MsgBox)}
                 </div>
               </div>
             </div>

@@ -46,7 +46,7 @@ interface Tx {
   value: Value;
 }
 
-interface ITx {
+interface TxResponse {
   height: string;
   txhash: string;
   raw_log: string;

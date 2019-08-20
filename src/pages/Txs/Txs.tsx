@@ -10,6 +10,32 @@ import { fromNow, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
 
+const getRow = (response: TxResponse) => {
+  const { txhash, tx, height, timestamp } = response;
+  return [
+    <span>
+      <Finder q="tx" v={txhash}>
+        {txhash}
+      </Finder>
+    </span>,
+    <span className="type">{sliceMsgType(tx.value.msg[0].type)}</span>,
+    <span>
+      {tx.value.fee.amount
+        ? format.coin({
+            amount: get(tx, `value.fee.amount[0].amount`),
+            denom: get(tx, `value.fee.amount[0].denom`)
+          })
+        : "0 Luna"}
+    </span>,
+    <span>
+      <Finder q="blocks" v={height}>
+        {height}
+      </Finder>
+    </span>,
+    <span>{fromNow(timestamp.toString())}</span>
+  ];
+};
+
 const Txs = (props: RouteComponentProps<{ block: string }>) => {
   const [page, setPage] = useState<string>("1");
 
@@ -18,36 +44,10 @@ const Txs = (props: RouteComponentProps<{ block: string }>) => {
 
   const head = [`TxHash`, `Type`, `Fee`, `Height`, `Time`];
 
-  const getRow = (Tx: ITx) => {
-    const { txhash, tx, height, timestamp } = Tx;
-    return [
-      <span>
-        <Finder q="tx" v={txhash}>
-          {txhash}
-        </Finder>
-      </span>,
-      <span className="type">{sliceMsgType(tx.value.msg[0].type)}</span>,
-      <span>
-        {tx.value.fee.amount
-          ? format.coin({
-              amount: get(tx, `value.fee.amount[0].amount`),
-              denom: get(tx, `value.fee.amount[0].denom`)
-            })
-          : "0 Luna"}
-      </span>,
-      <span>
-        <Finder q="blocks" v={height}>
-          {height}
-        </Finder>
-      </span>,
-      <span>{fromNow(timestamp.toString())}</span>
-    ];
-  };
-
   return (
     <div className={s.tableContainer}>
       <WithFetch url="/v1/txs" params={{ block, page }} loading={<Loading />}>
-        {({ txs = [], ...pagination }: ITxs) => (
+        {({ txs = [], ...pagination }: Pagination & { txs: TxResponse[] }) => (
           <>
             <h2 className="title">
               Transactions<span>for Block #{block}</span>
