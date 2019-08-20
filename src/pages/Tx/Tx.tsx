@@ -4,7 +4,7 @@ import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 
-import { get, isEmpty } from "lodash";
+import { get, isArray } from "lodash";
 
 import s from "./Tx.module.scss";
 import Loading from "../../components/Loading";
@@ -12,56 +12,78 @@ import WithFetch from "../../HOCs/WithFetch";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 
+function isSendTx(tx: ITx) {
+  const type = get(tx, "tx.value.msg[0].type");
+  return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
+}
+
+function getAmountAndDenom(tax: string) {
+  const result = /\d+/.exec(tax);
+
+  if (!result) {
+    return {
+      amount: 0,
+      denom: ""
+    };
+  }
+
+  return {
+    amount: +result[0],
+    denom: tax.slice(result[0].length)
+  };
+}
+
+function getTaxTotal(tx: ITx) {
+  const result: { [key: string]: number } = {};
+  const logs = get(tx, "logs");
+
+  if (!isArray(logs)) {
+    return ``;
+  }
+
+  logs.forEach(log => {
+    if (!log || typeof log.log !== "string") {
+      return;
+    }
+
+    const tax = JSON.parse(log.log).tax;
+
+    if (!tax || typeof tax !== "string") {
+      return;
+    }
+
+    const taxArray: string[] = tax.split(",");
+
+    taxArray.forEach(tax => {
+      const { amount, denom } = getAmountAndDenom(tax);
+
+      if (denom) {
+        result[denom] = amount + (result[denom] || 0);
+      }
+    });
+  });
+
+  const keys = Object.keys(result);
+
+  if (!keys.length) {
+    return ``;
+  }
+
+  return keys
+    .map(
+      denom =>
+        `${format.coin({
+          amount: result[denom].toString(),
+          denom
+        })}`
+    )
+    .join(", ");
+}
+
 const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const { match } = props;
   const { hash } = match.params;
 
-  function isSend(tx: ITx) {
-    const type = get(tx, "tx.value.msg[0].type");
-    return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
-  }
-
-  function taxString(tx: ITx) {
-    function taxNumber(tax: string) {
-      return parseInt(tax).toString() || ``;
-    }
-
-    function taxDenom(taxNumber: string, tax: string) {
-      const length = taxNumber.length;
-      if (!tax || !taxNumber) return ``;
-      return tax.slice(length);
-    }
-
-    const result: { [key: string]: number } = {};
-    const logs = get(tx, "logs");
-
-    if (isEmpty(logs)) return ``;
-
-    logs.forEach(log => {
-      if (!log.log) return;
-      const tax = get(JSON.parse(log.log), "tax");
-
-      if (!tax || typeof tax !== "string") return;
-      const taxArray: string[] = tax.split(",");
-
-      if (!taxArray || taxArray.length === 0) return;
-
-      taxArray.forEach(tax => {
-        const denom = taxDenom(taxNumber(tax), tax);
-        result[denom] = Number(taxNumber(tax)) + Number(result[denom] || 0);
-      });
-    });
-
-    if (isEmpty(result)) return ``;
-    const resultArr = Object.keys(result).map(key => {
-      return `${format.coin({
-        amount: result[key].toString(),
-        denom: key
-      })} `;
-    });
-
-    return resultArr.join(",");
-  }
   return (
     <WithFetch url={`/txs/${hash}`} loading={<Loading />}>
       {(tx: ITx) => (
@@ -121,10 +143,10 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
                   : "0 Luna"}
               </div>
             </div>
-            {isSend(tx) && (
+            {isSendTx(tx) && (
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
-                <div className={s.body}>{taxString(tx)}</div>
+                <div className={s.body}>{getTaxTotal(tx)}</div>
               </div>
             )}
             <div className={s.row}>
