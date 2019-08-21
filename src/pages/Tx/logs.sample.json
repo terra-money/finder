@@ -1,5 +1,5 @@
 {
-  "no_tax": {
+  "no tax": {
     "logs": [
       {
         "msg_index": "0",
@@ -8,7 +8,7 @@
       }
     ]
   },
-  "krw_tax": {
+  "single denom": {
     "logs": [
       {
         "msg_index": "0",
@@ -17,7 +17,7 @@
       }
     ]
   },
-  "multi_logs_single_denom": {
+  "multiple logs with single denom": {
     "logs": [
       {
         "msg_index": "0",
@@ -41,7 +41,7 @@
       }
     ]
   },
-  "multi_logs_multi_denoms": {
+  "multiple logs with multiple denoms": {
     "logs": [
       {
         "msg_index": "0",
@@ -56,7 +56,7 @@
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw,10uusd\"}"
+        "log": "{\"tax\":\"10uusd,10ukrw,0uinvalid\"}"
       },
       {
         "msg_index": "0",

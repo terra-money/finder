@@ -1,11 +1,9 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
+import { get, isArray, isObject } from "lodash";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
-
-import { get, isArray } from "lodash";
-
 import s from "./Tx.module.scss";
 import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
@@ -33,33 +31,37 @@ function getAmountAndDenom(tax: string) {
   };
 }
 
-export function parseLogs(logs: Log[]) {
+export function getTotalTax(txResponse: TxResponse) {
+  const logs = get(txResponse, "logs");
+
+  if (!isArray(logs)) {
+    return ``;
+  }
+
   const result: { [key: string]: number } = {};
 
   logs.forEach(log => {
-    if (
-      !log ||
-      typeof log.log !== "string" ||
-      (log.log && log.log.length === 0)
-    ) {
+    if (!isObject(log) || typeof log.log !== "string" || log.log.length === 0) {
       return;
     }
 
-    const tax = JSON.parse(log.log).tax;
+    try {
+      const tax = JSON.parse(log.log).tax;
 
-    if (!tax || typeof tax !== "string") {
-      return;
-    }
-
-    const taxArray: string[] = tax.split(",");
-
-    taxArray.forEach(tax => {
-      const { amount, denom } = getAmountAndDenom(tax);
-
-      if (denom) {
-        result[denom] = amount + (result[denom] || 0);
+      if (typeof tax !== "string" || tax.length === 0) {
+        return;
       }
-    });
+
+      tax.split(",").forEach(tax => {
+        const { amount, denom } = getAmountAndDenom(tax);
+
+        if (denom && amount) {
+          result[denom] = amount + (result[denom] || 0);
+        }
+      });
+    } catch (err) {
+      // ignore JSON.parse error
+    }
   });
 
   const keys = Object.keys(result);
@@ -77,16 +79,6 @@ export function parseLogs(logs: Log[]) {
         })}`
     )
     .join(", ");
-}
-
-function getTaxTotal(response: TxResponse) {
-  const logs = get(response, "logs");
-
-  if (!isArray(logs)) {
-    return ``;
-  }
-
-  return parseLogs(logs);
 }
 
 const Txs = (props: RouteComponentProps<{ hash: string }>) => {
@@ -155,7 +147,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             {isSendTx(response) && (
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
-                <div className={s.body}>{getTaxTotal(response)}</div>
+                <div className={s.body}>{getTotalTax(response)}</div>
               </div>
             )}
             <div className={s.row}>
