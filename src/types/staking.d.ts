@@ -1,4 +1,68 @@
-interface IUndelegation {
+interface Validator {
+  accountAddress: string;
+  operatorAddress: string;
+  description: Description;
+  votingPower: VotingPower;
+  selfDelegation: VotingPower;
+  commissions: Reward[];
+  commissionInfo: CommissionInfo;
+  upTime: number;
+  status: string;
+  rewardsPool: Rewards;
+  myUndelegation: MyUndelegation[];
+  myDelegatable: string;
+  myDelegation: string;
+  myRewards?: Rewards;
+}
+
+interface Description {
+  moniker: string;
+  identity: string;
+  website: string;
+  details: string;
+  profileIcon: string;
+}
+
+interface VotingPower {
+  amount: string;
+  weight: string;
+}
+
+interface CommissionInfo {
+  rate: string;
+  maxRate: string;
+  maxChangeRate: string;
+  updateTime: any;
+}
+
+interface Rewards {
+  total: string;
+  denoms: Reward[];
+}
+
+interface Reward {
+  denom: string;
+  amount: string;
+  adjustedAmount?: string;
+}
+
+interface MyDelegation {
+  validatorName: string;
+  validatorAddress: string;
+  amountDelegated: string;
+  rewards: Reward[];
+  totalReward: string;
+  validatorStatus: string;
+}
+
+interface MyUndelegation {
+  releaseTime: string;
+  amount: string;
+  validatorName: string;
+  validatorAddress: string;
+}
+
+interface Undelegation {
   releaseTime: string;
   amount: string;
   validatorName: string;
@@ -7,88 +71,11 @@ interface IUndelegation {
   creationHeight: string;
 }
 
-interface IDenom {
-  denom: string;
-  amount: string;
-}
-
-interface IRewards {
-  total: string;
-  denoms: IDenom[];
-}
-
-interface IDescription {
-  moniker: string;
-  identity: string;
-  website: string;
-  details: string;
-  profileIcon: string;
-}
-
-interface IVotingPower {
-  amount: string;
-  weight: string;
-}
-
-interface ICommissionInfo {
-  rate: string;
-  maxRate: string;
-  maxChangeRate: string;
-  updateTime: any;
-}
-
-interface IDenom2 {
-  denom: string;
-  amount: string;
-  adjustedAmount: string;
-}
-
-interface IRewardsPool {
-  total: string;
-  denoms: IDenom2[];
-}
-
-interface IMyUndelegation {
-  releaseTime: string;
-  amount: string;
-  validatorName: string;
-  validatorAddress: string;
-}
-
-interface IValidator {
-  operatorAddress: string;
-  consensusPubkey: string;
-  description: IDescription;
-  tokens: string;
-  delegatorShares: string;
-  votingPower: IVotingPower;
-  commissionInfo: ICommissionInfo;
-  upTime: number;
-  status: string;
-  rewardsPool: IRewardsPool;
-  myDelegation: string;
-  myUndelegation: IMyUndelegation[];
-}
-
-interface IReward {
-  denom: string;
-  amount: string;
-}
-
-interface IMyDelegation {
-  validatorName: string;
-  validatorAddress: string;
-  amountDelegated: string;
-  rewards: IReward[];
-  totalReward: string;
-  validatorStatus: string;
-}
-
-interface IStaking {
+interface Staking {
   delegationTotal: string;
-  undelegations: IUndelegation[];
-  rewards: IRewards;
-  validators: IValidator[];
-  myDelegations: IMyDelegation[];
+  undelegations: Undelegation[];
+  rewards: Rewards;
+  validators: Validator[];
+  myDelegations: MyDelegation[];
   availableLuna: string;
 }

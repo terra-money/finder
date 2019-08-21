@@ -1,9 +1,9 @@
-interface IBlock {
-  block_meta: IBlockMeta;
+interface Block {
+  block_meta: BlockMeta;
   block: object;
 }
 
-interface IBlockMeta {
+interface BlockMeta {
   header: {
     height: string;
     time: string;

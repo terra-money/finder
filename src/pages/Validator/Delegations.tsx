@@ -9,7 +9,7 @@ import Amount from "../../components/Amount";
 interface DelegationEvent {
   height: string;
   type: string;
-  amount: ICoin;
+  amount: Coin;
   timestamp: string;
 }
 

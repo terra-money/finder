@@ -2,7 +2,7 @@ import React from "react";
 import c from "classnames";
 import { percent } from "../../scripts/math";
 import { prependProtocol } from "../../scripts/utility";
-import { getBadgeClassName } from "../../scripts/helper"
+import { getBadgeClassName } from "../../scripts/helper";
 import Amount from "../../components/Amount";
 import Badge from "../../components/Badge";
 import Card from "../../components/Card";
@@ -12,7 +12,7 @@ import { ReactComponent as Terra } from "../../Terra.svg";
 import s from "./Header.module.scss";
 
 const thumbnail = { className: s.thumbnail, width: 80, height: 80 };
-const Header = (v: IValidator) => (
+const Header = (v: Validator) => (
   <Card
     title={
       <header className={s.header}>
@@ -24,7 +24,9 @@ const Header = (v: IValidator) => (
         <section>
           <h1 className={s.moniker}>
             {v.description.moniker}
-            <Badge className={c(getBadgeClassName(v.status), s.status)}>{v.status}</Badge>
+            <Badge className={c(getBadgeClassName(v.status), s.status)}>
+              {v.status}
+            </Badge>
           </h1>
           <p className={s.p}>
             <a

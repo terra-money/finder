@@ -1,7 +1,7 @@
 import React from "react";
 import Available from "./Available";
 
-const AvailableList = ({ list }: { list: IBalance[] }) => {
+const AvailableList = ({ list }: { list: Balance[] }) => {
   return (
     <>
       {list.map((a, i) => (

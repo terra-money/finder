@@ -40,7 +40,7 @@ export default (msg: Msg) => {
               <span>{key}</span>
               <span>
                 {Array.isArray(msg.value[key]) ? (
-                  msg.value[key].map((a: ICoin) => <Coin {...a} />)
+                  msg.value[key].map((a: Coin) => <Coin {...a} />)
                 ) : (
                   <Coin {...msg.value[key]} />
                 )}

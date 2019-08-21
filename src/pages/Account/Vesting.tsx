@@ -5,7 +5,7 @@ import AmountCard from "./AmountCard";
 import Schedule from "./Schedule";
 import s from "./Vesting.module.scss";
 
-const Vesting = ({ denom, total, schedules }: IVesting) => {
+const Vesting = ({ denom, total, schedules }: Vesting) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(isOpen => !isOpen);
 

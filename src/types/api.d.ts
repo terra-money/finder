@@ -1,4 +1,4 @@
-interface IFetchProps {
+interface FetchProps {
   url: string;
   params?: object;
 }

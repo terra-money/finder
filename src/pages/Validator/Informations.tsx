@@ -4,7 +4,7 @@ import Finder from "../../components/Finder";
 import format from "../../scripts/format";
 import s from "./Informations.module.scss";
 
-const Informations = (v: IValidator) => {
+const Informations = (v: Validator) => {
   /* render */
   const list = [
     {

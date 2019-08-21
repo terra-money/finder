@@ -16,7 +16,7 @@ const formatDenom = (denom: string): string => {
   return f && (f === "luna" ? "Luna" : f.slice(0, 2).toUpperCase() + "T");
 };
 
-const formatCoin = ({ amount, denom }: ICoin): string =>
+const formatCoin = ({ amount, denom }: Coin): string =>
   [formatAmount(amount), formatDenom(denom)].join(" ");
 
 export default {
@@ -24,7 +24,7 @@ export default {
   amount: formatAmount,
   denom: formatDenom,
   coin: formatCoin,
-  coins: (coins: ICoin[]): string[] => coins.map(formatCoin),
+  coins: (coins: Coin[]): string[] => coins.map(formatCoin),
 
   date: (param: string, config: { toLocale?: boolean } = {}): string => {
     const dt = DateTime.fromISO(param).toUTC();
