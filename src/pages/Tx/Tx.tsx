@@ -33,16 +33,15 @@ function getAmountAndDenom(tax: string) {
   };
 }
 
-function getTaxTotal(response: TxResponse) {
+export function parseLogs(logs: Log[]) {
   const result: { [key: string]: number } = {};
-  const logs = get(response, "logs");
-
-  if (!isArray(logs)) {
-    return ``;
-  }
 
   logs.forEach(log => {
-    if (!log || typeof log.log !== "string") {
+    if (
+      !log ||
+      typeof log.log !== "string" ||
+      (log.log && log.log.length === 0)
+    ) {
       return;
     }
 
@@ -78,6 +77,16 @@ function getTaxTotal(response: TxResponse) {
         })}`
     )
     .join(", ");
+}
+
+function getTaxTotal(response: TxResponse) {
+  const logs = get(response, "logs");
+
+  if (!isArray(logs)) {
+    return ``;
+  }
+
+  return parseLogs(logs);
 }
 
 const Txs = (props: RouteComponentProps<{ hash: string }>) => {

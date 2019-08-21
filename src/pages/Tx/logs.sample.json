@@ -1,0 +1,68 @@
+{
+  "no_tax": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": ""
+      }
+    ]
+  },
+  "krw_tax": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"308477000ukrw\"}"
+      }
+    ]
+  },
+  "multi_logs_single_denom": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      }
+    ]
+  },
+  "multi_logs_multi_denoms": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uluna\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uluna\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uusd\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uusd\"}"
+      }
+    ]
+  }
+}
