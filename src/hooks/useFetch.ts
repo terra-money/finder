@@ -2,12 +2,7 @@ import { useState, useEffect } from "react";
 import apiClient from "../apiClient";
 import { fcdUrl, getNetwork } from "../scripts/utility";
 
-interface IFetch {
-  url: string;
-  params?: object;
-  network: string;
-}
-export default ({ url, params, network }: IFetch) => {
+export default ({ url, params, network }: FetchProps & { network: string }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();

@@ -3,11 +3,8 @@ import FetchError from "../components/FetchError";
 import useFetch from "../hooks/useFetch";
 import NetworkContext from "../contexts/NetworkContext";
 
-interface IFetchProps {
-  url: string;
-  params?: object;
-}
-type Props = IFetchProps & { loading?: ReactNode; children: Function };
+type Props = FetchProps & { loading?: ReactNode; children: Function };
+
 const WithFetch = ({ url, params, loading, children }: Props) => {
   const { network } = useContext(NetworkContext);
 
