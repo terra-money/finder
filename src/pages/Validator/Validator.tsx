@@ -13,7 +13,7 @@ import Delegators from "./Delegators";
 const Validator = ({ match }: RouteComponentProps<{ address: string }>) => {
   return (
     <WithFetch url={`/v1/staking/validators/${match.params.address}`}>
-      {(v: IValidator) => (
+      {(v: Validator) => (
         <Page title="Validator Details">
           <Header {...v} />
 

@@ -1,4 +1,4 @@
-interface IBalance {
+interface Balance {
   denom: string;
   available: string;
   delegatable: string;
@@ -8,7 +8,7 @@ interface IBalance {
   unbonding: string;
 }
 
-interface ISchedule {
+interface Schedule {
   amount: string;
   startTime: any;
   endTime: any;
@@ -17,20 +17,20 @@ interface ISchedule {
   denom: string;
 }
 
-interface IVesting {
+interface Vesting {
   denom: string;
   total: string;
-  schedules: ISchedule[];
+  schedules: Schedule[];
 }
 
-interface IDelegation {
+interface Delegation {
   delegator_address: string;
   validator_address: string;
   shares: string;
 }
 
-interface IAccount {
-  balance: IBalance[];
-  vesting: IVesting[];
-  delegations: IDelegation[];
+interface Account {
+  balance: Balance[];
+  vesting: Vesting[];
+  delegations: Delegation[];
 }

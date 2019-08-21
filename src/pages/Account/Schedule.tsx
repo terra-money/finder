@@ -7,7 +7,7 @@ import Icon from "../../components/Icon";
 import s from "./Schedule.module.scss";
 import { getNetwork } from "../../scripts/utility";
 
-const Schedule = ({ denom, ...schedule }: ISchedule & { denom: string }) => {
+const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
   const { amount, startTime, endTime, ratio, freedRate } = schedule;
   const width = percent(freedRate);
   const now = new Date().getTime();

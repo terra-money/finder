@@ -13,7 +13,7 @@ const Block = (
   const { match } = props;
   const { block } = match.params;
   const { network } = useContext(networkContext);
-  function Height(block_meta: IBlockMeta) {
+  function Height(block_meta: BlockMeta) {
     return (
       <span className={s.height}>
         <span>{block_meta.header.height}</span>
@@ -27,7 +27,7 @@ const Block = (
     );
   }
 
-  function Txs(block_meta: IBlockMeta) {
+  function Txs(block_meta: BlockMeta) {
     return (
       <span className={s.txs}>
         {parseInt(block_meta.header.num_txs) > 0 ? (
@@ -42,7 +42,7 @@ const Block = (
     );
   }
 
-  function parentHash(block_meta: IBlockMeta) {
+  function parentHash(block_meta: BlockMeta) {
     return (
       <Link className={s.button} to={`${parseInt(block) - 1}`}>
         {block_meta.header.last_commit_hash}
@@ -52,7 +52,7 @@ const Block = (
 
   return (
     <WithFetch url={`/blocks/${block}`} loading={<Loading />}>
-      {(blockData: IBlock) => (
+      {(blockData: Block) => (
         <>
           <h2 className="title">
             Block<span>#{block}</span>

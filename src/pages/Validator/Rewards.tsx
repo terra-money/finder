@@ -7,7 +7,7 @@ import Amount from "../../components/Amount";
 import Card from "../../components/Card";
 import NoDataYet from "../../components/NoDataYet";
 
-const Rewards = ({ title, list }: { title: string; list: IReward[] }) => (
+const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
   <Card title={title} bordered>
     {!isEmpty(list) ? (
       <Table>

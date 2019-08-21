@@ -26,7 +26,7 @@ const Account = ({
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
-      {({ balance, vesting }: IAccount) => (
+      {({ balance, vesting }: Account) => (
         <>
           <h2 className="title">Account</h2>
           <Card title="Address" bordered headerClassName={s.cardTitle}>

@@ -30,9 +30,9 @@ export default (address: string, search: string, pathname: string) => {
     pathname,
     search: getNextSearch([["page", page]])
   });
-  const getRow = (tx: ITx) => {
-    const { tx: txBody, txhash, height, timestamp } = tx;
-    const isSuccess = get(tx, "logs[0].success");
+  const getRow = (response: TxResponse) => {
+    const { tx: txBody, txhash, height, timestamp } = response;
+    const isSuccess = get(response, "logs[0].success");
     return [
       <span>
         <Finder q="tx" v={txhash}>
@@ -55,7 +55,7 @@ export default (address: string, search: string, pathname: string) => {
   const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`];
   return (
     <WithFetch url={`/v1/txs`} params={{ account: address, page }}>
-      {({ txs, ...pagination }: Pagination & { txs: ITx[] }) =>
+      {({ txs, ...pagination }: Pagination & { txs: TxResponse[] }) =>
         !isEmpty(txs) ? (
           <Pagination {...pagination} title="transaction" link={getLink}>
             <FlexTable

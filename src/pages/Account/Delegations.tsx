@@ -13,7 +13,7 @@ import { isEmpty } from "lodash";
 import { BASE_DENOM } from "../../scripts/utility";
 
 export default (address: string) => {
-  const getRow = (d: IMyDelegation) => {
+  const getRow = (d: MyDelegation) => {
     const {
       amountDelegated,
       validatorName,
@@ -60,7 +60,7 @@ export default (address: string) => {
   const head = [`Validator`, `Status`, `Amount`, `Rewards`];
   return (
     <WithFetch url={`/v1/staking/${address}`}>
-      {(staking: IStaking) =>
+      {(staking: Staking) =>
         !isEmpty(staking.myDelegations) && (
           <Card title="Delegations" bordered headerClassName={s.cardTitle}>
             <div className={s.cardBodyContainer}>

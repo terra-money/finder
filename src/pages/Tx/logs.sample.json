@@ -1,0 +1,68 @@
+{
+  "no tax": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": ""
+      }
+    ]
+  },
+  "single denom": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"308477000ukrw\"}"
+      }
+    ]
+  },
+  "multiple logs with single denom": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw\"}"
+      }
+    ]
+  },
+  "multiple logs with multiple denoms": {
+    "logs": [
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uluna\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uluna\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10uusd,10ukrw,0uinvalid\"}"
+      },
+      {
+        "msg_index": "0",
+        "success": true,
+        "log": "{\"tax\":\"10ukrw,10uusd\"}"
+      }
+    ]
+  }
+}

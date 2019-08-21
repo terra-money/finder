@@ -1,67 +1,93 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
+import { get, isArray, isObject } from "lodash";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
-
-import { get, isEmpty } from "lodash";
-
 import s from "./Tx.module.scss";
 import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 
+function isSendTx(response: TxResponse) {
+  const type = get(response, "tx.value.msg[0].type");
+  return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
+}
+
+function getAmountAndDenom(tax: string) {
+  const result = /\d+/.exec(tax);
+
+  if (!result) {
+    return {
+      amount: 0,
+      denom: ""
+    };
+  }
+
+  return {
+    amount: +result[0],
+    denom: tax.slice(result[0].length)
+  };
+}
+
+export function getTotalTax(txResponse: TxResponse) {
+  const logs = get(txResponse, "logs");
+
+  if (!isArray(logs)) {
+    return ``;
+  }
+
+  const result: { [key: string]: number } = {};
+
+  logs.forEach(log => {
+    if (!isObject(log) || typeof log.log !== "string" || log.log.length === 0) {
+      return;
+    }
+
+    try {
+      const tax = JSON.parse(log.log).tax;
+
+      if (typeof tax !== "string" || tax.length === 0) {
+        return;
+      }
+
+      tax.split(",").forEach(tax => {
+        const { amount, denom } = getAmountAndDenom(tax);
+
+        if (denom && amount) {
+          result[denom] = amount + (result[denom] || 0);
+        }
+      });
+    } catch (err) {
+      // ignore JSON.parse error
+    }
+  });
+
+  const keys = Object.keys(result);
+
+  if (!keys.length) {
+    return ``;
+  }
+
+  return keys
+    .map(
+      denom =>
+        `${format.coin({
+          amount: result[denom].toString(),
+          denom
+        })}`
+    )
+    .join(", ");
+}
+
 const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const { match } = props;
   const { hash } = match.params;
 
-  function isSend(tx: ITx) {
-    const type = get(tx, "tx.value.msg[0].type");
-    return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
-  }
-
-  function taxString(tx: ITx) {
-    function taxNumber(tax: string) {
-      return parseInt(tax).toString() || ``;
-    }
-
-    function taxDenom(taxNumber: string, tax: string) {
-      const length = taxNumber.length;
-      if (!tax || !taxNumber) return ``;
-      return tax.slice(length);
-    }
-
-    const result: { [key: string]: number } = {};
-    const logs = get(tx, "logs");
-
-    if (isEmpty(logs)) return ``;
-
-    logs.map(log => {
-      if (!log.log) return null;
-      const tax = get(JSON.parse(log.log), "tax");
-      const taxArray: string[] = tax.split(",");
-
-      taxArray.map(tax => {
-        const denom = taxDenom(taxNumber(tax), tax);
-        result[denom] = Number(taxNumber(tax)) + Number(result[denom] || 0);
-        return null;
-      });
-      return null;
-    });
-    if (isEmpty(result)) return ``;
-    const resultArr = Object.keys(result).map(key => {
-      return `${format.coin({
-        amount: result[key].toString(),
-        denom: key
-      })} `;
-    });
-    console.log(resultArr.join(","));
-    return resultArr.join(",");
-  }
   return (
     <WithFetch url={`/txs/${hash}`} loading={<Loading />}>
-      {(tx: ITx) => (
+      {(response: TxResponse) => (
         <>
           <h2 className="title">Transaction Details</h2>
 
@@ -70,9 +96,9 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               <div className={s.head}>Transaction hash</div>
               <div className={s.body}>
                 <div>
-                  {tx.txhash}
+                  {response.txhash}
                   <Copy
-                    text={tx.txhash}
+                    text={response.txhash}
                     style={{ display: "inline-block", position: "absolute" }}
                   ></Copy>
                 </div>
@@ -81,13 +107,13 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Status</div>
               <div className={s.body}>
-                {get(tx, "logs[0].success") ? (
+                {get(response, "logs[0].success") ? (
                   <span className={s.success}>Success</span>
                 ) : (
                   <>
                     <p className={s.fail}>Failed</p>
                     <p className={s.failedMsg}>
-                      {get(tx, "logs[0].log") || get(tx, "raw_log")}
+                      {get(response, "logs[0].log") || get(response, "raw_log")}
                     </p>
                   </>
                 )}
@@ -96,52 +122,52 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Block</div>
               <div className={s.body}>
-                <Finder q="blocks" v={tx.height}>
-                  {tx.height}
+                <Finder q="blocks" v={response.height}>
+                  {response.height}
                 </Finder>
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Timestamp</div>
               <div className={s.body}>
-                {fromISOTime(tx.timestamp.toString())} (UTC)
+                {fromISOTime(response.timestamp.toString())} (UTC)
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Transaction fee</div>
               <div className={s.body}>
-                {tx.tx.value.fee.amount
+                {response.tx.value.fee.amount
                   ? format.coin({
-                      amount: get(tx, `tx.value.fee.amount[0].amount`),
-                      denom: get(tx, `tx.value.fee.amount[0].denom`)
+                      amount: get(response, `tx.value.fee.amount[0].amount`),
+                      denom: get(response, `tx.value.fee.amount[0].denom`)
                     })
                   : "0 Luna"}
               </div>
             </div>
-            {isSend(tx) && (
+            {isSendTx(response) && (
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
-                <div className={s.body}>{taxString(tx)}</div>
+                <div className={s.body}>{getTotalTax(response)}</div>
               </div>
             )}
             <div className={s.row}>
               <div className={s.head}>Gas (Used/Requested)</div>
               <div className={s.body}>
-                {parseInt(tx.gas_used).toLocaleString()}/
-                {parseInt(tx.gas_wanted).toLocaleString()}
+                {parseInt(response.gas_used).toLocaleString()}/
+                {parseInt(response.gas_wanted).toLocaleString()}
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Memo</div>
               <div className={s.body}>
-                {tx.tx.value.memo ? tx.tx.value.memo : "-"}
+                {response.tx.value.memo ? response.tx.value.memo : "-"}
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Message</div>
               <div className={s.body}>
                 <div style={{ overflowX: "hidden", width: "100%" }}>
-                  {tx.tx.value.msg.map(MsgBox)}
+                  {response.tx.value.msg.map(MsgBox)}
                 </div>
               </div>
             </div>

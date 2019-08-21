@@ -15,7 +15,7 @@ import Coin from "../../components/Coin";
 import { BASE_DENOM } from "../../scripts/utility";
 
 export default (address: string) => {
-  const getRow = (u: IUndelegation) => {
+  const getRow = (u: Undelegation) => {
     const {
       amount,
       releaseTime,
@@ -57,7 +57,7 @@ export default (address: string) => {
   const head = [`Validator`, `Status`, `Block`, `Amount`, `Release time`];
   return (
     <WithFetch url={`/v1/staking/${address}`}>
-      {(staking: IStaking) =>
+      {(staking: Staking) =>
         !isEmpty(staking.undelegations) && (
           <Card title="Undelegations" bordered headerClassName={s.cardTitle}>
             <div className={s.cardBodyContainer}>
