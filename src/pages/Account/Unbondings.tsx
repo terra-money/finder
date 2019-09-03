@@ -30,10 +30,7 @@ export default (address: string) => {
           <Finder q="validator" v={validatorAddress}>
             {validatorName}
           </Finder>
-        </span>
-      ))(),
-      (() => (
-        <span>
+          &nbsp;&nbsp;
           <Badge className={c(getBadgeClassName(validatorStatus))}>
             {validatorStatus}
           </Badge>
@@ -54,7 +51,7 @@ export default (address: string) => {
       (() => <span>{fromISOTime(releaseTime)}</span>)()
     ];
   };
-  const head = [`Validator`, `Status`, `Block`, `Amount`, `Release time`];
+  const head = [`Validator`, `Block`, `Amount`, `Release time`];
   return (
     <WithFetch url={`/v1/staking/${address}`}>
       {(staking: Staking) =>
