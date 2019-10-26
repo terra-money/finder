@@ -3,6 +3,7 @@ import React from "react";
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
 import Pagination from "../../components/Pagination";
+import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
@@ -54,7 +55,11 @@ export default (address: string, search: string, pathname: string) => {
 
   const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`];
   return (
-    <WithFetch url={`/v1/txs`} params={{ account: address, page }}>
+    <WithFetch
+      url={`/v1/txs`}
+      params={{ account: address, page }}
+      loading={<Loading />}
+    >
       {({ txs, ...pagination }: Pagination & { txs: TxResponse[] }) =>
         !isEmpty(txs) ? (
           <Pagination {...pagination} title="transaction" link={getLink}>
