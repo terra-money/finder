@@ -9,7 +9,7 @@ export default [
   {
     key: "soju-0010",
     lcd: "https://soju-lcd.terra.dev",
-    fcd: "https://fitz.terra.money:5561",
+    fcd: "https://soju-fcd.terra.dev",
     rpc: "https://rpc.terra.dev",
     wss: "ws://rpc.terra.dev/websocket"
   },
