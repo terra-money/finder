@@ -7,6 +7,13 @@ export default [
     wss: "ws://rpc.terra.dev/websocket"
   },
   {
+    key: "soju-0010",
+    lcd: "https://soju-lcd.terra.dev",
+    fcd: "https://fitz.terra.money:5561",
+    rpc: "https://rpc.terra.dev",
+    wss: "ws://rpc.terra.dev/websocket"
+  },
+  {
     key: "vodka",
     lcd: "https://vodka-lcd.terra.dev",
     fcd: "https://vodka-fcd.terra.dev",
