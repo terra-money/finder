@@ -7,7 +7,7 @@ export default [
     wss: "ws://rpc.terra.dev/websocket"
   },
   {
-    key: "soju-0011",
+    key: "soju-0012",
     lcd: "https://soju-lcd.terra.dev",
     fcd: "https://soju-fcd.terra.dev",
     rpc: "https://rpc.terra.dev",
