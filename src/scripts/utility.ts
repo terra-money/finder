@@ -41,18 +41,6 @@ export function fcdUrl(key: string) {
     : networksConfig.filter(n => n.key === key)[0].fcd;
 }
 
-export function getNetwork() {
-  return localStorage.getItem("network") || DEFAULT_NETWORK;
-}
-
-export function setLocalStorageNetwork(network: string) {
-  const keys = networksConfig.map(n => n.key);
-
-  const key = keys.indexOf(network) > -1 ? network : DEFAULT_NETWORK;
-
-  localStorage.setItem("network", key);
-}
-
 export function isTerraAddress(keyword: string) {
   if (keyword && keyword.length === 44 && keyword.indexOf("terra") > -1) {
     return true;
