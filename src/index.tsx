@@ -17,7 +17,7 @@ if (
   Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 }
 
-class Main extends Component {
+class Root extends Component {
   setNetwork = (network: string) => {
     this.setState({
       network: network
@@ -42,7 +42,7 @@ class Main extends Component {
 
 ReactDOM.render(
   <Router>
-    <Main />
+    <Root />
   </Router>,
   document.getElementById("root")
 );
