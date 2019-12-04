@@ -86,7 +86,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
 
   return (
-    <WithFetch url={`/txs/${hash}`} loading={<Loading />}>
+    <WithFetch url={`/v1/tx/${hash}`} loading={<Loading />}>
       {(response: TxResponse) => (
         <>
           <h2 className="title">Transaction Details</h2>
@@ -113,7 +113,8 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
                   <>
                     <p className={s.fail}>Failed</p>
                     <p className={s.failedMsg}>
-                      {get(response, "logs[0].log") || get(response, "raw_log")}
+                      {get(response, "logs[0].log.message") ||
+                        get(response, "raw_log")}
                     </p>
                   </>
                 )}
