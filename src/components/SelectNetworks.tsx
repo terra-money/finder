@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 
 import s from "./SelectNetworks.module.scss";
 import networksConfig from "../config/networks";
-import { setLocalStorageNetwork, DEFAULT_NETWORK } from "../scripts/utility";
+import NetworkContext from "../contexts/NetworkContext";
 
 type Props = {
   className?: string;
 };
 const SelectNetworks = (props: Props) => {
-  const pathArray = window.location.pathname.split("/");
-
-  const [network, setNetwork] = useState(pathArray[1] || DEFAULT_NETWORK); // default network
-
-  useEffect(() => {
-    setLocalStorageNetwork(network);
-  }, [network]);
+  const { network, setNetwork } = useContext(NetworkContext);
 
   return (
     <div className={props.className}>

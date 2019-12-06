@@ -1,11 +1,12 @@
 import "react-app-polyfill/ie9";
 import "core-js";
-import React from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./index.scss";
 import Index from "./pages/Index/Index";
 import App from "./layouts/App";
+import NetworkContext from "./contexts/NetworkContext";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
 
@@ -16,12 +17,32 @@ if (
   Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 }
 
+class Root extends Component {
+  setNetwork = (network: string) => {
+    this.setState({
+      network: network
+    });
+  };
+  state = {
+    network: window.location.pathname.split("/")[1],
+    setNetwork: this.setNetwork
+  };
+
+  render() {
+    return (
+      <NetworkContext.Provider value={this.state}>
+        <Switch>
+          <Route path="/" exact component={Index} />
+          <App />
+        </Switch>
+      </NetworkContext.Provider>
+    );
+  }
+}
+
 ReactDOM.render(
   <Router>
-    <Switch>
-      <Route path="/" exact component={Index} />
-      <App />
-    </Switch>
+    <Root />
   </Router>,
   document.getElementById("root")
 );

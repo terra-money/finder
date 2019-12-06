@@ -1,14 +1,9 @@
-import { createContext } from "react";
+import React from "react";
+import { DEFAULT_NETWORK } from "../scripts/utility";
 
-const initialState = {
-  network: "",
-  setNetwork: () => {}
-};
+const NetworkContext = React.createContext({
+  network: DEFAULT_NETWORK,
+  setNetwork: (network: string) => {}
+});
 
-interface NetworkContextInterface {
-  network: string;
-  setNetwork: Function;
-}
-
-const NetworkContext = createContext<NetworkContextInterface>(initialState);
 export default NetworkContext;

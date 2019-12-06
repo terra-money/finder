@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import apiClient from "../apiClient";
-import { fcdUrl, getNetwork } from "../scripts/utility";
+import { fcdUrl } from "../scripts/utility";
 
 export default ({ url, params, network }: FetchProps & { network: string }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
 
-  const fcd = fcdUrl(getNetwork());
+  const fcd = fcdUrl(network);
 
   const init = (): void => {
     setError(undefined);

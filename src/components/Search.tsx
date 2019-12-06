@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
-import { handleSearch, getNetwork } from "../scripts/utility";
+import { handleSearch } from "../scripts/utility";
 import s from "./Search.module.scss";
 import networkContext from "../contexts/NetworkContext";
 
@@ -10,14 +10,13 @@ type Props = {
 
 const Search = ({ className, history }: Props) => {
   const [value, setValue] = useState(``);
-  const { setNetwork } = useContext(networkContext);
+  const { network } = useContext(networkContext);
 
   const handleSubmit: Submit = async e => {
     e.preventDefault();
 
-    setNetwork(getNetwork());
     if (value) {
-      history.push(handleSearch(value, getNetwork()));
+      history.push(handleSearch(value, network));
     }
   };
 
