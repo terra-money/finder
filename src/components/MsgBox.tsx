@@ -18,7 +18,7 @@ export default (msg: Msg) => {
       {Object.keys(msg.value).map(key => {
         if (isTerraAddress(msg.value[key])) {
           return (
-            <p key={JSON.stringify(msg.value[key])}>
+            <p key={key + JSON.stringify(msg.value[key])}>
               <span>{key}</span>
               <Finder q="account" v={msg.value[key]}>
                 {msg.value[key]}
@@ -27,7 +27,7 @@ export default (msg: Msg) => {
           );
         } else if (isValidatorAddress(msg.value[key])) {
           return (
-            <p key={JSON.stringify(msg.value[key])}>
+            <p key={key + JSON.stringify(msg.value[key])}>
               <span>{key}</span>
               <Finder q="validator" v={msg.value[key]}>
                 {msg.value[key]}
@@ -36,11 +36,11 @@ export default (msg: Msg) => {
           );
         } else if (key === "amount" || key === "offer_coin") {
           return (
-            <p key={JSON.stringify(msg.value[key])}>
+            <p key={key + JSON.stringify(msg.value[key])}>
               <span>{key}</span>
               <span>
                 {Array.isArray(msg.value[key]) ? (
-                  msg.value[key].map((a: Coin) => <Coin {...a} />)
+                  msg.value[key].map((a: Coin) => <Coin key={a.denom} {...a} />)
                 ) : (
                   <Coin {...msg.value[key]} />
                 )}
@@ -49,14 +49,14 @@ export default (msg: Msg) => {
           );
         } else if (key === "ask_denom" || key === "denom") {
           return (
-            <p key={JSON.stringify(msg.value[key])}>
+            <p key={key + JSON.stringify(msg.value[key])}>
               <span>{key}</span>
               <span>{format.denom(msg.value[key])}</span>
             </p>
           );
         } else {
           return (
-            <p key={JSON.stringify(msg.value[key])}>
+            <p key={key + JSON.stringify(msg.value[key])}>
               <span>{key}</span>
               {isArray(msg.value[key]) ? (
                 <div>

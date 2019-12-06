@@ -35,18 +35,18 @@ export function getTotalTax(txResponse: TxResponse) {
   const logs = get(txResponse, "logs");
 
   if (!isArray(logs)) {
-    return ``;
+    return `0 Luna`;
   }
 
   const result: { [key: string]: number } = {};
 
   logs.forEach(log => {
-    if (!isObject(log) || typeof log.log !== "string" || log.log.length === 0) {
+    if (!isObject(log)) {
       return;
     }
 
     try {
-      const tax = JSON.parse(log.log).tax;
+      const tax = get(log, "log.tax");
 
       if (typeof tax !== "string" || tax.length === 0) {
         return;
@@ -67,7 +67,7 @@ export function getTotalTax(txResponse: TxResponse) {
   const keys = Object.keys(result);
 
   if (!keys.length) {
-    return ``;
+    return `0 Luna`;
   }
 
   return keys
@@ -75,6 +75,44 @@ export function getTotalTax(txResponse: TxResponse) {
       denom =>
         `${format.coin({
           amount: result[denom].toString(),
+          denom
+        })}`
+    )
+    .join(", ");
+}
+
+function getTotalFee(txResponse: TxResponse) {
+  const fee = get(txResponse, "tx.value.fee");
+  const amount = fee.amount;
+  const result: { [key: string]: string } = {};
+
+  if (!amount) {
+    return `0 Luna`;
+  }
+
+  amount.forEach((a: Coin) => {
+    if (!isObject(a)) {
+      return;
+    }
+
+    try {
+      result[a.denom] = a.amount + (result[a.denom] || 0);
+    } catch (err) {
+      // ignore JSON.parse error
+    }
+  });
+
+  const keys = Object.keys(result);
+
+  if (!keys.length) {
+    return `0 Luna`;
+  }
+
+  return keys
+    .map(
+      denom =>
+        `${format.coin({
+          amount: result[denom],
           denom
         })}`
     )
@@ -136,14 +174,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             </div>
             <div className={s.row}>
               <div className={s.head}>Transaction fee</div>
-              <div className={s.body}>
-                {response.tx.value.fee.amount
-                  ? format.coin({
-                      amount: get(response, `tx.value.fee.amount[0].amount`),
-                      denom: get(response, `tx.value.fee.amount[0].denom`)
-                    })
-                  : "0 Luna"}
-              </div>
+              <div className={s.body}>{getTotalFee(response)}</div>
             </div>
             {isSendTx(response) && (
               <div className={s.row}>
