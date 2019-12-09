@@ -1,24 +1,15 @@
 export default [
   {
     key: "columbus-2",
-    lcd: "https://lcd.terra.dev",
-    fcd: "https://fcd.terra.dev",
-    rpc: "https://rpc.terra.dev",
-    wss: "ws://rpc.terra.dev/websocket"
+    fcd: "https://fcd.terra.dev"
   },
   {
     key: "soju-0013",
-    lcd: "https://soju-lcd.terra.dev",
-    fcd: "https://soju-fcd.terra.dev",
-    rpc: "https://rpc.terra.dev",
-    wss: "ws://rpc.terra.dev/websocket"
+    fcd: "https://soju-fcd.terra.dev"
   },
   {
-    key: "vodka",
-    lcd: "https://vodka-lcd.terra.dev",
-    fcd: "https://vodka-fcd.terra.dev",
-    rpc: "https://rpc.terra.dev",
-    wss: "ws://rpc.terra.dev/websocket"
+    key: "vodka-0001",
+    fcd: "https://vodka-fcd.terra.dev"
   },
   {
     key: "columbus-1",
