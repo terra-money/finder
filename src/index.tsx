@@ -9,6 +9,7 @@ import App from "./layouts/App";
 import NetworkContext from "./contexts/NetworkContext";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
+import { DEFAULT_NETWORK } from "./scripts/utility";
 
 if (
   process.env.REACT_APP_SENTRY_DSN &&
@@ -24,7 +25,7 @@ class Root extends Component {
     });
   };
   state = {
-    network: window.location.pathname.split("/")[1],
+    network: window.location.pathname.split("/")[1] || DEFAULT_NETWORK,
     setNetwork: this.setNetwork
   };
 
