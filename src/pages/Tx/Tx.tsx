@@ -96,7 +96,7 @@ function getTotalFee(txResponse: TxResponse) {
     }
 
     try {
-      result[a.denom] = a.amount + (result[a.denom] || 0);
+      result[a.denom] = a.amount;
     } catch (err) {
       // ignore JSON.parse error
     }
