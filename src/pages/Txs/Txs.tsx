@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import s from "./Txs.module.scss";
 import FlexTable from "../../components/FlexTable";
 import Pagination from "../../components/Pagination";
@@ -21,12 +21,12 @@ const getRow = (response: TxResponse) => {
     </span>,
     <span className="type">{sliceMsgType(tx.value.msg[0].type)}</span>,
     <span>
-      {tx.value.fee.amount
-        ? format.coin({
+      {isEmpty(tx.value.fee.amount)
+        ? "0 Luna"
+        : format.coin({
             amount: get(tx, `value.fee.amount[0].amount`),
             denom: get(tx, `value.fee.amount[0].denom`)
-          })
-        : "0 Luna"}
+          })}
     </span>,
     <span>
       <Finder q="blocks" v={height}>
