@@ -25,7 +25,7 @@ describe("getTotalTax", () => {
   test(`no tax`, () => {
     // 3D65E73CF9C401A8736AE1A52AF357EEFD92AA4732B33D3C9BBA35D5F655203F
     expect(getTotalTax({ ...dummyTx, logs: sample["no tax"].logs })).toEqual(
-      ``
+      "0 Luna"
     );
   });
 

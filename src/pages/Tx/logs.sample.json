@@ -4,7 +4,9 @@
       {
         "msg_index": "0",
         "success": true,
-        "log": ""
+        "log": {
+          "tax": ""
+        }
       }
     ]
   },
@@ -13,7 +15,9 @@
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"308477000ukrw\"}"
+        "log": {
+          "tax": "308477000ukrw"
+        }
       }
     ]
   },
@@ -22,22 +26,30 @@
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw\"}"
+        "log": {
+          "tax": "10ukrw"
+        }
       },
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw\"}"
+        "log": {
+          "tax": "10ukrw"
+        }
       },
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw\"}"
+        "log": {
+          "tax": "10ukrw"
+        }
       },
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw\"}"
+        "log": {
+          "tax": "10ukrw"
+        }
       }
     ]
   },
@@ -46,22 +58,30 @@
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw,10uluna\"}"
+        "log": {
+          "tax": "10ukrw,10uluna"
+        }
       },
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw,10uluna\"}"
+        "log": {
+          "tax": "10ukrw,10uluna"
+        }
       },
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10uusd,10ukrw,0uinvalid\"}"
+        "log": {
+          "tax": "10uusd,10ukrw,0uinvalid"
+        }
       },
       {
         "msg_index": "0",
         "success": true,
-        "log": "{\"tax\":\"10ukrw,10uusd\"}"
+        "log": {
+          "tax": "10ukrw,10uusd"
+        }
       }
     ]
   }

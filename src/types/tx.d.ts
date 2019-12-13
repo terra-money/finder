@@ -1,7 +1,9 @@
 interface Log {
   msg_index: string;
   success: boolean;
-  log: string;
+  log: {
+    tax: string;
+  };
 }
 
 interface Tag {
