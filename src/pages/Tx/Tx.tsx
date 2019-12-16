@@ -16,7 +16,7 @@ function isSendTx(response: TxResponse) {
 }
 
 function getAmountAndDenom(tax: string) {
-  const result = /\d+/.exec(tax);
+  const result = /-?\d*\.?\d+/g.exec(tax);
 
   if (!result) {
     return {
