@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
@@ -12,8 +12,11 @@ import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import c from "classnames";
 import s from "./Account.module.scss";
+import NetworkContext from "../../contexts/NetworkContext";
 
 export default (address: string, search: string, pathname: string) => {
+  const { network } = useContext(NetworkContext);
+
   /* URLSearchParams: tab */
   const getSearch = () => new URLSearchParams(search);
   const getNextSearch = (entries: string[][]) => {
@@ -57,7 +60,7 @@ export default (address: string, search: string, pathname: string) => {
   return (
     <WithFetch
       url={`/v1/txs`}
-      params={{ account: address, page }}
+      params={{ account: address, page, chainId: network }}
       loading={<Loading />}
     >
       {({ txs, ...pagination }: Pagination & { txs: TxResponse[] }) =>
