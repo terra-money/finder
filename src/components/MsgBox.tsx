@@ -56,18 +56,18 @@ export default ({ msg }: { msg: Msg }) => {
           );
         } else {
           return (
-            <div key={index}>
+            <p key={index}>
               <span>{key}</span>
               {isArray(msg.value[key]) ? (
-                <div>
+                <span>
                   {msg.value[key].map((j: any, index: number) => (
                     <p key={index}>{`${JSON.stringify(j, undefined, 2)}`}</p>
                   ))}
-                </div>
+                </span>
               ) : (
                 <span>{JSON.stringify(msg.value[key])}</span>
               )}
-            </div>
+            </p>
           );
         }
       })}
