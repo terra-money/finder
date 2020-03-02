@@ -1,6 +1,5 @@
 import React from "react";
 import FlexTable from "../../components/FlexTable";
-import WithFetch from "../../HOCs/WithFetch";
 import Finder from "../../components/Finder";
 import s from "./Account.module.scss";
 
@@ -14,7 +13,7 @@ import Coin from "../../components/Coin";
 
 import { BASE_DENOM } from "../../scripts/utility";
 
-export default (address: string) => {
+export default ({ staking }: { staking: Staking }) => {
   const getRow = (u: Undelegation) => {
     const {
       amount,
@@ -52,22 +51,16 @@ export default (address: string) => {
     ];
   };
   const head = [`Validator`, `Block`, `Amount`, `Release time`];
-  return (
-    <WithFetch url={`/v1/staking/${address}`}>
-      {(staking: Staking) =>
-        !isEmpty(staking.undelegations) && (
-          <Card title="Undelegations" bordered headerClassName={s.cardTitle}>
-            <div className={s.cardBodyContainer}>
-              <FlexTable
-                head={head}
-                body={staking.undelegations.map(getRow)}
-                tableStyle={{ border: "none" }}
-                headStyle={{ background: "none" }}
-              ></FlexTable>
-            </div>
-          </Card>
-        )
-      }
-    </WithFetch>
-  );
+  return !isEmpty(staking.undelegations) ? (
+    <Card title="Undelegations" bordered headerClassName={s.cardTitle}>
+      <div className={s.cardBodyContainer}>
+        <FlexTable
+          head={head}
+          body={staking.undelegations.map(getRow)}
+          tableStyle={{ border: "none" }}
+          headStyle={{ background: "none" }}
+        ></FlexTable>
+      </div>
+    </Card>
+  ) : null;
 };

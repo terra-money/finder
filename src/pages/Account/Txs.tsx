@@ -14,7 +14,15 @@ import c from "classnames";
 import s from "./Account.module.scss";
 import NetworkContext from "../../contexts/NetworkContext";
 
-export default (address: string, search: string, pathname: string) => {
+export default ({
+  address,
+  search,
+  pathname
+}: {
+  address: string;
+  search: string;
+  pathname: string;
+}) => {
   const { network } = useContext(NetworkContext);
 
   /* URLSearchParams: tab */
@@ -36,7 +44,7 @@ export default (address: string, search: string, pathname: string) => {
   });
   const getRow = (response: TxResponse) => {
     const { tx: txBody, txhash, height, timestamp } = response;
-    const isSuccess = response.code === 0;
+    const isSuccess = !response.code;
     return [
       <span>
         <Finder q="tx" v={txhash}>

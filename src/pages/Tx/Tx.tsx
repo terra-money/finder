@@ -145,7 +145,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Status</div>
               <div className={s.body}>
-                {response.code === 0 ? (
+                {!response.code ? (
                   <span className={s.success}>Success</span>
                 ) : (
                   <>
@@ -199,7 +199,9 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               <div className={s.head}>Message</div>
               <div className={s.body}>
                 <div style={{ overflowX: "hidden", width: "100%" }}>
-                  {response.tx.value.msg.map(MsgBox)}
+                  {response.tx.value.msg.map((msg, index) => (
+                    <MsgBox msg={msg} key={index} />
+                  ))}
                 </div>
               </div>
             </div>
