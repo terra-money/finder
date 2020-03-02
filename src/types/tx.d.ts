@@ -1,9 +1,15 @@
 interface Log {
   msg_index: string;
   success: boolean;
-  log: {
-    tax: string;
-  };
+  // log can be empty string with success
+  log:
+    | string
+    | {
+        tax: string;
+        // when failure
+        code?: number;
+        message?: string;
+      };
 }
 
 interface Tag {
@@ -51,6 +57,7 @@ interface Tx {
 interface TxResponse {
   height: string;
   txhash: string;
+  code: number;
   raw_log: string;
   logs: Log[];
   gas_wanted: string;

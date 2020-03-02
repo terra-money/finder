@@ -11,9 +11,16 @@ const formatAmount = (amount: BigNumber.Value): string =>
     .toFormat(6);
 
 const formatDenom = (denom: string): string => {
-  if (!denom) return "";
-  const f = denom.slice(1);
-  return f && (f === "luna" ? "Luna" : f.slice(0, 2).toUpperCase() + "T");
+  if (!denom) {
+    return "";
+  }
+
+  if (denom[0] === "u") {
+    const f = denom.slice(1);
+    return f === "luna" ? "Luna" : f.slice(0, 2).toUpperCase() + "T";
+  }
+
+  return denom;
 };
 
 const formatCoin = ({ amount, denom }: Coin): string =>

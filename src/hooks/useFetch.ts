@@ -19,11 +19,12 @@ export default ({ url, params, network }: FetchProps & { network: string }) => {
 
       try {
         const result = await apiClient.get(fcd + url, { params });
+
         if (result.data === null) {
-          setError("Data is null");
-        } else {
-          setData(result.data);
+          throw new Error("Data is null");
         }
+
+        setData(result.data);
       } catch (error) {
         setError(error);
       }

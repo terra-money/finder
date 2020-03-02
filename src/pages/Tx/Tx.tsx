@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { get, isArray, isObject } from "lodash";
+import { get, last, isArray, isObject } from "lodash";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
@@ -145,13 +145,13 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Status</div>
               <div className={s.body}>
-                {get(response, "logs[0].success") ? (
+                {response.code === 0 ? (
                   <span className={s.success}>Success</span>
                 ) : (
                   <>
                     <p className={s.fail}>Failed</p>
                     <p className={s.failedMsg}>
-                      {get(response, "logs[0].log.message") ||
+                      {get(last(response.logs), "log.message") ||
                         get(response, "raw_log")}
                     </p>
                   </>
