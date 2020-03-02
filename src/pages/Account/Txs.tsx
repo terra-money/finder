@@ -43,11 +43,11 @@ export default ({
     search: getNextSearch([["page", page]])
   });
   const getRow = (response: TxResponse) => {
-    const { tx: txBody, txhash, height, timestamp } = response;
+    const { tx: txBody, txhash, height, timestamp, chainId } = response;
     const isSuccess = !response.code;
     return [
       <span>
-        <Finder q="tx" v={txhash}>
+        <Finder q="tx" network={chainId} v={txhash}>
           {format.truncate(txhash, [8, 8])}
         </Finder>
       </span>,
@@ -56,7 +56,7 @@ export default ({
         {isSuccess ? `Success` : `Failed`}
       </span>,
       <span>
-        <Finder q="blocks" v={height}>
+        <Finder q="blocks" network={chainId} v={height}>
           {height}
         </Finder>
       </span>,

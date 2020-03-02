@@ -9,15 +9,15 @@ type Props = {
   children: string;
   className?: string;
   brand?: boolean;
-  caret?: boolean;
+  network?: string;
 };
 
-const Finder = ({ q, v, children, className, brand, caret }: Props) => {
-  const { network } = useContext(NetworkContext);
+const Finder = ({ q, v, children, className, brand, network }: Props) => {
+  const { network: contextNetwork } = useContext(NetworkContext);
 
   return (
     <Link
-      to={`/${network}/${q}/${v || children}`}
+      to={`/${network || contextNetwork}/${q}/${v || children}`}
       className={c(className, brand && "text-primary")}
       rel="noopener noreferrer"
     >
