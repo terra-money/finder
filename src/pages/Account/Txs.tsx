@@ -7,7 +7,7 @@ import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
-import { isEmpty, get } from "lodash";
+import { isEmpty } from "lodash";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import c from "classnames";
@@ -36,7 +36,7 @@ export default (address: string, search: string, pathname: string) => {
   });
   const getRow = (response: TxResponse) => {
     const { tx: txBody, txhash, height, timestamp } = response;
-    const isSuccess = get(response, "logs[0].success");
+    const isSuccess = response.code === 0;
     return [
       <span>
         <Finder q="tx" v={txhash}>

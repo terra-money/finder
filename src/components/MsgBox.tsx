@@ -10,9 +10,9 @@ import format from "../scripts/format";
 import Finder from "./Finder";
 import { isArray } from "lodash";
 
-export default (msg: Msg) => {
+export default (msg: Msg, index: number) => {
   return (
-    <div className={s.msgBox} key={JSON.stringify(msg.value)}>
+    <div className={s.msgBox} key={index}>
       <div className={s.type}>{sliceMsgType(msg.type)}</div>
 
       {Object.keys(msg.value).map(key => {

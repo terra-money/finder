@@ -1,7 +1,6 @@
 import React from "react";
 // import s from "./FetchError.module.scss";
 // import { Link } from "react-router-dom";
-import { AxiosError } from "axios";
 // import * as Sentry from "@sentry/browser";
 import NotFound from "./NotFound";
 
@@ -9,8 +8,9 @@ import NotFound from "./NotFound";
 
 type Props = {
   url: string;
-  error: AxiosError;
+  error?: Error;
 };
+
 export default ({ url, error }: Props) => {
   // let isOffline = false;
   // const statusCode = get(error, `response.status`);

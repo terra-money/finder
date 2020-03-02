@@ -10,10 +10,10 @@ The Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explo
 
 ## Project setup
 ```
-yarn install
+npm install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-yarn start
+npm start
 ```
