@@ -14,7 +14,15 @@ import c from "classnames";
 import s from "./Account.module.scss";
 import NetworkContext from "../../contexts/NetworkContext";
 
-export default (address: string, search: string, pathname: string) => {
+export default ({
+  address,
+  search,
+  pathname
+}: {
+  address: string;
+  search: string;
+  pathname: string;
+}) => {
   const { network } = useContext(NetworkContext);
 
   /* URLSearchParams: tab */
@@ -35,11 +43,11 @@ export default (address: string, search: string, pathname: string) => {
     search: getNextSearch([["page", page]])
   });
   const getRow = (response: TxResponse) => {
-    const { tx: txBody, txhash, height, timestamp } = response;
-    const isSuccess = response.code === 0;
+    const { tx: txBody, txhash, height, timestamp, chainId } = response;
+    const isSuccess = !response.code;
     return [
       <span>
-        <Finder q="tx" v={txhash}>
+        <Finder q="tx" network={chainId} v={txhash}>
           {format.truncate(txhash, [8, 8])}
         </Finder>
       </span>,
@@ -48,7 +56,7 @@ export default (address: string, search: string, pathname: string) => {
         {isSuccess ? `Success` : `Failed`}
       </span>,
       <span>
-        <Finder q="blocks" v={height}>
+        <Finder q="blocks" network={chainId} v={height}>
           {height}
         </Finder>
       </span>,

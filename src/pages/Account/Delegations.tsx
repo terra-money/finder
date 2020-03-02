@@ -6,13 +6,12 @@ import Badge from "../../components/Badge";
 import c from "classnames";
 import { getBadgeClassName } from "../../scripts/helper";
 import Card from "../../components/Card";
-import WithFetch from "../../HOCs/WithFetch";
 import Coin from "../../components/Coin";
 import Finder from "../../components/Finder";
 import { isEmpty } from "lodash";
 import { BASE_DENOM } from "../../scripts/utility";
 
-export default (address: string) => {
+export default ({ staking }: { staking: Staking }) => {
   const getRow = (d: MyDelegation) => {
     const {
       amountDelegated,
@@ -58,22 +57,16 @@ export default (address: string) => {
   };
 
   const head = [`Validator`, `Status`, `Amount`, `Rewards`];
-  return (
-    <WithFetch url={`/v1/staking/${address}`}>
-      {(staking: Staking) =>
-        !isEmpty(staking.myDelegations) && (
-          <Card title="Delegations" bordered headerClassName={s.cardTitle}>
-            <div className={s.cardBodyContainer}>
-              <FlexTable
-                head={head}
-                body={staking.myDelegations.map(getRow)}
-                tableStyle={{ border: "none" }}
-                headStyle={{ background: "none" }}
-              ></FlexTable>
-            </div>
-          </Card>
-        )
-      }
-    </WithFetch>
-  );
+  return !isEmpty(staking.myDelegations) ? (
+    <Card title="Delegations" bordered headerClassName={s.cardTitle}>
+      <div className={s.cardBodyContainer}>
+        <FlexTable
+          head={head}
+          body={staking.myDelegations.map(getRow)}
+          tableStyle={{ border: "none" }}
+          headStyle={{ background: "none" }}
+        ></FlexTable>
+      </div>
+    </Card>
+  ) : null;
 };

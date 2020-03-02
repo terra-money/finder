@@ -57,7 +57,7 @@ interface Tx {
 interface TxResponse {
   height: string;
   txhash: string;
-  code: number;
+  code?: number;
   raw_log: string;
   logs: Log[];
   gas_wanted: string;
@@ -65,4 +65,5 @@ interface TxResponse {
   tags: Tag[];
   tx: Tx;
   timestamp: Date;
+  chainId?: string;
 }
