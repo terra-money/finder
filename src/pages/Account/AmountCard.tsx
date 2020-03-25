@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { lte } from "../../scripts/math";
 import Card from "../../components/Card";
 import Amount from "../../components/Amount";
 import s from "./AmountCard.module.scss";
@@ -16,7 +17,7 @@ const AmountCard = ({ denom, amount, button, children }: Props) => (
       <header className={s.header}>
         <h1 className={s.denom}>{denom}</h1>
         <section className={s.action}>
-          <Amount className={s.amount}>{amount}</Amount>
+          <Amount className={s.amount}>{lte(amount, 0) ? "0" : amount}</Amount>
           <div className={s.button}>{button}</div>
         </section>
       </header>
