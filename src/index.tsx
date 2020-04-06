@@ -5,12 +5,10 @@ import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
   useHistory,
   useLocation
 } from "react-router-dom";
 import "./index.scss";
-import Index from "./pages/Index/Index";
 import App from "./layouts/App";
 import NetworkContext from "./contexts/NetworkContext";
 import * as Sentry from "@sentry/browser";
@@ -37,7 +35,6 @@ const Root = () => {
   return (
     <NetworkContext.Provider value={{ network, selectNetwork }}>
       <Switch>
-        <Route path="/" exact component={Index} />
         <App />
       </Switch>
     </NetworkContext.Provider>
