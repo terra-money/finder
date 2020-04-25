@@ -8,14 +8,14 @@ type Props = {
   className?: string;
 };
 const SelectNetworks = (props: Props) => {
-  const { network, setNetwork } = useContext(NetworkContext);
+  const { network, selectNetwork } = useContext(NetworkContext);
 
   return (
     <div className={props.className}>
       <select
         className={s.select}
         value={network}
-        onChange={e => setNetwork(e.target.value)}
+        onChange={e => selectNetwork(e.target.value)}
       >
         {networksConfig.map(({ key }, index) => {
           return <option key={index}>{key}</option>;

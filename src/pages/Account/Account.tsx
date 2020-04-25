@@ -72,11 +72,17 @@ const Account = ({
               </div>
             </Card>
           )}
-          {Delegations(address)}
-          {Unbondings(address)}
+          <WithFetch url={`/v1/staking/${address}`}>
+            {(staking: Staking) => (
+              <>
+                <Delegations staking={staking} />
+                <Unbondings staking={staking} />
+              </>
+            )}
+          </WithFetch>
           <Card title="Transactions" bordered headerClassName={s.cardTitle}>
             <div className={s.cardBodyContainer}>
-              {Txs(address, search, pathname)}
+              <Txs address={address} search={search} pathname={pathname} />
             </div>
           </Card>
         </>

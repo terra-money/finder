@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { get, isArray, isObject } from "lodash";
+import { get, last, isArray, isObject } from "lodash";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
@@ -16,7 +16,7 @@ function isSendTx(response: TxResponse) {
 }
 
 function getAmountAndDenom(tax: string) {
-  const result = /\d+/.exec(tax);
+  const result = /-?\d*\.?\d+/g.exec(tax);
 
   if (!result) {
     return {
@@ -96,7 +96,7 @@ function getTotalFee(txResponse: TxResponse) {
     }
 
     try {
-      result[a.denom] = a.amount + (result[a.denom] || 0);
+      result[a.denom] = a.amount;
     } catch (err) {
       // ignore JSON.parse error
     }
@@ -145,13 +145,13 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Status</div>
               <div className={s.body}>
-                {get(response, "logs[0].success") ? (
+                {!response.code ? (
                   <span className={s.success}>Success</span>
                 ) : (
                   <>
                     <p className={s.fail}>Failed</p>
                     <p className={s.failedMsg}>
-                      {get(response, "logs[0].log.message") ||
+                      {get(last(response.logs), "log.message") ||
                         get(response, "raw_log")}
                     </p>
                   </>
@@ -199,7 +199,9 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               <div className={s.head}>Message</div>
               <div className={s.body}>
                 <div style={{ overflowX: "hidden", width: "100%" }}>
-                  {response.tx.value.msg.map(MsgBox)}
+                  {response.tx.value.msg.map((msg, index) => (
+                    <MsgBox msg={msg} key={index} />
+                  ))}
                 </div>
               </div>
             </div>

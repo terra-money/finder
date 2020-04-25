@@ -14,7 +14,14 @@ type Props = {
 };
 
 const Copy = (props: Props) => {
-  const { classNames = {}, text, buttonLabel, children, tooltip, style } = props;
+  const {
+    classNames = {},
+    text,
+    buttonLabel,
+    children,
+    tooltip,
+    style
+  } = props;
   const [copied, setCopied] = useState(false);
 
   const showTooltip = () => {

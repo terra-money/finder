@@ -1,14 +1,19 @@
 import "react-app-polyfill/ie9";
 import "core-js";
-import React, { Component } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  useHistory,
+  useLocation
+} from "react-router-dom";
 import "./index.scss";
-import Index from "./pages/Index/Index";
 import App from "./layouts/App";
 import NetworkContext from "./contexts/NetworkContext";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
+import { DEFAULT_NETWORK } from "./scripts/utility";
 
 if (
   process.env.REACT_APP_SENTRY_DSN &&
@@ -17,28 +22,24 @@ if (
   Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 }
 
-class Root extends Component {
-  setNetwork = (network: string) => {
-    this.setState({
-      network: network
-    });
-  };
-  state = {
-    network: window.location.pathname.split("/")[1],
-    setNetwork: this.setNetwork
+const Root = () => {
+  const { push } = useHistory();
+  const location = useLocation();
+  const network = location.pathname.split("/")[1] || DEFAULT_NETWORK;
+  const selectNetwork = (network: string) => {
+    const pathnames = location.pathname.split("/");
+    pathnames[1] = network;
+    push(pathnames.join("/"));
   };
 
-  render() {
-    return (
-      <NetworkContext.Provider value={this.state}>
-        <Switch>
-          <Route path="/" exact component={Index} />
-          <App />
-        </Switch>
-      </NetworkContext.Provider>
-    );
-  }
-}
+  return (
+    <NetworkContext.Provider value={{ network, selectNetwork }}>
+      <Switch>
+        <App />
+      </Switch>
+    </NetworkContext.Provider>
+  );
+};
 
 ReactDOM.render(
   <Router>

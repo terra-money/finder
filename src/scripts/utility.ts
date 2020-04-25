@@ -4,7 +4,7 @@ import networksConfig from "../config/networks";
 import { isInteger } from "./math";
 import { isEmpty } from "lodash";
 
-export const DEFAULT_NETWORK = `columbus-2`;
+export const DEFAULT_NETWORK = `columbus-3`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const BASE_DENOM = `uluna`;
 

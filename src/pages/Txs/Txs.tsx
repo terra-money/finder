@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { get } from "lodash";
+import { get, isEmpty } from "lodash";
 import s from "./Txs.module.scss";
 import FlexTable from "../../components/FlexTable";
 import Pagination from "../../components/Pagination";
@@ -9,6 +9,7 @@ import Finder from "../../components/Finder";
 import { fromNow, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
+import NetworkContext from "../../contexts/NetworkContext";
 
 const getRow = (response: TxResponse) => {
   const { txhash, tx, height, timestamp } = response;
@@ -20,12 +21,12 @@ const getRow = (response: TxResponse) => {
     </span>,
     <span className="type">{sliceMsgType(tx.value.msg[0].type)}</span>,
     <span>
-      {tx.value.fee.amount
-        ? format.coin({
+      {isEmpty(tx.value.fee.amount)
+        ? "0 Luna"
+        : format.coin({
             amount: get(tx, `value.fee.amount[0].amount`),
             denom: get(tx, `value.fee.amount[0].denom`)
-          })
-        : "0 Luna"}
+          })}
     </span>,
     <span>
       <Finder q="blocks" v={height}>
@@ -38,6 +39,7 @@ const getRow = (response: TxResponse) => {
 
 const Txs = (props: RouteComponentProps<{ block: string }>) => {
   const [page, setPage] = useState<string>("1");
+  const { network } = useContext(NetworkContext);
 
   const { match } = props;
   const { block } = match.params;
@@ -46,7 +48,11 @@ const Txs = (props: RouteComponentProps<{ block: string }>) => {
 
   return (
     <div className={s.tableContainer}>
-      <WithFetch url="/v1/txs" params={{ block, page }} loading={<Loading />}>
+      <WithFetch
+        url="/v1/txs"
+        params={{ block, page, chainId: network }}
+        loading={<Loading />}
+      >
         {({ txs = [], ...pagination }: Pagination & { txs: TxResponse[] }) => (
           <>
             <h2 className="title">

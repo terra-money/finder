@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
@@ -7,13 +7,24 @@ import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
-import { isEmpty, get } from "lodash";
+import { isEmpty } from "lodash";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import c from "classnames";
 import s from "./Account.module.scss";
+import NetworkContext from "../../contexts/NetworkContext";
 
-export default (address: string, search: string, pathname: string) => {
+export default ({
+  address,
+  search,
+  pathname
+}: {
+  address: string;
+  search: string;
+  pathname: string;
+}) => {
+  const { network } = useContext(NetworkContext);
+
   /* URLSearchParams: tab */
   const getSearch = () => new URLSearchParams(search);
   const getNextSearch = (entries: string[][]) => {
@@ -32,11 +43,11 @@ export default (address: string, search: string, pathname: string) => {
     search: getNextSearch([["page", page]])
   });
   const getRow = (response: TxResponse) => {
-    const { tx: txBody, txhash, height, timestamp } = response;
-    const isSuccess = get(response, "logs[0].success");
+    const { tx: txBody, txhash, height, timestamp, chainId } = response;
+    const isSuccess = !response.code;
     return [
       <span>
-        <Finder q="tx" v={txhash}>
+        <Finder q="tx" network={chainId} v={txhash}>
           {format.truncate(txhash, [8, 8])}
         </Finder>
       </span>,
@@ -45,7 +56,7 @@ export default (address: string, search: string, pathname: string) => {
         {isSuccess ? `Success` : `Failed`}
       </span>,
       <span>
-        <Finder q="blocks" v={height}>
+        <Finder q="blocks" network={chainId} v={height}>
           {height}
         </Finder>
       </span>,
@@ -57,7 +68,7 @@ export default (address: string, search: string, pathname: string) => {
   return (
     <WithFetch
       url={`/v1/txs`}
-      params={{ account: address, page }}
+      params={{ account: address, page, chainId: network }}
       loading={<Loading />}
     >
       {({ txs, ...pagination }: Pagination & { txs: TxResponse[] }) =>
