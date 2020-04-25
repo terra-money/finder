@@ -4,7 +4,7 @@ export default [
     fcd: "https://fcd.terra.dev"
   },
   {
-    key: "soju-0013",
+    key: "soju-0014",
     fcd: "https://soju-fcd.terra.dev"
   },
   {
