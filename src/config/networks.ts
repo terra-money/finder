@@ -12,8 +12,8 @@ export default [
     fcd: "https://soju-fcd.terra.dev"
   },
   {
-    key: "vodka-0001",
-    fcd: "https://vodka-fcd.terra.dev"
+    key: "tequila-0001",
+    fcd: "https://tequila-fcd.terra.dev"
   },
   {
     key: "columbus-1",
