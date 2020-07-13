@@ -7,32 +7,33 @@ import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
 import { fromISOTime } from "../../scripts/utility";
 import networkContext from "../../contexts/NetworkContext";
+
 const Block = (
-  props: RouteComponentProps<{ block: string; network: string }>
+  props: RouteComponentProps<{ height: string; network: string }>
 ) => {
   const { match } = props;
-  const { block } = match.params;
+  const { height } = match.params;
   const { network } = useContext(networkContext);
-  function Height(block_meta: BlockMeta) {
+  function Height(header: BlockHeader) {
     return (
       <span className={s.height}>
-        <span>{block_meta.header.height}</span>
-        <Link to={`${parseInt(block) - 1}`}>
+        <span>{header.height}</span>
+        <Link to={`${parseInt(height) - 1}`}>
           <i className="material-icons">chevron_left</i>
         </Link>
-        <Link to={`${parseInt(block) + 1}`}>
+        <Link to={`${parseInt(height) + 1}`}>
           <i className="material-icons">chevron_right</i>
         </Link>
       </span>
     );
   }
 
-  function Txs(block_meta: BlockMeta) {
+  function Txs(txCount: number) {
     return (
       <span className={s.txs}>
-        {parseInt(block_meta.header.num_txs) > 0 ? (
-          <Link className={s.button} to={`/${network}/txs/${block}`}>
-            {block_meta.header.num_txs} Transactions{" "}
+        {txCount > 0 ? (
+          <Link className={s.button} to={`/${network}/txs/${height}`}>
+            {txCount} Transactions{" "}
             <i className="material-icons"> chevron_right</i>
           </Link>
         ) : (
@@ -42,49 +43,58 @@ const Block = (
     );
   }
 
-  function parentHash(block_meta: BlockMeta) {
+  function parentHash(header: BlockHeader) {
     return (
-      <Link className={s.button} to={`${parseInt(block) - 1}`}>
-        {block_meta.header.last_commit_hash}
+      <Link className={s.button} to={`${parseInt(height) - 1}`}>
+        {header.last_commit_hash}
       </Link>
     );
   }
 
   return (
-    <WithFetch url={`/blocks/${block}`} loading={<Loading />}>
+    <WithFetch url={`/blocks/${height}`} loading={<Loading />}>
       {(blockData: Block) => (
         <>
           <h2 className="title">
-            Block<span>#{block}</span>
+            Block<span>#{height}</span>
           </h2>
           <div className={s.list}>
             <div className={s.row}>
               <div className={s.head}>Block height</div>
-              <div className={s.body}>{Height(blockData.block_meta)}</div>
+              <div className={s.body}>{Height(blockData.block.header)}</div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Timestamp</div>
               <div className={s.body}>
-                {fromISOTime(blockData.block_meta.header.time)} (UTC)
+                {fromISOTime(blockData.block.header.time)} (UTC)
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Transactions</div>
-              <div className={s.body}>{Txs(blockData.block_meta)}</div>
+              <div className={s.body}>
+                {Txs(blockData.block.data.txs?.length)}
+              </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Proposer</div>
               <div className={s.body}>
-                {blockData.block_meta.header.proposer_address}
+                {blockData.block.header.proposer_address}
               </div>
             </div>
             <div className={s.row}>
               <div className={s.head}>Block hash</div>
-              <div className={s.body}>{blockData.block_meta.block_id.hash}</div>
+              {blockData.block_id && (
+                <div className={s.body}>{blockData.block_id.hash}</div>
+              )}
+              {blockData.block_meta && (
+                <div className={s.body}>
+                  {blockData.block_meta.block_id.hash}
+                </div>
+              )}
             </div>
             <div className={s.row}>
               <div className={s.head}>Parent hash</div>
-              <div className={s.body}>{parentHash(blockData.block_meta)}</div>
+              <div className={s.body}>{parentHash(blockData.block.header)}</div>
             </div>
           </div>
         </>

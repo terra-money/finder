@@ -37,12 +37,12 @@ const getRow = (response: TxResponse) => {
   ];
 };
 
-const Txs = (props: RouteComponentProps<{ block: string }>) => {
+const Txs = (props: RouteComponentProps<{ height: string }>) => {
   const [page, setPage] = useState<string>("1");
   const { network } = useContext(NetworkContext);
 
   const { match } = props;
-  const { block } = match.params;
+  const { height } = match.params;
 
   const head = [`TxHash`, `Type`, `Fee`, `Height`, `Time`];
 
@@ -50,13 +50,13 @@ const Txs = (props: RouteComponentProps<{ block: string }>) => {
     <div className={s.tableContainer}>
       <WithFetch
         url="/v1/txs"
-        params={{ block, page, chainId: network }}
+        params={{ block: height, page, chainId: network }}
         loading={<Loading />}
       >
         {({ txs = [], ...pagination }: Pagination & { txs: TxResponse[] }) => (
           <>
             <h2 className="title">
-              Transactions<span>for Block #{block}</span>
+              Transactions<span>for Block #{height}</span>
             </h2>
             <p className={s.description}>
               A total of {pagination.totalCnt} transactions found

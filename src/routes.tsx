@@ -12,8 +12,8 @@ export default (
   <Switch>
     <Route path="/" exact component={Index} />
     <Route path="/:network" exact component={Index} />
-    <Route path="/:network/blocks/:block" component={Block} />
-    <Route path="/:network/txs/:block" component={Txs} />
+    <Route path="/:network/blocks/:height" component={Block} />
+    <Route path="/:network/txs/:height" component={Txs} />
     <Route path="/:network/tx/:hash" component={Tx} />
     <Route path="/:network/account/:address" component={Account} />
     <Route path="/:network/validator/:address" component={Validator} />
