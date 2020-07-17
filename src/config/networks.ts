@@ -18,5 +18,9 @@ export default [
   {
     key: "columbus-1",
     fcd: "https://columbus-1-fcd.terra.dev"
+  },
+  {
+    key: "localterra",
+    fcd: "http://localhost:3060"
   }
 ];
