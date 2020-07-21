@@ -5,18 +5,20 @@ import NetworkContext from "../contexts/NetworkContext";
 
 type Props = FetchProps & {
   loading?: ReactNode;
+  renderError?: () => ReactNode;
   children: (data: any) => ReactNode;
 };
 
-const WithFetch = ({ url, params, loading, children }: Props) => {
-  const { network } = useContext(NetworkContext);
-
-  const { data, isLoading, error } = useFetch({ url, params, network });
+const WithFetch = (props: Props) => {
+  const { url, params, loading, renderError, children } = props;
+  const { data, isLoading, error } = useRequest({ url, params });
 
   return (
     <>
       {error
-        ? FetchError({ url, error })
+        ? renderError
+          ? renderError()
+          : FetchError({ url, error })
         : isLoading
         ? loading || null
         : children(data) || null}
@@ -25,3 +27,15 @@ const WithFetch = ({ url, params, loading, children }: Props) => {
 };
 
 export default WithFetch;
+
+/* hook */
+export const useNetwork = () => {
+  const { network } = useContext(NetworkContext);
+  return network;
+};
+
+export const useRequest = ({ url, params }: FetchProps) => {
+  const network = useNetwork();
+  const result = useFetch({ url, params, network });
+  return result;
+};

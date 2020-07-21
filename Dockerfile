@@ -1,7 +1,7 @@
 FROM node:lts-alpine as builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm i
+RUN npm ci
 COPY . .
 ARG SENTRY_DSN
 RUN REACT_APP_SENTRY_DSN=${SENTRY_DSN} npm run build
