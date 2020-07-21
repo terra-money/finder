@@ -31,7 +31,11 @@ const Account = () => {
 
           <CopyAddress>{address}</CopyAddress>
 
-          <WithFetch url={`/v1/wasm/contract/${address}`} loading={<Loading />}>
+          <WithFetch
+            url={`/v1/wasm/contract/${address}`}
+            loading={<Loading />}
+            renderError={() => null}
+          >
             {data => <Contract {...data} />}
           </WithFetch>
 
