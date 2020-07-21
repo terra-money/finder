@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import s from "./Account.module.scss";
 import Loading from "../../components/Loading";
 import Copy from "../../components/Copy";
@@ -18,11 +18,9 @@ import Vesting from "./Vesting";
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
 
-const Account = ({
-  location: { search, pathname },
-  match: { params }
-}: RouteComponentProps<{ address: string }>) => {
-  const { address } = params;
+const Account = () => {
+  const { search, pathname } = useLocation();
+  const { address } = useParams();
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
