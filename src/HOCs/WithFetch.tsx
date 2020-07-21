@@ -9,9 +9,7 @@ type Props = FetchProps & {
 };
 
 const WithFetch = ({ url, params, loading, children }: Props) => {
-  const { network } = useContext(NetworkContext);
-
-  const { data, isLoading, error } = useFetch({ url, params, network });
+  const { data, isLoading, error } = useRequest({ url, params });
 
   return (
     <>
@@ -25,3 +23,15 @@ const WithFetch = ({ url, params, loading, children }: Props) => {
 };
 
 export default WithFetch;
+
+/* hook */
+export const useNetwork = () => {
+  const { network } = useContext(NetworkContext);
+  return network;
+};
+
+export const useRequest = ({ url, params }: FetchProps) => {
+  const network = useNetwork();
+  const result = useFetch({ url, params, network });
+  return result;
+};
