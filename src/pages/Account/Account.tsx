@@ -2,7 +2,6 @@ import React from "react";
 import { useLocation, useParams } from "react-router-dom";
 import s from "./Account.module.scss";
 import Loading from "../../components/Loading";
-import Copy from "../../components/Copy";
 import Info from "../../components/Info";
 import Icon from "../../components/Icon";
 import Flex from "../../components/Flex";
@@ -14,6 +13,8 @@ import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
 import Txs from "./Txs";
 import Vesting from "./Vesting";
+import CopyAddress from "./CopyAddress";
+import Contract from "./Contract";
 
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
@@ -27,10 +28,13 @@ const Account = () => {
       {({ balance, vesting }: Account) => (
         <>
           <h2 className="title">Account</h2>
-          <Card title="Address" bordered headerClassName={s.cardTitle}>
-            {address}
-            <Copy text={address} style={{ display: "inline-block" }}></Copy>
-          </Card>
+
+          <CopyAddress>{address}</CopyAddress>
+
+          <WithFetch url={`/v1/wasm/contract/${address}`} loading={<Loading />}>
+            {data => <Contract {...data} />}
+          </WithFetch>
+
           <Card title="Available" bordered headerClassName={s.cardTitle}>
             {balance.length ? (
               <div className={s.cardBodyContainer}>
