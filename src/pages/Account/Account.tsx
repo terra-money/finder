@@ -21,7 +21,7 @@ Vested Luna can be delegated in the meantime.`;
 
 const Account = () => {
   const { search, pathname } = useLocation();
-  const { address } = useParams();
+  const { address = "" } = useParams();
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
