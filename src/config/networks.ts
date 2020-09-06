@@ -15,7 +15,7 @@ export default [
     // separator
   },
   {
-    key: "tequila-0002",
+    key: "tequila-0004",
     fcd: "https://tequila-fcd.terra.dev"
   },
   {
