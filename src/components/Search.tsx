@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
-import { handleSearch } from "../scripts/utility";
+import { getEndpointByKeyword } from "../scripts/utility";
 import s from "./Search.module.scss";
 import networkContext from "../contexts/NetworkContext";
 
@@ -16,7 +16,7 @@ const Search = ({ className, history }: Props) => {
     e.preventDefault();
 
     if (value) {
-      history.push(handleSearch(value, network));
+      history.push(getEndpointByKeyword(value, network));
     }
   };
 

@@ -17,7 +17,11 @@ const SelectNetworks = (props: Props) => {
         value={network}
         onChange={e => selectNetwork(e.target.value)}
       >
-        {networksConfig.map(({ key }, index) => {
+        {networksConfig.map(({ key, selectable }, index) => {
+          if (selectable === false) {
+            return null;
+          }
+
           if (!key) {
             return <option disabled>──────────</option>;
           }

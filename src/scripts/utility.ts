@@ -1,19 +1,19 @@
+import { isEmpty } from "lodash";
 import { formatToTimeZone } from "date-fns-timezone";
 import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 import networksConfig from "../config/networks";
 import { isInteger } from "./math";
-import { isEmpty } from "lodash";
 
 export const DEFAULT_NETWORK = `columbus-3`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const BASE_DENOM = `uluna`;
 
-export function handleSearch(keyword: string, network: string) {
+export function getEndpointByKeyword(keyword: string, network: string) {
   if (isInteger(keyword)) {
     return `/${network}/blocks/${keyword}`;
-  } else if (keyword.indexOf("terravaloper") > -1) {
+  } else if (keyword.indexOf("terravaloper") === 0) {
     return `/${network}/validator/${keyword}`;
-  } else if (keyword.indexOf("terra") > -1) {
+  } else if (keyword.indexOf("terra") === 0) {
     return `/${network}/account/${keyword}`;
   } else {
     return `/${network}/tx/${keyword}`;
