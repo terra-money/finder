@@ -5,11 +5,13 @@ export default [
   },
   {
     key: "columbus-2",
-    fcd: "https://columbus-2-fcd.terra.dev"
+    fcd: "https://columbus-2-fcd.terra.dev",
+    selectable: false
   },
   {
     key: "columbus-1",
-    fcd: "https://columbus-1-fcd.terra.dev"
+    fcd: "https://columbus-1-fcd.terra.dev",
+    selectable: false
   },
   {
     // separator
