@@ -4,7 +4,7 @@ import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 import networksConfig from "../config/networks";
 import { isInteger } from "./math";
 
-export const DEFAULT_NETWORK = networksConfig[0].key;
+export const DEFAULT_NETWORK = networksConfig[0].key || "columbus-4";
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const BASE_DENOM = `uluna`;
 
