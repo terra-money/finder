@@ -26,10 +26,6 @@ export default [
     fcd: "https://tequila-fcd.terra.dev"
   },
   {
-    key: "soju-0014",
-    fcd: "https://soju-fcd.terra.dev"
-  },
-  {
     // separator
   },
   {
