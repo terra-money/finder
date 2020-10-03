@@ -1,7 +1,12 @@
 export default [
   {
-    key: "columbus-3",
+    key: "columbus-4",
     fcd: "https://fcd.terra.dev"
+  },
+  {
+    key: "columbus-3",
+    fcd: "https://columbus-3-fcd.terra.dev",
+    selectable: false
   },
   {
     key: "columbus-2",
