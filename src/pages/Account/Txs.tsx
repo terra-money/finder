@@ -59,6 +59,7 @@ export default ({
         <Finder q="blocks" network={chainId} v={height}>
           {height}
         </Finder>
+        <span> ({chainId})</span>
       </span>,
       <span>{fromISOTime(timestamp.toString())} (UTC)</span>
     ];

@@ -159,6 +159,10 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               </div>
             </div>
             <div className={s.row}>
+              <div className={s.head}>Network</div>
+              <div className={s.body}>{response.chainId}</div>
+            </div>
+            <div className={s.row}>
               <div className={s.head}>Block</div>
               <div className={s.body}>
                 <Finder q="blocks" v={response.height}>
