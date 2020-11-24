@@ -7,6 +7,7 @@ import {
   isValidatorAddress
 } from "../scripts/utility";
 import format from "../scripts/format";
+import { decodeBase64 } from "../scripts/utility";
 import Finder from "./Finder";
 import { isArray } from "lodash";
 
@@ -52,6 +53,13 @@ export default ({ msg }: { msg: Msg }) => {
             <p key={index}>
               <span>{key}</span>
               <span>{format.denom(msg.value[key])}</span>
+            </p>
+          );
+        } else if (key === "execute_msg") {
+          return (
+            <p key={index}>
+              <span>{key}</span>
+              <span>{decodeBase64(msg.value[key])}</span>
             </p>
           );
         } else {

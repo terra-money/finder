@@ -66,3 +66,7 @@ export function prependProtocol(url: string) {
     return `http://` + url;
   }
 }
+
+export function decodeBase64(key: string) {
+  return Buffer.from(key, "base64").toString();
+}
