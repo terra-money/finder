@@ -1,7 +1,8 @@
 export default [
   {
     key: "columbus-4",
-    fcd: "https://fcd.terra.dev"
+    fcd: "https://fcd.terra.dev",
+    mantle: "https://mantle.terra.dev"
   },
   {
     key: "columbus-3",
@@ -23,13 +24,15 @@ export default [
   },
   {
     key: "tequila-0004",
-    fcd: "https://tequila-fcd.terra.dev"
+    fcd: "https://tequila-fcd.terra.dev",
+    mantle: "https://tequila-mantle.terra.dev"
   },
   {
     // separator
   },
   {
     key: "localterra",
-    fcd: "http://localhost:3060"
+    fcd: "http://localhost:3060",
+    mantle: "http://localhost:1337"
   }
 ];

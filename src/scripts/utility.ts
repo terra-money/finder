@@ -1,4 +1,3 @@
-import { isEmpty } from "lodash";
 import { formatToTimeZone } from "date-fns-timezone";
 import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 import networksConfig from "../config/networks";
@@ -6,6 +5,7 @@ import { isInteger } from "./math";
 
 export const DEFAULT_NETWORK = networksConfig[0].key || "columbus-4";
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
+export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
 
 export function getEndpointByKeyword(keyword: string, network: string) {
@@ -36,9 +36,11 @@ export function sliceMsgType(msg: string) {
 }
 
 export function fcdUrl(key: string) {
-  return isEmpty(networksConfig.filter(n => n.key === key))
-    ? DEFAULT_FCD
-    : networksConfig.filter(n => n.key === key)[0].fcd;
+  return networksConfig.find(n => n.key === key)?.fcd || DEFAULT_FCD;
+}
+
+export function mantleUri(key: string) {
+  return networksConfig.find(n => n.key === key)?.mantle || DEFAULT_MANTLE;
 }
 
 export function isTerraAddress(keyword: string) {
