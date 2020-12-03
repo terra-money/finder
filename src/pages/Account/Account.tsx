@@ -8,6 +8,7 @@ import Flex from "../../components/Flex";
 import Pop from "../../components/Pop";
 import Card from "../../components/Card";
 import WithFetch from "../../HOCs/WithFetch";
+import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import AvailableList from "./AvailableList";
 import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
@@ -15,6 +16,7 @@ import Txs from "./Txs";
 import Vesting from "./Vesting";
 import CopyAddress from "./CopyAddress";
 import Contract from "./Contract";
+import AmountCard from "./AmountCard";
 
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
@@ -22,6 +24,7 @@ Vested Luna can be delegated in the meantime.`;
 const Account = () => {
   const { search, pathname } = useLocation();
   const { address = "" } = useParams<{ address: string }>();
+  const tokens = useTokenBalance(address);
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
@@ -43,6 +46,29 @@ const Account = () => {
             {balance.length ? (
               <div className={s.cardBodyContainer}>
                 <AvailableList list={balance} />
+              </div>
+            ) : (
+              <Card>
+                <Info icon="info_outline" title="">
+                  This account doesn't hold any coins yet.
+                </Info>
+              </Card>
+            )}
+          </Card>
+
+          <Card title="Tokens" bordered headerClassName={s.cardTitle}>
+            {tokens?.list?.length ? (
+              <div className={s.cardBodyContainer}>
+                {tokens.list
+                  .filter(t => t.balance !== "0")
+                  .map((t, i) => (
+                    <AmountCard
+                      key={i}
+                      denom={t.symbol}
+                      amount={t.balance}
+                      icon={t.icon}
+                    />
+                  ))}
               </div>
             ) : (
               <Card>

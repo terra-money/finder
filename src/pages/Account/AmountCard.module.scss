@@ -49,3 +49,17 @@
     margin-left: 25px;
   }
 }
+
+.token_wrapper {
+  display: flex;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: #121a30;
+  padding: 3px;
+  margin-right: 5px;
+}
