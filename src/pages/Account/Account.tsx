@@ -24,7 +24,7 @@ Vested Luna can be delegated in the meantime.`;
 const Account = () => {
   const { search, pathname } = useLocation();
   const { address = "" } = useParams<{ address: string }>();
-  const tokens = useTokenBalance(address);
+  const tokens = useTokenBalance(address).list?.filter(t => t.balance !== "0");
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
@@ -56,12 +56,11 @@ const Account = () => {
             )}
           </Card>
 
-          <Card title="Tokens" bordered headerClassName={s.cardTitle}>
-            {tokens?.list?.length ? (
-              <div className={s.cardBodyContainer}>
-                {tokens.list
-                  .filter(t => t.balance !== "0")
-                  .map((t, i) => (
+          {tokens?.length ? (
+            <Card title="Tokens" bordered headerClassName={s.cardTitle}>
+              {
+                <div className={s.cardBodyContainer}>
+                  {tokens?.map((t, i) => (
                     <AmountCard
                       key={i}
                       denom={t.symbol}
@@ -69,15 +68,10 @@ const Account = () => {
                       icon={t.icon}
                     />
                   ))}
-              </div>
-            ) : (
-              <Card>
-                <Info icon="info_outline" title="">
-                  This account doesn't hold any coins yet.
-                </Info>
-              </Card>
-            )}
-          </Card>
+                </div>
+              }
+            </Card>
+          ) : undefined}
 
           {vesting.length > 0 && (
             <Card
