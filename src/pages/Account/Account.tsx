@@ -56,8 +56,8 @@ const Account = () => {
             )}
           </Card>
 
-          <Card title="Tokens" bordered headerClassName={s.cardTitle}>
-            {tokens?.list?.length ? (
+          {tokens?.list?.filter(t => t.balance !== "0").length ? (
+            <Card title="Tokens" bordered headerClassName={s.cardTitle}>
               <div className={s.cardBodyContainer}>
                 {tokens.list
                   .filter(t => t.balance !== "0")
@@ -70,14 +70,8 @@ const Account = () => {
                     />
                   ))}
               </div>
-            ) : (
-              <Card>
-                <Info icon="info_outline" title="">
-                  This account doesn't hold any coins yet.
-                </Info>
-              </Card>
-            )}
-          </Card>
+            </Card>
+          ) : undefined}
 
           {vesting.length > 0 && (
             <Card
