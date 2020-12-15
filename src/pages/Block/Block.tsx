@@ -46,7 +46,7 @@ const Block = (
   function parentHash(header: BlockHeader) {
     return (
       <Link className={s.button} to={`${parseInt(height) - 1}`}>
-        {header.last_commit_hash}
+        {header.last_block_id.hash}
       </Link>
     );
   }

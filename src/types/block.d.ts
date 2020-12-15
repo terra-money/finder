@@ -3,6 +3,9 @@ interface BlockHeader {
   time: string;
   proposer_address: string;
   last_commit_hash: string;
+  last_block_id: {
+    hash: string;
+  };
 }
 
 interface Block {
