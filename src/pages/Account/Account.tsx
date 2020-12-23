@@ -1,6 +1,5 @@
 import React from "react";
 import { useLocation, useParams } from "react-router-dom";
-import s from "./Account.module.scss";
 import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Icon from "../../components/Icon";
@@ -15,7 +14,7 @@ import Unbondings from "./Unbondings";
 import Txs from "./Txs";
 import Vesting from "./Vesting";
 import CopyAddress from "./CopyAddress";
-import Contract from "./Contract";
+import s from "./Account.module.scss";
 import AmountCard from "./AmountCard";
 
 const TOOLTIP = `This displays your investment with Terra.
@@ -30,17 +29,9 @@ const Account = () => {
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
       {({ balance, vesting }: Account) => (
         <>
-          <h2 className="title">Account</h2>
+          <h2 className="title">Account Detail</h2>
 
           <CopyAddress>{address}</CopyAddress>
-
-          <WithFetch
-            url={`/v1/wasm/contract/${address}`}
-            loading={<Loading />}
-            renderError={() => null}
-          >
-            {data => <Contract {...data} />}
-          </WithFetch>
 
           <Card title="Available" bordered headerClassName={s.cardTitle}>
             {balance.length ? (
@@ -98,6 +89,7 @@ const Account = () => {
               </div>
             </Card>
           )}
+
           <WithFetch url={`/v1/staking/${address}`}>
             {(staking: Staking) => (
               <>
@@ -106,6 +98,7 @@ const Account = () => {
               </>
             )}
           </WithFetch>
+
           <Card title="Transactions" bordered headerClassName={s.cardTitle}>
             <div className={s.cardBodyContainer}>
               <Txs address={address} search={search} pathname={pathname} />

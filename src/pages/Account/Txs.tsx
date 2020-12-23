@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
 import Pagination from "../../components/Pagination";
@@ -10,9 +9,8 @@ import Finder from "../../components/Finder";
 import { isEmpty } from "lodash";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
-import c from "classnames";
-import s from "./Account.module.scss";
 import NetworkContext from "../../contexts/NetworkContext";
+import s from "./Txs.module.scss";
 
 export default ({
   address,
@@ -52,7 +50,7 @@ export default ({
         </Finder>
       </span>,
       <span className="type">{sliceMsgType(txBody.value.msg[0].type)}</span>,
-      <span className={c(isSuccess ? s.success : s.fail)}>
+      <span className={isSuccess ? s.success : s.fail}>
         {isSuccess ? `Success` : `Failed`}
       </span>,
       <span>

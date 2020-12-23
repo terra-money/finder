@@ -6,6 +6,7 @@
   margin: 0 auto;
   padding: 40px;
   color: $brand !important;
+  -webkit-text-size-adjust: 100%;
   @media (max-width: $breakpoint) {
     padding: 50px 15px;
     padding-top: 85px;

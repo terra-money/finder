@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { Dictionary } from "ramda";
-import classNames from "classnames";
 import { lte } from "../../scripts/math";
 import Card from "../../components/Card";
 import Amount from "../../components/Amount";
@@ -26,7 +25,7 @@ const AmountCard = ({ denom, icon, amount, button, children }: Props) => {
   const size = { width: 18, height: 18 };
 
   const iconRender = icon ? (
-    <div className={classNames(s.icon, s.token)}>
+    <div className={s.icon}>
       <img src={icon} alt={denom} {...size} />
     </div>
   ) : TerraIcon[denom] ? (
