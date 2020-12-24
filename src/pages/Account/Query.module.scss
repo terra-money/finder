@@ -1,0 +1,115 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.header {
+  text-align: center;
+}
+
+.title {
+  color: $brand;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+}
+
+.mainTitle {
+  font-size: 20px;
+  text-align: center;
+  margin: 10px 0px 20px 0px;
+}
+
+.subTitle {
+  margin: 5px 0px 5px 0px;
+  font-size: 12px;
+}
+
+.nextButton {
+  width: 100%;
+  text-align: center;
+  background-color: $brand;
+  color: white;
+  margin-top: 40px;
+  border-radius: 22px;
+  height: 44px;
+}
+
+.address:read-only {
+  margin-bottom: 20px;
+  background-color: #f4f5fb;
+  font-size: 14px;
+  padding: 12px 0px 12px 15px;
+  color: $brand;
+  border: solid 1px $line;
+  border-radius: 5px;
+  height: 40px;
+  line-height: 14px;
+  appearance: none;
+}
+
+.inner {
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.innerHeader {
+  @include flex(space-between, flex-end);
+  margin-bottom: 10px;
+}
+
+.back {
+  @include flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 15px;
+  color: $brand;
+}
+
+.copyWrapper {
+  position: relative;
+  border-radius: 11px;
+  background-color: $a-bg;
+  cursor: pointer;
+}
+
+.copyButton {
+  @include flex(center);
+  font-size: 12px;
+  font-weight: 500;
+  color: $brand;
+  line-height: 12px;
+  padding: 6px 15px;
+}
+
+.result {
+  border: solid 1px $line;
+  border-radius: 5px;
+  padding: 14px 200px 20px 15px;
+  height: 250px;
+  overflow-y: auto;
+  white-space: pre;
+  color: $brand;
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: normal;
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.errorIcon {
+  color: $brand;
+  margin-top: 20px;
+}
+
+.errorTitle {
+  font-size: 24px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.errorMassage {
+  text-align: center;
+  color: $brand;
+}

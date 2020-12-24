@@ -18,12 +18,8 @@ const SelectNetworks = (props: Props) => {
         onChange={e => selectNetwork(e.target.value)}
       >
         {networksConfig.map(({ key, selectable }, index) => {
-          if (selectable === false) {
+          if (selectable === false || !key) {
             return null;
-          }
-
-          if (!key) {
-            return <option disabled>──────────</option>;
           }
 
           return <option key={index}>{key}</option>;

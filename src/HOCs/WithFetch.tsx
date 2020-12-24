@@ -6,12 +6,14 @@ import NetworkContext from "../contexts/NetworkContext";
 type Props = FetchProps & {
   loading?: ReactNode;
   renderError?: () => ReactNode;
-  children: (data: any) => ReactNode;
+  children: ReactNode | ((data: any) => ReactNode);
 };
 
 const WithFetch = (props: Props) => {
   const { url, params, loading, renderError, children } = props;
   const { data, isLoading, error } = useRequest({ url, params });
+  const render = () =>
+    typeof children === "function" ? children(data) : children;
 
   return (
     <>
@@ -21,7 +23,7 @@ const WithFetch = (props: Props) => {
           : FetchError({ url, error })
         : isLoading
         ? loading || null
-        : children(data) || null}
+        : render() || null}
     </>
   );
 };

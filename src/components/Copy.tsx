@@ -5,7 +5,12 @@ import Tooltip from "./Tooltip";
 import s from "./Copy.module.scss";
 
 type Props = {
-  classNames?: { container?: string; text?: string; button?: string };
+  classNames?: {
+    container?: string;
+    text?: string;
+    button?: string;
+    wrapper?: string;
+  };
   text: string;
   buttonLabel?: string;
   children?: ReactNode;
@@ -33,11 +38,11 @@ const Copy = (props: Props) => {
     <div className={classNames.container} style={style}>
       {children && <div className={classNames.text}>{children}</div>}
 
-      <section className={s.wrapper}>
+      <section className={classNames.wrapper ?? s.wrapper}>
         <CopyToClipboard text={text} onCopy={showTooltip}>
           <button className={classNames.button} type="button">
-            <Icon name="filter_none" size={12} />
             {buttonLabel}
+            <Icon name="filter_none" size={12} />
           </button>
         </CopyToClipboard>
 
