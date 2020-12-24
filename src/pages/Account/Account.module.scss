@@ -1,25 +1,11 @@
 @import "../../styles/list";
 
-.copy {
-  display: inline-block;
-}
-
 .cardTitle {
   background: $table-head;
 }
 
 .cardBodyContainer {
   overflow-x: auto;
-}
-
-.success {
-  color: $green;
-  font-weight: 500;
-}
-
-.fail {
-  color: $red;
-  font-weight: 500;
 }
 
 /* contract */
@@ -29,36 +15,5 @@
 
   &:not(:first-child) {
     margin-top: 25px;
-  }
-}
-
-.wrapper {
-  border-radius: 3px;
-  border: 1px solid $line;
-}
-
-.table {
-  tr:not(:first-child) {
-    border-top: 1px solid $line;
-  }
-
-  th {
-    background: rgba(84, 147, 247, 0.05);
-    font-weight: normal;
-    vertical-align: top;
-    width: 150px;
-  }
-
-  tr {
-    th,
-    td {
-      font-size: 14px;
-      padding: 14px 20px !important; // Because of legacy !important. Fix me!
-      padding-left: 20px !important; // Because of legacy !important. Fix me!
-    }
-  }
-
-  pre {
-    margin: 0;
   }
 }

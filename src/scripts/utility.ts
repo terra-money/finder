@@ -14,7 +14,7 @@ export function getEndpointByKeyword(keyword: string, network: string) {
   } else if (keyword.indexOf("terravaloper") === 0) {
     return `/${network}/validator/${keyword}`;
   } else if (keyword.indexOf("terra") === 0) {
-    return `/${network}/account/${keyword}`;
+    return `/${network}/address/${keyword}`;
   } else {
     return `/${network}/tx/${keyword}`;
   }
@@ -74,5 +74,14 @@ export function decodeBase64(str: string) {
     return Buffer.from(str, "base64").toString();
   } catch {
     return str;
+  }
+}
+
+export function isJson(param: any) {
+  try {
+    JSON.parse(param);
+    return true;
+  } catch {
+    return false;
   }
 }

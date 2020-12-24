@@ -1,0 +1,54 @@
+@import "../../styles/list";
+
+.cardTitle {
+  background: $table-head;
+}
+
+.cardBodyContainer {
+  overflow-x: auto;
+}
+
+/* contract */
+.h3 {
+  font-size: 14px;
+  font-weight: 500;
+
+  &:not(:first-child) {
+    margin-top: 25px;
+  }
+}
+
+.wrapper {
+  border-radius: 3px;
+  border: 1px solid $line;
+}
+
+.table {
+  box-sizing: border-box;
+  tr:not(:first-child) {
+    border-top: 1px solid $line;
+  }
+
+  th {
+    background: rgba(84, 147, 247, 0.05);
+    font-weight: normal;
+    vertical-align: top;
+    width: 150px;
+  }
+
+  tr {
+    th {
+      font-size: 14px;
+      padding: 15px 20px;
+    }
+
+    td {
+      font-size: 14px;
+      padding: 15px 0px 15px 20px;
+    }
+  }
+
+  pre {
+    margin: 0;
+  }
+}

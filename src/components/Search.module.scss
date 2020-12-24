@@ -50,10 +50,10 @@ input {
   background: transparent;
   padding-left: 10px !important;
   padding-right: 45px !important;
-  border-radius: 0 !important;
+  border-radius: 0;
   word-break: normal;
   @media (max-width: $breakpoint) {
-    border-radius: 0 !important;
+    border-radius: 0;
     background: #fff;
     color: $brand;
     border-bottom: solid 1px rgba(32, 67, 181, 0.8);
