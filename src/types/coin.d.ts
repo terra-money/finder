@@ -1,4 +1,4 @@
-interface Coin {
+interface CoinData {
   amount: string;
   denom: string;
 }

@@ -10,6 +10,7 @@
   padding: 0 20px;
   overflow: auto;
   font-size: 15px;
+  width: 100%;
   .type {
     padding: 20px;
     line-height: 1;
@@ -21,7 +22,8 @@
     -webkit-box-sizing: content-box;
     box-sizing: content-box;
   }
-  p {
+  p,
+  .eventWrapper {
     line-height: 1.5;
     margin: 20px 0;
     display: table;
@@ -41,4 +43,22 @@
       padding-right: 20px;
     }
   }
+}
+
+.events {
+  margin-bottom: 20px;
+}
+
+.eventType {
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.attrKey {
+  width: 155px;
+  font-weight: 500;
+}
+
+.attrValue {
+  white-space: pre-line;
 }

@@ -9,7 +9,7 @@ import Coin from "../../components/Coin";
 interface Claim {
   tx: string;
   type: string;
-  amounts: Coin[];
+  amounts: CoinData[];
   timestamp: string;
 }
 

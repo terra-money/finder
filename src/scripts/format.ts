@@ -23,7 +23,7 @@ const formatDenom = (denom: string): string => {
   return denom;
 };
 
-const formatCoin = ({ amount, denom }: Coin): string =>
+const formatCoin = ({ amount, denom }: CoinData): string =>
   [formatAmount(amount), formatDenom(denom)].join(" ");
 
 export default {
@@ -31,7 +31,7 @@ export default {
   amount: formatAmount,
   denom: formatDenom,
   coin: formatCoin,
-  coins: (coins: Coin[]): string[] => coins.map(formatCoin),
+  coins: (coins: CoinData[]): string[] => coins.map(formatCoin),
 
   date: (param: string, config: { toLocale?: boolean } = {}): string => {
     const dt = DateTime.fromISO(param).toUTC();
