@@ -1,6 +1,7 @@
 interface Log {
   msg_index: string;
   success: boolean;
+  events: Events[];
   // log can be empty string with success
   log:
     | string
@@ -10,6 +11,16 @@ interface Log {
         code?: number;
         message?: string;
       };
+}
+
+interface Events {
+  type: string;
+  attributes: Attributes[];
+}
+
+interface Attributes {
+  key: string;
+  value: string;
 }
 
 interface Tag {

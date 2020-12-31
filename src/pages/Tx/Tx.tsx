@@ -90,7 +90,7 @@ function getTotalFee(txResponse: TxResponse) {
     return `0 Luna`;
   }
 
-  amount.forEach((a: Coin) => {
+  amount.forEach((a: CoinData) => {
     if (!isObject(a)) {
       return;
     }
@@ -202,11 +202,9 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Message</div>
               <div className={s.body}>
-                <div style={{ overflowX: "hidden", width: "100%" }}>
-                  {response.tx.value.msg.map((msg, index) => (
-                    <MsgBox msg={msg} key={index} />
-                  ))}
-                </div>
+                {response.tx.value.msg.map((msg, index) => (
+                  <MsgBox msg={msg} log={response.logs[index]} key={index} />
+                ))}
               </div>
             </div>
           </div>
