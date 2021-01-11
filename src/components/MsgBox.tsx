@@ -8,7 +8,7 @@ import {
 import format from "../scripts/format";
 import { decodeBase64 } from "../scripts/utility";
 import Finder from "./Finder";
-import Formatter from "./Formatter";
+import useFormatter from "./Formatter";
 import s from "./Msg.module.scss";
 
 export default ({ msg, log }: { msg: Msg; log: Log | undefined }) => {
@@ -46,6 +46,8 @@ export default ({ msg, log }: { msg: Msg; log: Log | undefined }) => {
     }
   };
 
+  const formatter = useFormatter();
+
   const renderEventlog = () =>
     log && (
       <div className={s.eventWrapper}>
@@ -66,7 +68,7 @@ export default ({ msg, log }: { msg: Msg; log: Log | undefined }) => {
                     <tr key={key} className={s.eventData}>
                       <th className={s.attrKey}>{attr.key}</th>
                       <td className={s.attrValue}>
-                        <Formatter attr={attr} formatExact={formatExact} />
+                        {attr.value && formatter(attr.value, formatExact)}
                       </td>
                     </tr>
                   );
