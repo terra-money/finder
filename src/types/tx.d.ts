@@ -20,7 +20,7 @@ interface Events {
 
 interface Attributes {
   key: string;
-  value: string;
+  value?: string;
 }
 
 interface Tag {

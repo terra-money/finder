@@ -16,18 +16,19 @@ type Props = {
 const NativeDenoms = ["uluna", "ukrw", "uusd", "usdr", "umnt"];
 const Formatter = ({ attr, formatExact }: Props) => {
   const { network: currentChain } = useContext(NetworkContext);
+  const { value = "" } = attr;
 
-  return ValAddress.validate(attr.value) ? (
-    <Finder q="validator" v={attr.value} children={attr.value} />
-  ) : AccAddress.validate(attr.value) ? (
-    <Finder q="address" v={attr.value} children={attr.value} />
-  ) : new BigNumber(attr.value).isFinite() ? (
-    <>{formatExact ? attr.value : format.amount(attr.value)}</>
-  ) : NativeDenoms.includes(attr.value) ? (
-    <>{format.denom(attr.value)}</>
+  return ValAddress.validate(value) ? (
+    <Finder q="validator" v={value} children={value} />
+  ) : AccAddress.validate(value) ? (
+    <Finder q="address" v={value} children={value} />
+  ) : new BigNumber(value).isFinite() ? (
+    <>{formatExact ? value : format.amount(value)}</>
+  ) : NativeDenoms.includes(value) ? (
+    <>{format.denom(value)}</>
   ) : (
     <>
-      {attr.value
+      {value
         .split(",")
         .map(string => string.trim())
         .map(string =>
