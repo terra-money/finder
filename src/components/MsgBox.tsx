@@ -66,7 +66,12 @@ export default ({ msg, log }: { msg: Msg; log: Log | undefined }) => {
                     <tr key={key} className={s.eventData}>
                       <th className={s.attrKey}>{attr.key}</th>
                       <td className={s.attrValue}>
-                        <Formatter attr={attr} formatExact={formatExact} />
+                        {attr.value && (
+                          <Formatter
+                            value={attr.value}
+                            formatExact={formatExact}
+                          />
+                        )}
                       </td>
                     </tr>
                   );
