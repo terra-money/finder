@@ -4,7 +4,9 @@ import s from "./NoDataYet.module.scss";
 type Props = {
   context: string;
 };
-export default (props: Props) => {
+const NoDataYet = (props: Props) => {
   const { context } = props;
   return <div className={s.container}>No {context} yet</div>;
 };
+
+export default NoDataYet;

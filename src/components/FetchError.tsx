@@ -11,7 +11,7 @@ type Props = {
   error?: Error;
 };
 
-export default ({ url, error }: Props) => {
+const FetchError = ({ url, error }: Props) => {
   // let isOffline = false;
   // const statusCode = get(error, `response.status`);
   // const responseData = get(error, `response.data`);
@@ -54,3 +54,5 @@ export default ({ url, error }: Props) => {
     </>
   );
 };
+
+export default FetchError;

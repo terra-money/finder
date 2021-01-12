@@ -13,7 +13,7 @@ import Coin from "../../components/Coin";
 
 import { BASE_DENOM } from "../../scripts/utility";
 
-export default ({ staking }: { staking: Staking }) => {
+const Unbondings = ({ staking }: { staking: Staking }) => {
   const getRow = (u: Undelegation) => {
     const {
       amount,
@@ -64,3 +64,5 @@ export default ({ staking }: { staking: Staking }) => {
     </Card>
   ) : null;
 };
+
+export default Unbondings;

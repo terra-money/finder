@@ -13,8 +13,6 @@ interface Delegator {
   weight: string;
 }
 
-type Delegators = Pagination & { delegators: Delegator[] };
-
 const Delegators = ({ address }: { address: string }) => {
   const [page, setPage] = useState<string>("1");
 
@@ -46,7 +44,10 @@ const Delegators = ({ address }: { address: string }) => {
       url={`/v1/staking/validators/${address}/delegators`}
       params={{ page }}
     >
-      {({ delegators = [], ...pagination }: Delegators) => (
+      {({
+        delegators = [],
+        ...pagination
+      }: { delegators: Delegator[] } & Pagination) => (
         <Pagination {...pagination} title="claim" action={setPage}>
           <Table>
             <thead>{renderHead()}</thead>
