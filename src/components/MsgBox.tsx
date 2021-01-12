@@ -47,7 +47,7 @@ export default ({ msg, log }: { msg: Msg; log: Log | undefined }) => {
   };
 
   const renderEventlog = () =>
-    log && (
+    log?.events && (
       <div className={s.eventWrapper}>
         <span>event logs</span>
         {log.events.map((value, key) => (
@@ -59,7 +59,8 @@ export default ({ msg, log }: { msg: Msg; log: Log | undefined }) => {
                 {value.attributes.map((attr, key) => {
                   const formatExact = [
                     "exchange_rates",
-                    "exchange_rate"
+                    "exchange_rate",
+                    "position_idx"
                   ].includes(attr.key);
 
                   return (

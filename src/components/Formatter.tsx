@@ -63,7 +63,9 @@ const Formatter = ({ value, formatExact }: Props) => {
   ) : undefined;
 
   const renderValue = new BigNumber(value).isFinite()
-    ? format.amount(value)
+    ? formatExact
+      ? value
+      : format.amount(value)
     : NativeDenoms.includes(value)
     ? format.denom(value)
     : isValid(new Date(value))
@@ -73,7 +75,7 @@ const Formatter = ({ value, formatExact }: Props) => {
   const ret = renderFinder || renderValue || renderCoins || value;
 
   if (typeof ret === "string") {
-    return <span>{ret}</span>;
+    return <>{ret}</>;
   }
 
   return ret;
