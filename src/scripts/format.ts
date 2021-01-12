@@ -26,7 +26,7 @@ const formatDenom = (denom: string): string => {
 const formatCoin = ({ amount, denom }: CoinData): string =>
   [formatAmount(amount), formatDenom(denom)].join(" ");
 
-export default {
+const format = {
   decimal: formatDecimal,
   amount: formatAmount,
   denom: formatDenom,
@@ -51,3 +51,5 @@ export default {
       : address;
   }
 };
+
+export default format;

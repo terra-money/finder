@@ -1,4 +1,4 @@
-export default [
+const networks = [
   {
     key: "columbus-4",
     fcd: "https://fcd.terra.dev",
@@ -36,3 +36,5 @@ export default [
     mantle: "http://localhost:1337"
   }
 ];
+
+export default networks;

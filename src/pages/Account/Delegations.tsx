@@ -11,7 +11,7 @@ import Finder from "../../components/Finder";
 import { isEmpty } from "lodash";
 import { BASE_DENOM } from "../../scripts/utility";
 
-export default ({ staking }: { staking: Staking }) => {
+const Delegations = ({ staking }: { staking: Staking }) => {
   const getRow = (d: MyDelegation) => {
     const {
       amountDelegated,
@@ -70,3 +70,5 @@ export default ({ staking }: { staking: Staking }) => {
     </Card>
   ) : null;
 };
+
+export default Delegations;

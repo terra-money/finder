@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import apiClient from "../apiClient";
 import { fcdUrl } from "../scripts/utility";
 
-export default ({ url, params, network }: FetchProps & { network: string }) => {
+const useFetch = ({
+  url,
+  params,
+  network
+}: FetchProps & { network: string }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
@@ -35,3 +39,5 @@ export default ({ url, params, network }: FetchProps & { network: string }) => {
 
   return { data, isLoading, error };
 };
+
+export default useFetch;

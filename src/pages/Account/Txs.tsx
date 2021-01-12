@@ -12,7 +12,7 @@ import format from "../../scripts/format";
 import NetworkContext from "../../contexts/NetworkContext";
 import s from "./Txs.module.scss";
 
-export default ({
+const Txs = ({
   address,
   search,
   pathname
@@ -91,3 +91,5 @@ export default ({
     </WithFetch>
   );
 };
+
+export default Txs;

@@ -13,8 +13,6 @@ interface Claim {
   timestamp: string;
 }
 
-type Claims = Pagination & { claims: Claim[] };
-
 const Claims = ({ address }: { address: string }) => {
   const [page, setPage] = useState<string>("1");
 
@@ -59,7 +57,7 @@ const Claims = ({ address }: { address: string }) => {
       url={`/v1/staking/validators/${address}/claims`}
       params={{ page }}
     >
-      {({ claims = [], ...pagination }: Claims) => (
+      {({ claims = [], ...pagination }: { claims: Claim[] } & Pagination) => (
         <Pagination {...pagination} title="claim" action={setPage}>
           <Table>
             <thead>{renderHead()}</thead>

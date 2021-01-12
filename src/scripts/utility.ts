@@ -1,5 +1,6 @@
 import { formatToTimeZone } from "date-fns-timezone";
 import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
+import isBase64 from "is-base64";
 import networksConfig from "../config/networks";
 import { isInteger } from "./math";
 
@@ -71,7 +72,11 @@ export function prependProtocol(url: string) {
 
 export function decodeBase64(str: string) {
   try {
-    return Buffer.from(str, "base64").toString();
+    if (isBase64(str)) {
+      return Buffer.from(str, "base64").toString();
+    }
+
+    return str;
   } catch {
     return str;
   }

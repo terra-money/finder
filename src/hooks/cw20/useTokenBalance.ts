@@ -18,7 +18,16 @@ export interface TokenBalance extends Token {
 
 export type Tokens = Dictionary<Token>;
 
-export default (
+const parseResult = (data: Dictionary<{ Result: string }>) =>
+  Object.entries(data).reduce(
+    (acc, [token, { Result }]) => ({
+      ...acc,
+      [token]: JSON.parse(Result).balance
+    }),
+    {}
+  );
+
+const useTokenBalance = (
   address: string
 ): { loading: boolean; whitelist?: Tokens; list?: TokenBalance[] } => {
   const [result, setResult] = useState<Dictionary<string>>();
@@ -67,11 +76,4 @@ export default (
   };
 };
 
-const parseResult = (data: Dictionary<{ Result: string }>) =>
-  Object.entries(data).reduce(
-    (acc, [token, { Result }]) => ({
-      ...acc,
-      [token]: JSON.parse(Result).balance
-    }),
-    {}
-  );
+export default useTokenBalance;

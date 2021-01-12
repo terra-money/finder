@@ -6,6 +6,8 @@ interface Item {
   msg: object;
 }
 
+const stringify = (msg: object) => JSON.stringify(msg).replace(/"/g, '\\"');
+
 const aliasItem = ({ token, contract, msg }: Item) => `
     ${token}: WasmContractsContractAddressStore(
       ContractAddress: "${contract}"
@@ -15,11 +17,10 @@ const aliasItem = ({ token, contract, msg }: Item) => `
       Result
     }`;
 
-export default (list: Item[]) => gql`
+const alias = (list: Item[]) => gql`
   query {
     ${list.map(aliasItem)}
   }
 `;
 
-export const stringify = (msg: object) =>
-  JSON.stringify(msg).replace(/"/g, '\\"');
+export default alias;
