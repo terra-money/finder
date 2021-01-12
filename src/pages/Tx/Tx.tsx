@@ -203,7 +203,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               <div className={s.head}>Message</div>
               <div className={s.body}>
                 {response.tx.value.msg.map((msg, index) => (
-                  <MsgBox msg={msg} log={response.logs[index]} key={index} />
+                  <MsgBox msg={msg} log={response.logs?.[index]} key={index} />
                 ))}
               </div>
             </div>
