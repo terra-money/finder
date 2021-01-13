@@ -19,11 +19,11 @@ const prettifyExecuteMsg = (str: string) => {
 
     if (typeof parsed === "object") {
       Object.keys(parsed).forEach(key => {
-        parsed[key].msg = prettifyExecuteMsg(parsed[key].msg);
+        parsed[key].msg = JSON.parse(decodeBase64(parsed[key].msg));
       });
     }
 
-    return JSON.stringify(parsed);
+    return JSON.stringify(parsed, undefined, 2);
   } catch (e) {
     return str;
   }
@@ -53,7 +53,7 @@ const getContent = (msg: Msg, key: string) => {
   } else if (key === "ask_denom" || key === "denom") {
     return format.denom(msg.value[key]);
   } else if (key === "execute_msg") {
-    return prettifyExecuteMsg(msg.value[key]);
+    return <pre>{prettifyExecuteMsg(msg.value[key])}</pre>;
   } else {
     return Array.isArray(msg.value[key])
       ? msg.value[key].map((j: any, index: number) => (
