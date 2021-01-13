@@ -12,10 +12,10 @@ import Formatter from "./Formatter";
 import s from "./Msg.module.scss";
 
 const prettifyExecuteMsg = (str: string) => {
-  const decoded = decodeBase64(str);
+  const decoded = JSON.parse(decodeBase64(str));
 
   try {
-    const parsed = JSON.parse(decoded);
+    const parsed = decoded;
 
     if (typeof parsed === "object") {
       Object.keys(parsed).forEach(key => {
@@ -25,7 +25,7 @@ const prettifyExecuteMsg = (str: string) => {
 
     return JSON.stringify(parsed, undefined, 2);
   } catch (e) {
-    return str;
+    return JSON.stringify(decoded, undefined, 2);
   }
 };
 
