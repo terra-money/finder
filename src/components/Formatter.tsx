@@ -3,13 +3,15 @@ import { Dictionary } from "ramda";
 import { AccAddress, Coin, ValAddress } from "@terra-money/terra.js";
 import { isValid } from "date-fns";
 import BigNumber from "bignumber.js";
-import { Tokens } from "../hooks/cw20/useTokenBalance";
-import tokens from "../hooks/cw20/tokens.json";
+import contracts from "../components/contracts.json";
 import NetworkContext from "../contexts/NetworkContext";
 import format from "../scripts/format";
 import Finder from "./Finder";
+import s from "./Formatter.module.scss";
 
 const NativeDenoms = ["uluna", "ukrw", "uusd", "usdr", "umnt"];
+
+type Data = Dictionary<{ name: string; icon: string }>;
 
 type Props = {
   value: string;
@@ -17,8 +19,8 @@ type Props = {
 };
 
 const getSymbol = (chainId: string, token: string) => {
-  const whitelist = (tokens as Dictionary<Tokens>)[chainId];
-  return whitelist && whitelist[token].symbol;
+  const whitelist = (contracts as Dictionary<Data>)[chainId];
+  return whitelist && whitelist[token].icon;
 };
 
 // 2956884terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt
@@ -74,13 +76,31 @@ const renderCoins = (
     .join("\n");
 };
 
+const formatAccAddress = (chainId: string, address: string) => {
+  const whitelist = (contracts as Dictionary<Data>)[chainId];
+  const data = whitelist[address];
+
+  return (
+    <div className={s.wrapper}>
+      {data ? (
+        <>
+          <Finder q="address" v={address} children={data.name} />
+          <img src={data.icon} alt={data.name} className={s.icon} />
+        </>
+      ) : (
+        <Finder q="address" v={address} children={address} />
+      )}
+    </div>
+  );
+};
+
 const Formatter = ({ value, formatExact }: Props) => {
   const { network: currentChain } = useContext(NetworkContext);
 
   const renderFinder = ValAddress.validate(value) ? (
     <Finder q="validator" v={value} children={value} />
   ) : AccAddress.validate(value) ? (
-    <Finder q="address" v={value} children={value} />
+    formatAccAddress(currentChain, value)
   ) : undefined;
 
   if (renderFinder) {
