@@ -16,51 +16,76 @@ type Props = {
   formatExact?: boolean;
 };
 
-const Formatter = ({ value, formatExact }: Props) => {
-  const { network: currentChain } = useContext(NetworkContext);
+const getSymbol = (chainId: string, token: string) => {
+  const whitelist = (tokens as Dictionary<Tokens>)[chainId];
+  return whitelist && whitelist[token].symbol;
+};
 
-  const formatCoin = (
-    string: string,
-    formatter = (amount: string) => amount
-  ) => {
-    try {
-      const coin = Coin.fromString(string);
-      return [formatter(coin.amount.toString()), format.denom(coin.denom)].join(
-        " "
-      );
-    } catch {
-      return formatCW20Token(string);
-    }
-  };
+// 2956884terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt
+const CW20TokenRegExp = /^(\d+)(terra[0-9][a-z0-9]{38})$/;
 
-  const formatCW20Token = (string: string) => {
-    const [, amount, token] = string.split(/(\d+)(\w+)/);
-    return [format.amount(amount), getSymbol(token)].join(" ");
-  };
+const formatCW20Token = (chainId: string, string: string) => {
+  const res = CW20TokenRegExp.exec(string);
 
-  const getSymbol = (token: string) => {
-    const whitelist =
-      currentChain && (tokens as Dictionary<Tokens>)[currentChain];
-    return whitelist && whitelist[token].symbol;
-  };
+  if (!res) {
+    return;
+  }
 
-  const renderCoins = value
+  const [, amount, address] = res;
+  const symbol = getSymbol(chainId, address);
+  return symbol && `${format.amount(amount)} ${symbol}`;
+};
+
+const formatCoin = (
+  chainId: string,
+  string: string,
+  formatter = (amount: string) => amount
+): string | undefined => {
+  try {
+    const coin = Coin.fromString(string);
+    return [formatter(coin.amount.toString()), format.denom(coin.denom)].join(
+      " "
+    );
+  } catch {
+    return formatCW20Token(chainId, string);
+  }
+};
+
+const renderCoins = (
+  chainId: string,
+  value: string,
+  formatExact?: boolean
+): string => {
+  return value
     .split(",")
     .map(string => string.trim())
     .map(string => {
       try {
-        return formatCoin(string, formatExact ? undefined : format.amount);
+        return formatCoin(
+          chainId,
+          string,
+          formatExact ? undefined : format.amount
+        );
       } catch {
         return undefined;
       }
     })
+    .filter(Boolean)
     .join("\n");
+};
+
+const Formatter = ({ value, formatExact }: Props) => {
+  const { network: currentChain } = useContext(NetworkContext);
 
   const renderFinder = ValAddress.validate(value) ? (
     <Finder q="validator" v={value} children={value} />
   ) : AccAddress.validate(value) ? (
     <Finder q="address" v={value} children={value} />
   ) : undefined;
+
+  if (renderFinder) {
+    return renderFinder;
+  }
 
   const renderValue = new BigNumber(value).isFinite()
     ? formatExact
@@ -72,13 +97,17 @@ const Formatter = ({ value, formatExact }: Props) => {
     ? new Date(value).toLocaleString()
     : undefined;
 
-  const ret = renderFinder || renderValue || renderCoins || value;
-
-  if (typeof ret === "string") {
-    return <>{ret}</>;
+  if (renderValue) {
+    return <>{renderValue}</>;
   }
 
-  return ret;
+  const coins = renderCoins(currentChain, value, formatExact);
+
+  if (coins) {
+    return <>{coins}</>;
+  }
+
+  return <>{value}</>;
 };
 
 export default Formatter;
