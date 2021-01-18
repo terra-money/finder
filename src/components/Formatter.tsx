@@ -6,8 +6,7 @@ import BigNumber from "bignumber.js";
 import contracts from "../components/contracts.json";
 import NetworkContext from "../contexts/NetworkContext";
 import format from "../scripts/format";
-import Finder from "./Finder";
-import s from "./Formatter.module.scss";
+import Address from "./Address";
 
 const NativeDenoms = ["uluna", "ukrw", "uusd", "usdr", "umnt"];
 
@@ -20,7 +19,7 @@ type Props = {
 
 const getSymbol = (chainId: string, token: string) => {
   const whitelist = (contracts as Dictionary<Data>)[chainId];
-  return whitelist && whitelist[token].icon;
+  return whitelist && whitelist[token].name;
 };
 
 // 2956884terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt
@@ -76,32 +75,13 @@ const renderCoins = (
     .join("\n");
 };
 
-const formatAccAddress = (chainId: string, address: string) => {
-  const whitelist = (contracts as Dictionary<Data>)[chainId];
-  const data = whitelist[address];
-
-  return (
-    <div className={s.wrapper}>
-      {data ? (
-        <>
-          <Finder q="address" v={address} children={data.name} />
-          <img src={data.icon} alt={data.name} className={s.icon} />
-        </>
-      ) : (
-        <Finder q="address" v={address} children={address} />
-      )}
-    </div>
-  );
-};
-
 const Formatter = ({ value, formatExact }: Props) => {
   const { network: currentChain } = useContext(NetworkContext);
 
-  const renderFinder = ValAddress.validate(value) ? (
-    <Finder q="validator" v={value} children={value} />
-  ) : AccAddress.validate(value) ? (
-    formatAccAddress(currentChain, value)
-  ) : undefined;
+  const renderFinder =
+    ValAddress.validate(value) || AccAddress.validate(value) ? (
+      <Address address={value} />
+    ) : undefined;
 
   if (renderFinder) {
     return renderFinder;

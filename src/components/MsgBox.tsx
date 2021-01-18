@@ -7,9 +7,9 @@ import {
 } from "../scripts/utility";
 import format from "../scripts/format";
 import { decodeBase64 } from "../scripts/utility";
-import Finder from "./Finder";
 import Formatter from "./Formatter";
 import s from "./Msg.module.scss";
+import Address from "./Address";
 
 const prettifyExecuteMsg = (str: string) => {
   const decoded = JSON.parse(decodeBase64(str));
@@ -30,18 +30,8 @@ const prettifyExecuteMsg = (str: string) => {
 };
 
 const getContent = (msg: Msg, key: string) => {
-  if (isTerraAddress(msg.value[key])) {
-    return (
-      <Finder q="account" v={msg.value[key]}>
-        {msg.value[key]}
-      </Finder>
-    );
-  } else if (isValidatorAddress(msg.value[key])) {
-    return (
-      <Finder q="validator" v={msg.value[key]}>
-        {msg.value[key]}
-      </Finder>
-    );
+  if (isTerraAddress(msg.value[key]) || isValidatorAddress(msg.value[key])) {
+    return <Address address={msg.value[key]} />;
   } else if (key === "amount" || key === "offer_coin") {
     return Array.isArray(msg.value[key]) ? (
       msg.value[key].map((a: CoinData) => (
@@ -76,7 +66,8 @@ const renderEventlog = (events: Events[]) => (
               const formatExact = [
                 "exchange_rates",
                 "exchange_rate",
-                "position_idx"
+                "position_idx",
+                "code_id"
               ].includes(attr.key);
 
               return (
