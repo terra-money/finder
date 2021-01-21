@@ -12,7 +12,7 @@ type Prop = { address: string };
 
 const formatAccAddress = (chainId: string, address: string) => {
   const whitelist = (contracts as Dictionary<Data>)[chainId];
-  const data = whitelist[address];
+  const data = whitelist?.[address];
 
   return (
     <div className={s.wrapper}>
