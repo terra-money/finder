@@ -45,7 +45,7 @@ const Txs = ({
     const isSuccess = !response.code;
     return [
       <span>
-        <Finder q="tx" network={chainId} v={txhash}>
+        <Finder q="tx" network={network} v={txhash}>
           {format.truncate(txhash, [8, 8])}
         </Finder>
       </span>,
@@ -54,7 +54,7 @@ const Txs = ({
         {isSuccess ? `Success` : `Failed`}
       </span>,
       <span>
-        <Finder q="blocks" network={chainId} v={height}>
+        <Finder q="blocks" network={network} v={height}>
           {height}
         </Finder>
         <span> ({chainId})</span>
