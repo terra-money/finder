@@ -4,8 +4,8 @@ import { Dictionary } from "ramda";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
 import Loading from "../../components/Loading";
+import contracts from "../../components/contracts.json";
 import WithFetch from "../../HOCs/WithFetch";
-import tokens from "../../hooks/cw20/tokens.json";
 import { Tokens } from "../../hooks/cw20/useTokenBalance";
 import NetworkContext from "../../contexts/NetworkContext";
 import Txs from "./Txs";
@@ -15,7 +15,7 @@ const TokenDetails = () => {
   const { address = "" } = useParams<{ address: string }>();
   const { search, pathname } = useLocation();
   const { network: currentChain } = useContext(NetworkContext);
-  const whitelist = (tokens as Dictionary<Tokens>)[currentChain];
+  const whitelist = (contracts as Dictionary<Tokens>)[currentChain];
   const size = { width: 32, height: 32 };
 
   return (
