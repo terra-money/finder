@@ -55,7 +55,7 @@ const Account = () => {
                   .map((t, i) => (
                     <AmountCard
                       key={i}
-                      denom={t.symbol}
+                      denom={t.name}
                       amount={t.balance}
                       icon={t.icon}
                     />

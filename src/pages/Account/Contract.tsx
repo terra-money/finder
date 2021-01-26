@@ -1,20 +1,20 @@
 import React, { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import format from "../../scripts/format";
+import { decodeBase64 } from "../../scripts/utility";
+import WithFetch, { useNetwork } from "../../HOCs/WithFetch";
+import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
 import ExtLink from "../../components/ExtLink";
-import WithFetch, { useNetwork } from "../../HOCs/WithFetch";
 import Info from "../../components/Info";
-import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import Loading from "../../components/Loading";
+import Flex from "../../components/Flex";
+import ModalWithButton from "../../components/ModalWithButton";
 import CopyAddress from "./CopyAddress";
 import Txs from "./Txs";
 import AvailableList from "./AvailableList";
 import AmountCard from "./AmountCard";
-import Flex from "../../components/Flex";
-import ModalWithButton from "../../components/ModalWithButton";
-import { decodeBase64 } from "../../scripts/utility";
 import Query from "./Query";
 import s from "./Contract.module.scss";
 
@@ -99,7 +99,7 @@ const Contract = ({ address, code, info, ...data }: Contract) => {
               .map((t, i) => (
                 <AmountCard
                   key={i}
-                  denom={t.symbol}
+                  denom={t.name}
                   amount={t.balance}
                   icon={t.icon}
                 />

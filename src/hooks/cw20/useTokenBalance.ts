@@ -2,14 +2,15 @@ import { useEffect, useState, useContext } from "react";
 import { Dictionary } from "ramda";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import NetworkContext from "../../contexts/NetworkContext";
-import tokens from "./tokens.json";
+import contracts from "../../components/contracts.json";
 import alias from "./alias";
 import { mantleUri } from "../../scripts/utility";
 
 export interface Token {
-  symbol: string;
   icon?: string;
-  token: string;
+  name: string;
+  contractAddress: string;
+  category: string;
 }
 
 export interface TokenBalance extends Token {
@@ -32,7 +33,7 @@ const useTokenBalance = (
 ): { loading: boolean; whitelist?: Tokens; list?: TokenBalance[] } => {
   const [result, setResult] = useState<Dictionary<string>>();
   const { network: currentChain } = useContext(NetworkContext);
-  const whitelist = (tokens as Dictionary<Tokens | undefined>)[currentChain];
+  const whitelist = (contracts as Dictionary<Tokens | undefined>)[currentChain];
   const mantle = mantleUri(currentChain);
 
   useEffect(() => {
@@ -45,10 +46,10 @@ const useTokenBalance = (
           });
 
           const queries = alias(
-            Object.values(whitelist).map(({ token }) => ({
-              token,
-              contract: token,
-              msg: { balance: { address } }
+            Object.values(whitelist).map(({ contractAddress, category }) => ({
+              contract: contractAddress,
+              msg: { balance: { address } },
+              category: category
             }))
           );
 
