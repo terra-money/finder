@@ -62,25 +62,14 @@ const renderEventlog = (events: Events[]) => (
         <hr />
         <table className={s.events}>
           <tbody>
-            {value.attributes.map((attr, key) => {
-              const formatExact = [
-                "exchange_rates",
-                "exchange_rate",
-                "position_idx",
-                "code_id"
-              ].includes(attr.key);
-
-              return (
-                <tr key={key} className={s.eventData}>
-                  <th className={s.attrKey}>{attr.key}</th>
-                  <td className={s.attrValue}>
-                    {attr.value && (
-                      <Formatter value={attr.value} formatExact={formatExact} />
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+            {value.attributes.map((attr, key) => (
+              <tr key={key} className={s.eventData}>
+                <th className={s.attrKey}>{attr.key}</th>
+                <td className={s.attrValue}>
+                  {attr.value && <Formatter value={attr.value} />}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
