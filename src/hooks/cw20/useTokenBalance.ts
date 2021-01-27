@@ -9,7 +9,6 @@ import { mantleUri } from "../../scripts/utility";
 export interface Token {
   icon?: string;
   name: string;
-  contractAddress: string;
   category: string;
 }
 
@@ -46,8 +45,8 @@ const useTokenBalance = (
           });
 
           const queries = alias(
-            Object.values(whitelist).map(({ contractAddress, category }) => ({
-              contract: contractAddress,
+            Object.entries(whitelist).map(([key, { category }]) => ({
+              contract: key,
               msg: { balance: { address } },
               category: category
             }))
