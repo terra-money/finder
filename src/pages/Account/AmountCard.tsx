@@ -1,14 +1,8 @@
-import React, { ReactNode } from "react";
-import { Dictionary } from "ramda";
+import React, { ReactNode, useState } from "react";
 import { lte } from "../../scripts/math";
 import Card from "../../components/Card";
 import Amount from "../../components/Amount";
-import { ReactComponent as Luna } from "../../images/Luna.svg";
 import { ReactComponent as Terra } from "../../images/Terra.svg";
-import SDT from "../../images/SDT.png";
-import UST from "../../images/UST.png";
-import KRT from "../../images/KRT.png";
-import MNT from "../../images/MNT.png";
 import s from "./AmountCard.module.scss";
 
 type Props = {
@@ -19,23 +13,26 @@ type Props = {
   children?: ReactNode;
 };
 
-const TerraIcon: Dictionary<string> = { SDT, UST, KRT, MNT };
-
 const AmountCard = ({ denom, icon, amount, button, children }: Props) => {
   const size = { width: 30, height: 30 };
+  const iconLink = `https://assets.terra.money/icon/60/${denom}.png`;
+  const [iconError, setIconError] = useState(false);
 
-  const iconRender = icon ? (
+  const iconRender = (
     <div className={s.icon}>
-      <img src={icon} alt={denom} {...size} />
+      {icon ? (
+        <img src={icon} alt={denom} {...size} />
+      ) : !iconError ? (
+        <img
+          src={iconLink}
+          onError={() => setIconError(true)}
+          alt={denom}
+          {...size}
+        />
+      ) : (
+        <Terra {...size} />
+      )}
     </div>
-  ) : TerraIcon[denom] ? (
-    <div className={s.icon}>
-      <img src={TerraIcon[denom]} alt={denom} {...size} />
-    </div>
-  ) : denom === "Luna" ? (
-    <Luna {...size} className={s.icon} />
-  ) : (
-    <Terra {...size} className={s.icon} />
   );
 
   return (
