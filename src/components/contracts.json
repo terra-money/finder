@@ -70,6 +70,31 @@
       "name": "mVIXY",
       "icon": "https://whitelist.mirror.finance/icon/VIXY.png"
     },
+    "terra1g4x2pzmkc9z3mseewxf758rllg08z3797xly0n": {
+      "category": "cw20Token",
+      "name": "mABNB",
+      "icon": "https://whitelist.mirror.finance/icon/ABNB.png"
+    },
+    "terra1rhhvx8nzfrx5fufkuft06q5marfkucdqwq5sjw": {
+      "category": "cw20Token",
+      "name": "mBTC",
+      "icon": "https://whitelist.mirror.finance/icon/BTC.png"
+    },
+    "terra1dk3g53js3034x4v5c3vavhj2738une880yu6kx": {
+      "category": "cw20Token",
+      "name": "mETH",
+      "icon": "https://whitelist.mirror.finance/icon/ETH.png"
+    },
+    "terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7": {
+      "category": "cw20Token",
+      "name": "mFB",
+      "icon": "https://whitelist.mirror.finance/icon/FB.png"
+    },
+    "terra137drsu8gce5thf6jr5mxlfghw36rpljt3zj73v": {
+      "category": "cw20Token",
+      "name": "mGS",
+      "icon": "https://whitelist.mirror.finance/icon/GS.png"
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -224,6 +249,56 @@
       "category": "Terraswap",
       "name": "Terraswap mVIXY-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/VIXY.png"
+    },
+    "terra1gq7lq389w4dxqtkxj03wp0fvz0cemj0ek5wwmm": {
+      "category": "Terraswap",
+      "name": "Terraswap mABNB-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/ABNB.png"
+    },
+    "terra1jmauv302lfvpdfau5nhzy06q0j2f9te4hy2d07": {
+      "category": "Terraswap",
+      "name": "Terraswap mABNB-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/ABNB.png"
+    },
+    "terra1prfcyujt9nsn5kfj5n925sfd737r2n8tk5lmpv": {
+      "category": "Terraswap",
+      "name": "Terraswap mBTC-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/BTC.png"
+    },
+    "terra1d34edutzwcz6jgecgk26mpyynqh74j3emdsnq5": {
+      "category": "Terraswap",
+      "name": "Terraswap mBTC-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/BTC.png"
+    },
+    "terra14fyt2g3umeatsr4j4g2rs8ca0jceu3k0mcs7ry": {
+      "category": "Terraswap",
+      "name": "Terraswap mETH-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/ETH.png"
+    },
+    "terra16auz7uhnuxrj2dzrynz2elthx5zpps5gs6tyln": {
+      "category": "Terraswap",
+      "name": "Terraswap mETH-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/ETH.png"
+    },
+    "terra1yl2atgxw422qxahm02p364wtgu7gmeya237pcs": {
+      "category": "Terraswap",
+      "name": "Terraswap mFB-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/FB.png"
+    },
+    "terra1jh2dh4g65hptsrwjv53nhsnkwlw8jdrxaxrca0": {
+      "category": "Terraswap",
+      "name": "Terraswap mFB-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/FB.png"
+    },
+    "terra108ukjf6ekezuc52t9keernlqxtmzpj4wf7rx0h": {
+      "category": "Terraswap",
+      "name": "Terraswap mGS-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/GS.png"
+    },
+    "terra17smg3rl9vdpawwpe7ex4ea4xm6q038gp2chge5": {
+      "category": "Terraswap",
+      "name": "Terraswap mGS-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/GS.png"
     },
     "terra1zw0kfxrxgrs5l087mjm79hcmj3y8z6tljuhpmc": {
       "category": "Terraswap",
