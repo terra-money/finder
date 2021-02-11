@@ -12,6 +12,11 @@ import format from "../../scripts/format";
 import NetworkContext from "../../contexts/NetworkContext";
 import s from "./Txs.module.scss";
 
+type Amount = {
+  amount: string;
+  denom: string;
+};
+
 const Txs = ({
   address,
   search,
@@ -35,6 +40,15 @@ const Txs = ({
   };
   const page = getSearch().get("page") || "1";
 
+  const getAmount = (prop: Amount) => {
+    if (!prop) return "-";
+
+    const amount = format.amount(prop?.amount);
+    const denom = format.denom(prop?.denom);
+
+    return `${amount} ${denom}`;
+  };
+
   /* helpers */
   const getLink = (page: string) => ({
     pathname,
@@ -43,6 +57,7 @@ const Txs = ({
   const getRow = (response: TxResponse) => {
     const { tx: txBody, txhash, height, timestamp, chainId } = response;
     const isSuccess = !response.code;
+
     return [
       <span>
         <Finder q="tx" network={network} v={txhash}>
@@ -59,11 +74,12 @@ const Txs = ({
         </Finder>
         <span> ({chainId})</span>
       </span>,
-      <span>{fromISOTime(timestamp.toString())} (UTC)</span>
+      <span>{fromISOTime(timestamp.toString())} (UTC)</span>,
+      <span>{getAmount(txBody.value.msg[0].value.amount?.[0])}</span>
     ];
   };
 
-  const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`];
+  const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`, `Amount`];
   return (
     <WithFetch
       url={`/v1/txs`}
