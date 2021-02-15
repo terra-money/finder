@@ -6,11 +6,24 @@ import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
+import CoinComponent from "../../components/Coin";
 import { isEmpty } from "lodash";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import NetworkContext from "../../contexts/NetworkContext";
 import s from "./Txs.module.scss";
+
+type Amount = {
+  denom: string;
+  amount: string;
+};
+
+const getAmount = (prop: Amount) => {
+  if (!prop) return "-";
+
+  const { denom, amount } = prop;
+  return <CoinComponent amount={amount} denom={denom} />;
+};
 
 const Txs = ({
   address,
@@ -59,11 +72,12 @@ const Txs = ({
         </Finder>
         <span> ({chainId})</span>
       </span>,
-      <span>{fromISOTime(timestamp.toString())} (UTC)</span>
+      <span>{fromISOTime(timestamp.toString())} (UTC)</span>,
+      <span>{getAmount(txBody.value.msg[0].value.amount?.[0])}</span>
     ];
   };
 
-  const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`];
+  const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`, `Amount`];
   return (
     <WithFetch
       url={`/v1/txs`}
