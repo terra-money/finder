@@ -95,6 +95,16 @@
       "name": "mGS",
       "icon": "https://whitelist.mirror.finance/icon/GS.png"
     },
+    "terra1m6j6j9gw728n82k78s0j9kq8l5p6ne0xcc820p": {
+      "category": "cw20Token",
+      "name": "mGME",
+      "icon": "https://whitelist.mirror.finance/icon/GME.png"
+    },
+    "terra1qelfthdanju7wavc5tq0k5r0rhsyzyyrsn09qy": {
+      "category": "cw20Token",
+      "name": "mAMC",
+      "icon": "https://whitelist.mirror.finance/icon/AMC.png"
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -299,6 +309,26 @@
       "category": "Terraswap",
       "name": "Terraswap mGS-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/GS.png"
+    },
+    "terra17eakdtane6d2y7y6v0s79drq7gnhzqan48kxw7": {
+      "category": "Terraswap",
+      "name": "Terraswap mGME-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/GME.png"
+    },
+    "terra1azk43zydh3sdxelg3h4csv4a4uef7fmjy0hu20": {
+      "category": "Terraswap",
+      "name": "Terraswap mGME-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/GME.png"
+    },
+    "terra1uenpalqlmfaf4efgtqsvzpa3gh898d9h2a232g": {
+      "category": "Terraswap",
+      "name": "Terraswap mAMC-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/AMC.png"
+    },
+    "terra1mtvslkm2tgsmh908dsfksnqu7r7lulh24a6knv": {
+      "category": "Terraswap",
+      "name": "Terraswap mAMC-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/AMC.png"
     },
     "terra1zw0kfxrxgrs5l087mjm79hcmj3y8z6tljuhpmc": {
       "category": "Terraswap",
