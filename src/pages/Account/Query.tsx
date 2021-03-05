@@ -28,7 +28,7 @@ const ACE_PROPS = {
 const Query = () => {
   const { address = "" } = useParams<{ address: string }>();
   const [query, setQuery] = useState<string>();
-  const [data, setData] = useState<string>();
+  const [data, setData] = useState<any>();
   const [error, setError] = useState<Error>();
 
   const reset = () => {
@@ -43,8 +43,8 @@ const Query = () => {
     try {
       const url = `https://lcd.terra.dev/wasm/contracts/${address}/store`;
       const params = query && { query_msg: JSON.parse(query) };
-      const { data } = await apiClient.get<string>(url, { params });
-      setData(data);
+      const { data } = await apiClient.get<{ result: any }>(url, { params });
+      setData(data.result);
     } catch (error) {
       setError(error);
     }
@@ -77,7 +77,7 @@ const Query = () => {
         <article className={s.innerHeader}>
           <h2 className={c(s.title, s.subTitle)}>JSON Output</h2>
           <Copy
-            text={data}
+            text={JSON.stringify(data, null, 2)}
             buttonLabel="COPY"
             classNames={{ button: s.copyButton, wrapper: s.copyWrapper }}
           />
