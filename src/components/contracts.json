@@ -824,17 +824,17 @@
     },
     "terra1wq9f8p8f7gldztpdc4v3awngupfkap8wpxhtjr": {
       "category": "cw20Token",
-      "symbol": "bLUNA",
+      "name": "bLUNA",
       "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png"
     },
     "terra1xhxx7tgth24d8f9pz6vkjmvulp88xh9vl9kmxu": {
       "category": "cw20Token",
-      "symbol": "aUST",
+      "name": "aUST",
       "icon": "https://whitelist.anchorprotocol.com/logo/aUST.png"
     },
     "terra1800p00qlxh0nmt0r0u9hv7m4lg042fnafng2t6": {
       "category": "cw20Token",
-      "symbol": "ANC",
+      "name": "ANC",
       "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
     }
   },
