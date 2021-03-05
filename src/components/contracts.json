@@ -836,6 +836,11 @@
       "category": "cw20Token",
       "name": "ANC",
       "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
+    },
+    "terra10lkkzutjesqpphugfuzdzy5995u37tmc72a255": {
+      "category": "Terraswap",
+      "name": "Terraswap ANC-UST Pair",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
     }
   },
   "localterra": {}
