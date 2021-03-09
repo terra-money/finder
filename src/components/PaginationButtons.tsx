@@ -10,10 +10,20 @@ type Props = {
   useStartEnd?: boolean;
 };
 
-const PaginationButtons = ({ current, total, actions, useStartEnd }: Props) => {
+const PaginationButtons = ({
+  current,
+  total,
+  actions,
+  links,
+  useStartEnd
+}: Props) => {
   const renderAction = (key: string, children: string, disabled: boolean) =>
     disabled ? (
       <span className={s[key]}>{children}</span>
+    ) : links ? (
+      <Link to={links[key]} className={s[key]}>
+        {children}
+      </Link>
     ) : (
       <button onClick={actions && actions[key]} className={s[key]}>
         {children}
