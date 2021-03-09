@@ -9,6 +9,7 @@ type Props = {
   link?: (page: string) => { pathname: string; search: string };
   action?: (page: string) => void;
   children: ReactNode;
+  useStartEnd?: boolean;
 };
 
 const Pagination = (props: Pagination & Props) => {
@@ -18,18 +19,22 @@ const Pagination = (props: Pagination & Props) => {
 
   const getLinks = () =>
     link && {
-      start: link("1"),
+      ...(props.useStartEnd && {
+        start: link("1"),
+        end: link(String(total))
+      }),
       prev: link(minus(page, 1)),
-      next: link(plus(page, 1)),
-      end: link(String(total))
+      next: link(plus(page, 1))
     };
 
   const getActions = () =>
     action && {
-      start: () => action("1"),
+      ...(props.useStartEnd && {
+        start: () => action("1"),
+        end: () => action(String(total))
+      }),
       prev: () => action(minus(page, 1)),
-      next: () => action(plus(page, 1)),
-      end: () => action(String(total))
+      next: () => action(plus(page, 1))
     };
 
   return gt(totalCnt, 0) ? (
