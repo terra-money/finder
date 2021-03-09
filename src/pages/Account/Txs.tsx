@@ -81,7 +81,7 @@ const Txs = ({
   return (
     <WithFetch
       url={`/v1/txs`}
-      params={{ account: address, page, chainId: network }}
+      params={{ page, limit: 100, account: address, chainId: network }}
       loading={<Loading />}
     >
       {({ txs, ...pagination }: Pagination & { txs: TxResponse[] }) =>
