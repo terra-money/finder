@@ -14,15 +14,27 @@ import NetworkContext from "../../contexts/NetworkContext";
 import s from "./Txs.module.scss";
 
 type Amount = {
-  denom: string;
-  amount: string;
+  amount: [
+    {
+      amount: string;
+      denom: string;
+    }
+  ];
+  from_address: string;
 };
 
-const getAmount = (prop: Amount) => {
-  if (!prop) return "-";
+const getAmount = (prop: Amount, address: string) => {
+  if (!prop.amount?.[0]) return "-";
 
-  const { denom, amount } = prop;
-  return <CoinComponent amount={amount} denom={denom} />;
+  const { denom, amount } = prop.amount[0];
+  const from_address = prop.from_address;
+
+  return (
+    <>
+      {from_address === address ? "-" : "+"}
+      <CoinComponent amount={amount} denom={denom} />
+    </>
+  );
 };
 
 const Txs = ({
@@ -70,10 +82,10 @@ const Txs = ({
         <Finder q="blocks" network={network} v={height}>
           {height}
         </Finder>
-        <span> ({chainId})</span>
+        <span>({chainId})</span>
       </span>,
       <span>{fromISOTime(timestamp.toString())} (UTC)</span>,
-      <span>{getAmount(txBody.value.msg[0].value.amount?.[0])}</span>
+      <span>{getAmount(txBody.value.msg[0].value, address)}</span>
     ];
   };
 
