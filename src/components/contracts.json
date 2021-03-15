@@ -412,18 +412,18 @@
     },
     "terra17wgmccdu57lx09yzhnnev39srqj7msg9ky2j76": {
       "category": "cw20Token",
-      "name": "bLUNA",
-      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png"
+      "name": "b",
+      "icon": ""
     },
     "terra1hj2lwwxdnsncvaey6wwjjamujc9m205xktntnw": {
       "category": "cw20Token",
-      "name": "aUST",
-      "icon": "https://whitelist.anchorprotocol.com/logo/aUST.png"
+      "name": "a",
+      "icon": ""
     },
     "terra12nxvzzqv0yeh80z6eya0gcufyn36ntrkcalnjl": {
       "category": "cw20Token",
-      "name": "ANC",
-      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
+      "name": "TTN",
+      "icon": ""
     }
   },
   "tequila-0004": {
