@@ -410,20 +410,25 @@
       "name": "Mirror Airdrop",
       "icon": "https://whitelist.mirror.finance/icon/MIR.png"
     },
-    "terra17wgmccdu57lx09yzhnnev39srqj7msg9ky2j76": {
+    "terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp": {
       "category": "cw20Token",
-      "name": "b",
-      "icon": ""
+      "name": "bLUNA",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png"
     },
-    "terra1hj2lwwxdnsncvaey6wwjjamujc9m205xktntnw": {
+    "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu": {
       "category": "cw20Token",
-      "name": "a",
-      "icon": ""
+      "name": "aUST",
+      "icon": "https://whitelist.anchorprotocol.com/logo/aUST.png"
     },
-    "terra12nxvzzqv0yeh80z6eya0gcufyn36ntrkcalnjl": {
+    "terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76": {
       "category": "cw20Token",
-      "name": "TTN",
-      "icon": ""
+      "name": "ANC",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
+    },
+    "terra1gm5p3ner9x9xpwugn9sp6gvhd0lwrtkyrecdn3": {
+      "category": "Terraswap",
+      "name": "Terraswap ANC-UST Pair",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
     }
   },
   "tequila-0004": {
