@@ -17,19 +17,18 @@ interface DelegationEvent {
 
 type DelegationsEvents = OldPaginationProps & { events: DelegationEvent[] };
 
-const Delegations = ({ address }: { address: string }) => {
-  const [page, setPage] = useState<string>("1");
+const renderHead = () => (
+  <tr>
+    <th>Height</th>
+    <th>Type</th>
+    <th className="text-right">Change</th>
+    <th className="text-right">Time</th>
+  </tr>
+);
 
-  const renderHead = () => (
-    <tr>
-      <th>Height</th>
-      <th>Type</th>
-      <th className="text-right">Change</th>
-      <th className="text-right">Time</th>
-    </tr>
-  );
-
-  const renderEvent = (event: DelegationEvent, index: number) =>
+const renderEvent = (event: DelegationEvent, index: number) => {
+  console.log("renderEvent", event);
+  return (
     event && (
       <tr key={index}>
         <td>
@@ -41,7 +40,12 @@ const Delegations = ({ address }: { address: string }) => {
         </td>
         <td className="text-right">{format.date(event.timestamp)}</td>
       </tr>
-    );
+    )
+  );
+};
+
+const Delegations = ({ address }: { address: string }) => {
+  const [page, setPage] = useState<string>("1");
 
   return (
     <WithFetch
@@ -49,7 +53,12 @@ const Delegations = ({ address }: { address: string }) => {
       params={{ page }}
     >
       {({ events, ...pagination }: DelegationsEvents) => (
-        <OldPagination {...pagination} title="claim" action={setPage}>
+        <OldPagination
+          {...pagination}
+          count={events.length}
+          title="delegations"
+          action={setPage}
+        >
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{events.map(renderEvent)}</tbody>

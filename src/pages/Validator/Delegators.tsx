@@ -50,7 +50,12 @@ const Delegators = ({ address }: { address: string }) => {
         delegators = [],
         ...pagination
       }: { delegators: Delegator[] } & OldPaginationProps) => (
-        <OldPagination {...pagination} title="claim" action={setPage}>
+        <OldPagination
+          {...pagination}
+          count={delegators.length}
+          title="delegator"
+          action={setPage}
+        >
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{delegators.map(renderDelegator)}</tbody>

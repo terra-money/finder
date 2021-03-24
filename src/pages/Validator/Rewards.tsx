@@ -5,7 +5,7 @@ import format from "../../scripts/format";
 import Table from "../../components/Table";
 import Amount from "../../components/Amount";
 import Card from "../../components/Card";
-import NoDataYet from "../../components/NoDataYet";
+import NoMoreData from "../../components/NoMoreData";
 
 const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
   <Card title={title} bordered>
@@ -30,7 +30,7 @@ const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
         </tbody>
       </Table>
     ) : (
-      <NoDataYet context={title} />
+      <NoMoreData context={title} />
     )}
   </Card>
 );

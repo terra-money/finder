@@ -3,13 +3,11 @@ import s from "./PaginationButtons.module.scss";
 import { Link } from "react-router-dom";
 
 type Props = {
-  current: number;
-  total: number;
   links?: { [key: string]: { pathname: string; search: string } };
   actions?: { [key: string]: () => void };
 };
 
-const OldPaginationButtons = ({ current, total, actions, links }: Props) => {
+const OldPaginationButtons = ({ actions, links }: Props) => {
   const renderAction = (key: string, children: string, disabled: boolean) =>
     disabled ? (
       <span className={s[key]}>{children}</span>
@@ -23,14 +21,11 @@ const OldPaginationButtons = ({ current, total, actions, links }: Props) => {
       </button>
     );
 
-  return total ? (
+  return (
     <div className={s.wrapper}>
-      <div className={s.component}>
-        {renderAction("prev", "‹", current === 1)}
-        {renderAction("next", "›", current === total)}
-      </div>
+      <div className={s.component}>{renderAction("next", "›", false)}</div>
     </div>
-  ) : null;
+  );
 };
 
 export default OldPaginationButtons;

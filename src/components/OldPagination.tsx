@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
-import { plus, minus, div, ceil, gt } from "../scripts/math";
-import NoDataYet from "./NoDataYet";
+import { plus } from "../scripts/math";
+import NoMoreData from "./NoMoreData";
 
 import OldPaginationButtons from "./OldPaginationButtons";
 
 export type OldPaginationProps = {
-  totalCnt: number;
+  count: number;
   page: number;
   limit: number;
   title: string;
@@ -15,34 +15,26 @@ export type OldPaginationProps = {
 };
 
 const OldPagination = (props: OldPaginationProps) => {
-  const { page, limit, totalCnt } = props;
-  const { title, link, action, children } = props;
-  const total = Number(ceil(div(totalCnt, limit)));
+  const { page } = props;
+  const { count, title, link, action, children } = props;
 
   const getLinks = () =>
     link && {
-      prev: link(minus(page, 1)),
       next: link(plus(page, 1))
     };
 
   const getActions = () =>
     action && {
-      prev: () => action(minus(page, 1)),
       next: () => action(plus(page, 1))
     };
 
-  return gt(totalCnt, 0) ? (
+  return count > 0 ? (
     <>
       {children}
-      <OldPaginationButtons
-        links={getLinks()}
-        actions={getActions()}
-        current={page}
-        total={total}
-      />
+      <OldPaginationButtons links={getLinks()} actions={getActions()} />
     </>
   ) : (
-    <NoDataYet context={title} />
+    <NoMoreData context={title} />
   );
 };
 
