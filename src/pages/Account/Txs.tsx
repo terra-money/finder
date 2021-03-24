@@ -75,7 +75,7 @@ const Txs = ({
         </Finder>
         <span>({chainId})</span>
       </span>,
-      <span>{fromISOTime(timestamp.toString())} (UTC)</span>,
+      <span>{fromISOTime(timestamp.toString())}</span>,
       <span>{getAmount(txBody.value.msg[0].value, address)}</span>
     ];
   };
