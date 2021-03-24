@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useHistory } from "react-router-dom";
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
 import Pagination from "../../components/Pagination";
@@ -39,32 +40,22 @@ const getAmount = (prop: Amount, address: string) => {
 
 const Txs = ({
   address,
-  search,
-  pathname
+  search
 }: {
   address: string;
   search: string;
   pathname: string;
 }) => {
   const { network } = useContext(NetworkContext);
+  const history = useHistory();
+  const searchParams = new URLSearchParams(search);
+  const offset = +(searchParams.get("offset") || 0);
 
-  /* URLSearchParams: tab */
-  const getSearch = () => new URLSearchParams(search);
-  const getNextSearch = (entries: string[][]) => {
-    const sp = getSearch();
-    entries.forEach(([key, value]) =>
-      value ? sp.set(key, value) : sp.delete(key)
-    );
-
-    return `?${sp.toString()}`;
+  const next = (offset: number) => {
+    searchParams.set("offset", `${offset}`);
+    history.push({ search: searchParams.toString() });
   };
-  const page = getSearch().get("page") || "1";
 
-  /* helpers */
-  const getLink = (page: string) => ({
-    pathname,
-    search: getNextSearch([["page", page]])
-  });
   const getRow = (response: TxResponse) => {
     const { tx: txBody, txhash, height, timestamp, chainId } = response;
     const isSuccess = !response.code;
@@ -84,7 +75,7 @@ const Txs = ({
         </Finder>
         <span>({chainId})</span>
       </span>,
-      <span>{fromISOTime(timestamp.toString())} (UTC)</span>,
+      <span>{fromISOTime(timestamp.toString())}</span>,
       <span>{getAmount(txBody.value.msg[0].value, address)}</span>
     ];
   };
@@ -93,27 +84,32 @@ const Txs = ({
   return (
     <WithFetch
       url={`/v1/txs`}
-      params={{ page, limit: 100, account: address, chainId: network }}
+      params={{ offset, limit: 100, account: address, chainId: network }}
       loading={<Loading />}
     >
-      {({ txs, ...pagination }: Pagination & { txs: TxResponse[] }) =>
-        !isEmpty(txs) ? (
-          <Pagination {...pagination} title="transaction" link={getLink}>
-            <FlexTable
-              head={head}
-              body={txs.map(getRow)}
-              tableStyle={{ border: "none" }}
-              headStyle={{ background: "none" }}
-            ></FlexTable>
-          </Pagination>
-        ) : (
-          <Card>
-            <Info icon="info_outline" title="">
-              No transactions yet
-            </Info>
-          </Card>
-        )
-      }
+      {({ txs }: { txs: TxResponse[] }) => {
+        if (!isEmpty(txs)) {
+          const nextOffset = txs[txs.length - 1].id;
+          return (
+            <Pagination offset={nextOffset} title="transaction" next={next}>
+              <FlexTable
+                head={head}
+                body={txs.map(getRow)}
+                tableStyle={{ border: "none" }}
+                headStyle={{ background: "none" }}
+              ></FlexTable>
+            </Pagination>
+          );
+        } else {
+          return (
+            <Card>
+              <Info icon="info_outline" title="">
+                No more transactions
+              </Info>
+            </Card>
+          );
+        }
+      }}
     </WithFetch>
   );
 };

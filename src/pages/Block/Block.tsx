@@ -66,7 +66,7 @@ const Block = (
             <div className={s.row}>
               <div className={s.head}>Timestamp</div>
               <div className={s.body}>
-                {fromISOTime(blockData.block.header.time)} (UTC)
+                {fromISOTime(blockData.block.header.time)}
               </div>
             </div>
             <div className={s.row}>

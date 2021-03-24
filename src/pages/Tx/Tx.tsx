@@ -173,7 +173,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
             <div className={s.row}>
               <div className={s.head}>Timestamp</div>
               <div className={s.body}>
-                {fromISOTime(response.timestamp.toString())} (UTC)
+                {fromISOTime(response.timestamp.toString())}
               </div>
             </div>
             <div className={s.row}>

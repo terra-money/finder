@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { DateTime } from "luxon";
+import { format as formatTZ } from "date-fns-tz";
 
 const formatDecimal = (number: BigNumber.Value): string =>
   new BigNumber(number).decimalPlaces(6, BigNumber.ROUND_DOWN).toFixed(6);
@@ -33,12 +33,9 @@ const format = {
   coin: formatCoin,
   coins: (coins: CoinData[]): string[] => coins.map(formatCoin),
 
-  date: (param: string, config: { toLocale?: boolean } = {}): string => {
-    const dt = DateTime.fromISO(param).toUTC();
-    const formatted = config.toLocale
-      ? dt.setLocale("en").toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS)
-      : dt.toFormat("yyyy.MM.dd HH:mm:ss");
-    return param ? `${formatted} (UTC)` : "";
+  date: (param: string): string => {
+    const str = formatTZ(new Date(param), "yyyy.MM.dd HH:mm:ssXXX");
+    return str;
   },
 
   truncate: (address: string = "", [h, t]: number[]) => {

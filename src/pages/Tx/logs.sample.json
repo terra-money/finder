@@ -6,7 +6,8 @@
         "success": true,
         "log": {
           "tax": ""
-        }
+        },
+        "events": []
       }
     ]
   },
@@ -17,7 +18,8 @@
         "success": true,
         "log": {
           "tax": "308477000ukrw"
-        }
+        },
+        "events": []
       }
     ]
   },
@@ -28,28 +30,32 @@
         "success": true,
         "log": {
           "tax": "10ukrw"
-        }
+        },
+        "events": []
       },
       {
         "msg_index": "0",
         "success": true,
         "log": {
           "tax": "10ukrw"
-        }
+        },
+        "events": []
       },
       {
         "msg_index": "0",
         "success": true,
         "log": {
           "tax": "10ukrw"
-        }
+        },
+        "events": []
       },
       {
         "msg_index": "0",
         "success": true,
         "log": {
           "tax": "10ukrw"
-        }
+        },
+        "events": []
       }
     ]
   },
@@ -60,28 +66,32 @@
         "success": true,
         "log": {
           "tax": "10ukrw,10uluna"
-        }
+        },
+        "events": []
       },
       {
         "msg_index": "0",
         "success": true,
         "log": {
           "tax": "10ukrw,10uluna"
-        }
+        },
+        "events": []
       },
       {
         "msg_index": "0",
         "success": true,
         "log": {
           "tax": "10uusd,10ukrw,0uinvalid"
-        }
+        },
+        "events": []
       },
       {
         "msg_index": "0",
         "success": true,
         "log": {
           "tax": "10ukrw,10uusd"
-        }
+        },
+        "events": []
       }
     ]
   }
