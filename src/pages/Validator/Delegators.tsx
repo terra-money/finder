@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
 import Finder from "../../components/Finder";
-import Pagination from "../../components/Pagination";
+import OldPagination, {
+  OldPaginationProps
+} from "../../components/OldPagination";
 import Table from "../../components/Table";
 import Amount from "../../components/Amount";
 import { percent } from "../../scripts/math";
@@ -47,13 +49,13 @@ const Delegators = ({ address }: { address: string }) => {
       {({
         delegators = [],
         ...pagination
-      }: { delegators: Delegator[] } & Pagination) => (
-        <Pagination {...pagination} title="claim" action={setPage}>
+      }: { delegators: Delegator[] } & OldPaginationProps) => (
+        <OldPagination {...pagination} title="claim" action={setPage}>
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{delegators.map(renderDelegator)}</tbody>
           </Table>
-        </Pagination>
+        </OldPagination>
       )}
     </WithFetch>
   );

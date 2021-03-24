@@ -2,6 +2,7 @@ import { getTotalTax } from "./Tx";
 import sample from "./logs.sample.json";
 
 const dummyTx: TxResponse = {
+  id: 11,
   height: "1234",
   txhash: "",
   raw_log: "",

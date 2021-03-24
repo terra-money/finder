@@ -1,5 +1,5 @@
-import { formatToTimeZone } from "date-fns-timezone";
-import distanceInWordsToNow from "date-fns/distance_in_words_to_now";
+import { format } from "date-fns-tz";
+import distanceInWordsToNow from "date-fns/formatDistanceToNow";
 import isBase64 from "is-base64";
 import networksConfig from "../config/networks";
 import { isInteger } from "./math";
@@ -22,11 +22,11 @@ export function getEndpointByKeyword(keyword: string, network: string) {
 }
 
 export function fromISOTime(time: string) {
-  return formatToTimeZone(time, `YYYY.MM.DD HH:mm:ss`, { timeZone: "Etc/UTC" });
+  return format(new Date(time), `yyyy.MM.dd HH:mm:ssXXX`);
 }
 
 export function fromNow(time: string) {
-  return distanceInWordsToNow(time);
+  return distanceInWordsToNow(new Date(time));
 }
 
 export function sliceMsgType(msg: string) {

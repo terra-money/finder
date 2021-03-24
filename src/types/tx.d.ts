@@ -66,6 +66,7 @@ interface Tx {
 }
 
 interface TxResponse {
+  id: number;
   height: string;
   txhash: string;
   code?: number;

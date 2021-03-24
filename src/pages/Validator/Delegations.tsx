@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
 import Finder from "../../components/Finder";
-import Pagination from "../../components/Pagination";
+import OldPagination, {
+  OldPaginationProps
+} from "../../components/OldPagination";
 import Table from "../../components/Table";
 import Amount from "../../components/Amount";
 
@@ -13,7 +15,7 @@ interface DelegationEvent {
   timestamp: string;
 }
 
-type DelegationsEvents = Pagination & { events: DelegationEvent[] };
+type DelegationsEvents = OldPaginationProps & { events: DelegationEvent[] };
 
 const Delegations = ({ address }: { address: string }) => {
   const [page, setPage] = useState<string>("1");
@@ -47,12 +49,12 @@ const Delegations = ({ address }: { address: string }) => {
       params={{ page }}
     >
       {({ events, ...pagination }: DelegationsEvents) => (
-        <Pagination {...pagination} title="claim" action={setPage}>
+        <OldPagination {...pagination} title="claim" action={setPage}>
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{events.map(renderEvent)}</tbody>
           </Table>
-        </Pagination>
+        </OldPagination>
       )}
     </WithFetch>
   );

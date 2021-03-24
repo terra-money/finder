@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
-import Pagination from "../../components/Pagination";
+import OldPagination from "../../components/OldPagination";
 import Finder from "../../components/Finder";
 import Table from "../../components/Table";
 import Coin from "../../components/Coin";
@@ -57,13 +57,13 @@ const Claims = ({ address }: { address: string }) => {
       url={`/v1/staking/validators/${address}/claims`}
       params={{ page }}
     >
-      {({ claims = [], ...pagination }: { claims: Claim[] } & Pagination) => (
-        <Pagination {...pagination} title="claim" action={setPage}>
+      {({ claims = [], ...pagination }) => (
+        <OldPagination {...pagination} title="claim" action={setPage}>
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{claims.map(renderClaim)}</tbody>
           </Table>
-        </Pagination>
+        </OldPagination>
       )}
     </WithFetch>
   );
