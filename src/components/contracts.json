@@ -105,6 +105,11 @@
       "name": "mAMC",
       "icon": "https://whitelist.mirror.finance/icon/AMC.png"
     },
+    "terra1aa00lpfexyycedfg5k2p60l9djcmw0ue5l8fhc": {
+      "category": "cw20Token",
+      "name": "mSPY",
+      "icon": "https://whitelist.mirror.finance/icon/SPY.png"
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -330,6 +335,16 @@
       "name": "Terraswap mAMC-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/AMC.png"
     },
+    "terra14hklnm2ssaexjwkcfhyyyzvpmhpwx6x6lpy39s": {
+      "category": "Terraswap",
+      "name": "Terraswap mSPY-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/SPY.png"
+    },
+    "terra1jqqegd35rg2gjde54adpj3t6ecu0khfeaarzy9": {
+      "category": "Terraswap",
+      "name": "Terraswap mSPY-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/SPY.png"
+    },
     "terra1zw0kfxrxgrs5l087mjm79hcmj3y8z6tljuhpmc": {
       "category": "Terraswap",
       "name": "Terraswap LUNA-KRT Pair",
@@ -409,6 +424,26 @@
       "category": "MirrorProtocol",
       "name": "Mirror Airdrop",
       "icon": "https://whitelist.mirror.finance/icon/MIR.png"
+    },
+    "terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp": {
+      "category": "cw20Token",
+      "name": "bLUNA",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png"
+    },
+    "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu": {
+      "category": "cw20Token",
+      "name": "aUST",
+      "icon": "https://whitelist.anchorprotocol.com/logo/aUST.png"
+    },
+    "terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76": {
+      "category": "cw20Token",
+      "name": "ANC",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
+    },
+    "terra1gm5p3ner9x9xpwugn9sp6gvhd0lwrtkyrecdn3": {
+      "category": "Terraswap",
+      "name": "Terraswap ANC-UST Pair",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
     }
   },
   "tequila-0004": {
@@ -516,6 +551,11 @@
       "category": "cw20Token",
       "name": "mGME",
       "icon": "https://whitelist.mirror.finance/icon/GME.png"
+    },
+    "terra15t9afkpj0wnh8m74n8n2f8tspkn7r65vnru45s": {
+      "category": "cw20Token",
+      "name": "mSPY",
+      "icon": "https://whitelist.mirror.finance/icon/SPY.png"
     },
     "terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3": {
       "category": "shuttle",
@@ -742,6 +782,16 @@
       "name": "Terraswap mGME-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/GME.png"
     },
+    "terra10q4qsd2sfl4wc6nv0d77zud4ur40ygf5602pzd": {
+      "category": "Terraswap",
+      "name": "Terraswap mSPY-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/SPY.png"
+    },
+    "terra1pef9fz8lkqajzuwp6ff6t33s86ndpkm3728cgc": {
+      "category": "Terraswap",
+      "name": "Terraswap mSPY-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/SPY.png"
+    },
     "terra1rfzwcdhhu502xws6r5pxw4hx8c6vms772d6vyu": {
       "category": "Terraswap",
       "name": "Terraswap LUNA-KRT Pair",
@@ -822,22 +872,22 @@
       "name": "Mirror Airdrop",
       "icon": "https://whitelist.mirror.finance/icon/MIR.png"
     },
-    "terra1wq9f8p8f7gldztpdc4v3awngupfkap8wpxhtjr": {
+    "terra1u0t35drzyy0mujj8rkdyzhe264uls4ug3wdp3x": {
       "category": "cw20Token",
       "name": "bLUNA",
       "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png"
     },
-    "terra1xhxx7tgth24d8f9pz6vkjmvulp88xh9vl9kmxu": {
+    "terra1ajt556dpzvjwl0kl5tzku3fc3p3knkg9mkv8jl": {
       "category": "cw20Token",
       "name": "aUST",
       "icon": "https://whitelist.anchorprotocol.com/logo/aUST.png"
     },
-    "terra1800p00qlxh0nmt0r0u9hv7m4lg042fnafng2t6": {
+    "terra1747mad58h0w4y589y3sk84r5efqdev9q4r02pc": {
       "category": "cw20Token",
       "name": "ANC",
       "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
     },
-    "terra10lkkzutjesqpphugfuzdzy5995u37tmc72a255": {
+    "terra1wfvczps2865j0awnurk9m04u7wdmd6qv3fdnvz": {
       "category": "Terraswap",
       "name": "Terraswap ANC-UST Pair",
       "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png"
