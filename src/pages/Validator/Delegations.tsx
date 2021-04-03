@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
 import Finder from "../../components/Finder";
-import OldPagination, {
-  OldPaginationProps
-} from "../../components/OldPagination";
+import Pagination, { PaginationProps } from "../../components/Pagination";
 import Table from "../../components/Table";
 import Amount from "../../components/Amount";
 
@@ -15,7 +13,7 @@ interface DelegationEvent {
   timestamp: string;
 }
 
-type DelegationsEvents = OldPaginationProps & { events: DelegationEvent[] };
+type DelegationsEvents = { events: DelegationEvent[] } & PaginationProps;
 
 const renderHead = () => (
   <tr>
@@ -45,25 +43,20 @@ const renderEvent = (event: DelegationEvent, index: number) => {
 };
 
 const Delegations = ({ address }: { address: string }) => {
-  const [page, setPage] = useState<string>("1");
+  const [offset, setOffset] = useState<number>(0);
 
   return (
     <WithFetch
       url={`/v1/staking/validators/${address}/delegations`}
-      params={{ page }}
+      params={{ offset }}
     >
       {({ events, ...pagination }: DelegationsEvents) => (
-        <OldPagination
-          {...pagination}
-          count={events.length}
-          title="delegations"
-          action={setPage}
-        >
+        <Pagination {...pagination} title="delegations" action={setOffset}>
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{events.map(renderEvent)}</tbody>
           </Table>
-        </OldPagination>
+        </Pagination>
       )}
     </WithFetch>
   );

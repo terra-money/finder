@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
-import OldPagination from "../../components/OldPagination";
+import Pagination from "../../components/Pagination";
 import Finder from "../../components/Finder";
 import Table from "../../components/Table";
 import Coin from "../../components/Coin";
@@ -41,7 +41,7 @@ const renderClaim = (claim: Claim, index: number) =>
   );
 
 const Claims = ({ address }: { address: string }) => {
-  const [page, setPage] = useState<string>("1");
+  const [offset, setOffset] = useState<number>(0);
 
   const renderHead = () => (
     <tr>
@@ -55,20 +55,15 @@ const Claims = ({ address }: { address: string }) => {
   return (
     <WithFetch
       url={`/v1/staking/validators/${address}/claims`}
-      params={{ page }}
+      params={{ offset }}
     >
       {({ claims = [], ...pagination }) => (
-        <OldPagination
-          {...pagination}
-          count={claims.length}
-          title="claims"
-          action={setPage}
-        >
+        <Pagination {...pagination} title="claims" action={setOffset}>
           <Table>
             <thead>{renderHead()}</thead>
             <tbody>{claims.map(renderClaim)}</tbody>
           </Table>
-        </OldPagination>
+        </Pagination>
       )}
     </WithFetch>
   );

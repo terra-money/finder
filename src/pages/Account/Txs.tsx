@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
-import Pagination from "../../components/Pagination";
+import Pagination, { PaginationProps } from "../../components/Pagination";
 import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
@@ -51,7 +51,7 @@ const Txs = ({
   const searchParams = new URLSearchParams(search);
   const offset = +(searchParams.get("offset") || 0);
 
-  const next = (offset: number) => {
+  const goNext = (offset: number) => {
     searchParams.set("offset", `${offset}`);
     history.push({ search: searchParams.toString() });
   };
@@ -87,11 +87,13 @@ const Txs = ({
       params={{ offset, limit: 100, account: address, chainId: network }}
       loading={<Loading />}
     >
-      {({ txs }: { txs: TxResponse[] }) => {
+      {({ txs, next }: { txs: TxResponse[] } & PaginationProps) => {
+        // TODO: getting nextOffset from txs will be deprecated.
+        const nextOffset = next || (txs.length && txs[txs.length - 1].id);
+
         if (!isEmpty(txs)) {
-          const nextOffset = txs[txs.length - 1].id;
           return (
-            <Pagination offset={nextOffset} title="transaction" next={next}>
+            <Pagination next={nextOffset} title="transaction" action={goNext}>
               <FlexTable
                 head={head}
                 body={txs.map(getRow)}

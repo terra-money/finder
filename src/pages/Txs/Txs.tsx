@@ -49,7 +49,7 @@ const Txs = (
   const searchParams = new URLSearchParams(props.location.search);
   const offset = +(searchParams.get("offset") || 0);
 
-  const next = (offset: number) => {
+  const goNext = (offset: number) => {
     searchParams.set("offset", `${offset}`);
     history.push({ search: searchParams.toString() });
   };
@@ -63,16 +63,21 @@ const Txs = (
         params={{ block: height, offset, chainId: network }}
         loading={<Loading />}
       >
-        {({ txs = [] }: { txs: TxResponse[] } & PaginationProps) => {
+        {({ txs, next }: { txs: TxResponse[] } & PaginationProps) => {
           if (!isEmpty(txs)) {
-            const nextOffset = txs.length && txs[txs.length - 1].id;
+            // TODO: getting nextOffset from txs will be deprecated.
+            const nextOffset = next || (txs.length && txs[txs.length - 1].id);
 
             return (
               <>
                 <h2 className="title">
                   Transactions<span>for Block #{height}</span>
                 </h2>
-                <Pagination offset={nextOffset} title="translation" next={next}>
+                <Pagination
+                  next={nextOffset}
+                  title="translation"
+                  action={goNext}
+                >
                   <FlexTable head={head} body={txs.map(getRow)} />
                 </Pagination>
               </>

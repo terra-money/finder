@@ -3,18 +3,18 @@ import PaginationButtons from "./PaginationButtons";
 
 export type PaginationProps = {
   title: string;
-  offset?: number;
-  next?: (offset: number) => void;
+  next?: number;
+  action?: (offset: number) => void;
   children: ReactNode;
 };
 
 const Pagination = (props: PaginationProps) => {
-  const { children, offset, next } = props;
+  const { children, action, next } = props;
 
   return (
     <>
       {children}
-      <PaginationButtons next={next} offset={offset} />
+      <PaginationButtons action={action} offset={next} />
     </>
   );
 };
