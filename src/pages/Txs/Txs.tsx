@@ -65,19 +65,12 @@ const Txs = (
       >
         {({ txs, next }: { txs: TxResponse[] } & PaginationProps) => {
           if (!isEmpty(txs)) {
-            // TODO: getting nextOffset from txs will be deprecated.
-            const nextOffset = next || (txs.length && txs[txs.length - 1].id);
-
             return (
               <>
                 <h2 className="title">
                   Transactions<span>for Block #{height}</span>
                 </h2>
-                <Pagination
-                  next={nextOffset}
-                  title="translation"
-                  action={goNext}
-                >
+                <Pagination next={next} title="translation" action={goNext}>
                   <FlexTable head={head} body={txs.map(getRow)} />
                 </Pagination>
               </>
