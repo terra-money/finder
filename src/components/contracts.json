@@ -132,6 +132,12 @@
       "icon": "https://whitelist.mirror.finance/icon/SPY.png",
       "tags": ["Mirror"]
     },
+    "terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph": {
+      "category": "cw20Token",
+      "name": "mCOIN",
+      "icon": "https://whitelist.mirror.finance/icon/COIN.png",
+      "tags": ["Mirror"]
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -414,6 +420,18 @@
       "icon": "https://whitelist.mirror.finance/icon/SPY.png",
       "tags": ["Mirror"]
     },
+    "terra1h7t2yq00rxs8a78nyrnhlvp0ewu8vnfnx5efsl": {
+      "category": "Terraswap",
+      "name": "Terraswap mCOIN-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/COIN.png",
+      "tags": ["Mirror"]
+    },
+    "terra1ktckr8v7judrr6wkwv476pwsv8mht0zqzw2t0h": {
+      "category": "Terraswap",
+      "name": "Terraswap mCOIN-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/COIN.png",
+      "tags": ["Mirror"]
+    },
     "terra1zw0kfxrxgrs5l087mjm79hcmj3y8z6tljuhpmc": {
       "category": "Terraswap",
       "name": "Terraswap LUNA-KRT Pair",
@@ -537,6 +555,108 @@
     "terra1gm5p3ner9x9xpwugn9sp6gvhd0lwrtkyrecdn3": {
       "category": "Terraswap",
       "name": "Terraswap ANC-UST Pair",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1gecs98vcuktyfkrve9czrpgtg0m3aq586x6gzm": {
+      "category": "Terraswap",
+      "name": "Terraswap ANC-UST LP",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1nuy34nwnsh53ygpc4xprlj263cztw7vc99leh2": {
+      "category": "Terraswap",
+      "name": "Terraswap bLUNA-LUNA LP",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1mtwph2juhj0rvjz7dy92gvl6xvukaxu8rfv8ts": {
+      "category": "AnchorProtocol",
+      "name": "bLuna Hub",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png",
+      "tags": ["Anchor"]
+    },
+    "terra17yap3mhph35pcwvhza38c2lkj7gzywzy05h7l0": {
+      "category": "AnchorProtocol",
+      "name": "bLuna Reward",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png",
+      "tags": ["Anchor"]
+    },
+    "terra199t7hg7w5vymehhg834r6799pju2q3a0ya7ae9": {
+      "category": "AnchorProtocol",
+      "name": "bLuna Airdrop Registry",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png",
+      "tags": ["Anchor"]
+    },
+    "terra1tmnqgvg567ypvsvk6rwsga3srp7e3lg6u0elp8": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Overseer",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1sepfj7s0aeg5967uxnfk4thzlerrsktkpelm5s": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Market",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1ptjp2vfjrwh0j0faj9r6katm640kgjxnwwq9kn": {
+      "category": "AnchorProtocol",
+      "name": "Anchor bLuna Custody",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1kq8zzq5hufas9t0kjsjc62t2kucfnx8txf547n": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Interest Model",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra14mufqpr5mevdfn92p4jchpkxp7xr46uyknqjwq": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Distribution Model",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1cgg6yef7qcdm070qftghfulaxmllgmvk77nc7t": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Price Oracle",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1w9ky73v4g7v98zzdqpqgf3kjmusnx4d4mvnac6": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Liquidation Contract",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1f32xyep306hhcxxxf7mlyh0ucggc00rm2s9da5": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Governance",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1897an2xux840p9lrh6py3ryankc6mspw49xse3": {
+      "category": "AnchorProtocol",
+      "name": "Anchor LP Staking",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra12wk8dey0kffwp27l5ucfumczlsc9aned8rqueg": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Community Fund",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra14ku9pgw5ld90dexlyju02u4rn6frheexr5f96h": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Fee Collector",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1mxf7d5updqxfgvchd7lv6575ehhm8qfdttuqzz": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Reward Distributor",
       "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
       "tags": ["Anchor"]
     }
@@ -672,6 +792,12 @@
       "category": "cw20Token",
       "name": "mSPY",
       "icon": "https://whitelist.mirror.finance/icon/SPY.png",
+      "tags": ["Mirror"]
+    },
+    "terra1qre9crlfnulcg0m68qqywqqstplgvrzywsg3am": {
+      "category": "cw20Token",
+      "name": "mCOIN",
+      "icon": "https://whitelist.mirror.finance/icon/COIN.png",
       "tags": ["Mirror"]
     },
     "terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3": {
@@ -956,6 +1082,18 @@
       "icon": "https://whitelist.mirror.finance/icon/SPY.png",
       "tags": ["Mirror"]
     },
+    "terra13qzses7zpsyrufx38h0kc3p87523cjgwmenj44": {
+      "category": "Terraswap",
+      "name": "Terraswap mCOIN-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/COIN.png",
+      "tags": ["Mirror"]
+    },
+    "terra1gdglgpm84pdzuedc924wurhsqd0vs4nv4tpmh8": {
+      "category": "Terraswap",
+      "name": "Terraswap mCOIN-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/COIN.png",
+      "tags": ["Mirror"]
+    },
     "terra1rfzwcdhhu502xws6r5pxw4hx8c6vms772d6vyu": {
       "category": "Terraswap",
       "name": "Terraswap LUNA-KRT Pair",
@@ -1079,6 +1217,108 @@
     "terra1wfvczps2865j0awnurk9m04u7wdmd6qv3fdnvz": {
       "category": "Terraswap",
       "name": "Terraswap ANC-UST Pair",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1vg0qyq92ky9z9dp0j9fv5rmr2s80sg605dah6f": {
+      "category": "Terraswap",
+      "name": "Terraswap ANC-UST LP",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1tj4pavqjqjfm0wh73sh7yy9m4uq3m2cpmgva6n": {
+      "category": "Terraswap",
+      "name": "Terraswap bLUNA-LUNA LP",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1fflas6wv4snv8lsda9knvq2w0cyt493r8puh2e": {
+      "category": "AnchorProtocol",
+      "name": "bLuna Hub",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png",
+      "tags": ["Anchor"]
+    },
+    "terra1ac24j6pdxh53czqyrkr6ygphdeftg7u3958tl2": {
+      "category": "AnchorProtocol",
+      "name": "bLuna Reward",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png",
+      "tags": ["Anchor"]
+    },
+    "terra1334h20c9ewxguw9p9vdxzmr8994qj4qu77ux6q": {
+      "category": "AnchorProtocol",
+      "name": "bLuna Airdrop Registry",
+      "icon": "https://whitelist.anchorprotocol.com/logo/bLUNA.png",
+      "tags": ["Anchor"]
+    },
+    "terra1qljxd0y3j3gk97025qvl3lgq8ygup4gsksvaxv": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Overseer",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra15dwd5mj8v59wpj0wvt233mf5efdff808c5tkal": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Market",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1ltnkx0mv7lf2rca9f8w740ashu93ujughy4s7p": {
+      "category": "AnchorProtocol",
+      "name": "Anchor bLuna Custody",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1m25aqupscdw2kw4tnq5ql6hexgr34mr76azh5x": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Interest Model",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1u64cezah94sq3ye8y0ung28x3pxc37tv8fth7h": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Distribution Model",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1p4gg3p2ue6qy2qfuxtrmgv2ec3f4jmgqtazum8": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Price Oracle",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra16vc4v9hhntswzkuunqhncs9yy30mqql3gxlqfe": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Liquidation Contract",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra16ckeuu7c6ggu52a8se005mg5c0kd2kmuun63cu": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Governance",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra19nxz35c8f7t3ghdxrxherym20tux8eccar0c3k": {
+      "category": "AnchorProtocol",
+      "name": "Anchor LP Staking",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra17g577z0pqt6tejhceh06y3lyeudfs3v90mzduy": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Community Fund",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1hlctcrrhcl2azxzcsns467le876cfuzam6jty4": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Fee Collector",
+      "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
+      "tags": ["Anchor"]
+    },
+    "terra1z7nxemcnm8kp7fs33cs7ge4wfuld307v80gypj": {
+      "category": "AnchorProtocol",
+      "name": "Anchor Reward Distributor",
       "icon": "https://whitelist.anchorprotocol.com/logo/ANC.png",
       "tags": ["Anchor"]
     }
