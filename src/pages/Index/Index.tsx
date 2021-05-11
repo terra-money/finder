@@ -2,6 +2,7 @@ import React from "react";
 import s from "./Index.module.scss";
 import Search from "../../components/Search";
 import SelectNetworks from "../../components/SelectNetworks";
+import SelectCurrency from "../../components/SelectCurrency";
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
         <Search className={s.search} />
       </div>
       <SelectNetworks className={s.networks} />
+      <SelectCurrency className={s.currency} />
       <div className={s.cover} />
       <video
         playsInline

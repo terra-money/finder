@@ -1,6 +1,6 @@
 import "react-app-polyfill/ie9";
 import "core-js";
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
@@ -11,9 +11,11 @@ import {
 import "./index.scss";
 import App from "./layouts/App";
 import NetworkContext from "./contexts/NetworkContext";
+import CurrencyContext from "./contexts/CurrencyContext";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
-import { DEFAULT_NETWORK } from "./scripts/utility";
+import { DEFAULT_NETWORK, getDefaultCurrency } from "./scripts/utility";
+import { setCookie } from "./scripts/cookie";
 
 if (
   process.env.REACT_APP_SENTRY_DSN &&
@@ -32,11 +34,20 @@ const Root = () => {
     push(pathnames.join("/"));
   };
 
+  const defaultCurrency = getDefaultCurrency();
+  const [currency, setCurrency] = useState(defaultCurrency);
+  const selectCurrency = (currency: string) => {
+    setCookie("currency", currency);
+    setCurrency(currency);
+  };
+
   return (
     <NetworkContext.Provider value={{ network, selectNetwork }}>
-      <Switch>
-        <App />
-      </Switch>
+      <CurrencyContext.Provider value={{ currency, selectCurrency }}>
+        <Switch>
+          <App />
+        </Switch>
+      </CurrencyContext.Provider>
     </NetworkContext.Provider>
   );
 };

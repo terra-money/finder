@@ -1,10 +1,14 @@
 import { format } from "date-fns-tz";
 import distanceInWordsToNow from "date-fns/formatDistanceToNow";
 import isBase64 from "is-base64";
+import { Dictionary } from "ramda";
 import networksConfig from "../config/networks";
+import currencies from "../currencies.json";
+import { getCookie, setCookie } from "./cookie";
 import { isInteger } from "./math";
 
 export const DEFAULT_NETWORK = networksConfig[0].key || "columbus-4";
+export const DEFAULT_CURRENCY = `uusd`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
@@ -89,4 +93,16 @@ export function isJson(param: any) {
   } catch {
     return false;
   }
+}
+
+export function getDefaultCurrency() {
+  const cookie = getCookie("currency");
+  if (cookie) return cookie;
+
+  const currency = currencies as Dictionary<string>;
+
+  if (currency[navigator.language]) {
+    setCookie("currency", currency[navigator.language]);
+    return currency[navigator.language];
+  } else return DEFAULT_CURRENCY;
 }
