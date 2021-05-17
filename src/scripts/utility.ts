@@ -103,10 +103,11 @@ export function getDefaultCurrency(denoms: string[]) {
   const countryData = countries as Dictionary<Country>;
 
   if (browserLang.includes("-")) {
-    const country = browserLang.split("-")[1];
-
+    const country = browserLang.split("-")?.[1]?.toUpperCase();
     //multiple currency
-    const currencies = countryData[country].currency.split(",");
+    const currencies = countryData[country]?.currency.split(",");
+
+    if (!currencies) return DEFAULT_CURRENCY;
 
     for (const currency of currencies) {
       const denom = `u${currency.toLowerCase()}`;
