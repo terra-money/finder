@@ -103,13 +103,28 @@ export function getDefaultCurrency(denoms: string[]) {
   const countryData = countries as Dictionary<Country>;
 
   if (browserLang.includes("-")) {
-    const country = browserLang.split("-")[1];
+    const country = browserLang.split("-")?.[1]?.toUpperCase();
+    const currencies = countryData[country]?.currency.split(",");
 
-    //multiple currency
-    const currencies = countryData[country].currency.split(",");
+    if (currencies) {
+      // we might have multiple currencies
+      for (const currency of currencies) {
+        const denom = `u${currency.toLowerCase()}`;
 
-    for (const currency of currencies) {
-      const denom = `u${currency.toLowerCase()}`;
+        if (denoms.includes(denom)) {
+          setCookie("currency", denom);
+          return denom;
+        }
+      }
+    }
+  }
+
+  const countryArray = Object.values(countryData);
+  const country = filter(countryArray, { languages: [browserLang] });
+
+  if (country) {
+    for (const data of country) {
+      const denom = `u${data.currency.toLowerCase()}`;
 
       if (denoms.includes(denom)) {
         setCookie("currency", denom);
@@ -118,16 +133,5 @@ export function getDefaultCurrency(denoms: string[]) {
     }
   }
 
-  const countryArray = Object.values(countryData);
-  const country = filter(countryArray, { languages: [browserLang] });
-
-  for (const data of country) {
-    const denom = `u${data.currency.toLowerCase()}`;
-
-    if (denoms.includes(denom)) {
-      setCookie("currency", denom);
-      return denom;
-    }
-  }
   return DEFAULT_CURRENCY;
 }
