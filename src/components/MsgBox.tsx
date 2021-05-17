@@ -7,7 +7,6 @@ import {
 } from "../scripts/utility";
 import format from "../scripts/format";
 import { decodeBase64 } from "../scripts/utility";
-import Formatter from "./Formatter";
 import s from "./Msg.module.scss";
 import Address from "./Address";
 
@@ -53,9 +52,16 @@ const getContent = (msg: Msg, key: string) => {
   }
 };
 
+const renderAddress = (str: string) =>
+  isTerraAddress(str) || isValidatorAddress(str) ? (
+    <Address address={str} />
+  ) : (
+    str
+  );
+
 const renderEventlog = (events: Events[]) => (
-  <div className={s.eventWrapper}>
-    <span>event logs</span>
+  <div className={s.msgWrapper}>
+    <span className={s.key}>event logs</span>
     {events.map((value, key) => (
       <section key={key}>
         <h2 className={s.eventType}>{`[${key}] ${value.type}`}</h2>
@@ -66,7 +72,7 @@ const renderEventlog = (events: Events[]) => (
               <tr key={key} className={s.eventData}>
                 <th className={s.attrKey}>{attr.key}</th>
                 <td className={s.attrValue}>
-                  {attr.value && <Formatter value={attr.value} />}
+                  {attr.value && renderAddress(attr.value)}
                 </td>
               </tr>
             ))}
@@ -77,24 +83,20 @@ const renderEventlog = (events: Events[]) => (
   </div>
 );
 
-export const MsgBox = ({ msg, log }: { msg: Msg; log?: Log }) => {
-  return (
-    <div className={s.msgBox}>
-      <div className={s.type}>{sliceMsgType(msg.type)}</div>
-
-      {Object.keys(msg.value).map((key: string, index: number) => {
-        const content = getContent(msg, key);
-
-        return (
-          <p key={index}>
-            <span>{key}</span>
-            {content}
-          </p>
-        );
-      })}
-      {log?.events && renderEventlog(log.events)}
-    </div>
-  );
-};
+export const MsgBox = ({ msg, log }: { msg: Msg; log?: Log }) => (
+  <div className={s.msgBox}>
+    <div className={s.type}>{sliceMsgType(msg.type)}</div>
+    {Object.keys(msg.value).map((key: string, index: number) => {
+      const content = getContent(msg, key);
+      return (
+        <section className={s.msgWrapper} key={index}>
+          <span className={s.key}>{key}</span>
+          {content}
+        </section>
+      );
+    })}
+    {log?.events && renderEventlog(log.events)}
+  </div>
+);
 
 export default MsgBox;

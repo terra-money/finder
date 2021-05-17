@@ -4,6 +4,7 @@ import Search from "../components/Search";
 import SelectNetworks from "../components/SelectNetworks";
 
 import { Link } from "react-router-dom";
+import SelectCurrency from "../components/SelectCurrency";
 
 const Header = () => (
   <div className={s.header}>
@@ -18,6 +19,7 @@ const Header = () => (
       </div>
       <Search className={s.search} />
       <SelectNetworks className={s.networks} />
+      <SelectCurrency className={s.currency} />
     </div>
   </div>
 );

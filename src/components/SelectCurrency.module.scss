@@ -1,7 +1,7 @@
 @import "../styles/variables.scss";
 
 .select {
-  width: 160px;
+  width: 100px;
   height: 36px;
   padding: 0 41px 0 10px !important;
   border-radius: 3px !important;
@@ -23,9 +23,6 @@
     width: 80px;
     height: 28px !important;
     font-size: 11px !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 }
 

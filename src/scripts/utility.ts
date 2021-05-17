@@ -1,10 +1,15 @@
 import { format } from "date-fns-tz";
 import distanceInWordsToNow from "date-fns/formatDistanceToNow";
 import isBase64 from "is-base64";
+import { Dictionary } from "ramda";
+import { countries, Country } from "countries-list";
 import networksConfig from "../config/networks";
+import { setCookie } from "./cookie";
 import { isInteger } from "./math";
+import { filter } from "lodash";
 
 export const DEFAULT_NETWORK = networksConfig[0].key || "columbus-4";
+export const DEFAULT_CURRENCY = `uusd`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
@@ -89,4 +94,40 @@ export function isJson(param: any) {
   } catch {
     return false;
   }
+}
+
+export function getDefaultCurrency(denoms: string[]) {
+  if (!navigator.language) return DEFAULT_CURRENCY;
+
+  const browserLang = navigator.language;
+  const countryData = countries as Dictionary<Country>;
+
+  if (browserLang.includes("-")) {
+    const country = browserLang.split("-")[1];
+
+    //multiple currency
+    const currencies = countryData[country].currency.split(",");
+
+    for (const currency of currencies) {
+      const denom = `u${currency.toLowerCase()}`;
+
+      if (denoms.includes(denom)) {
+        setCookie("currency", denom);
+        return denom;
+      }
+    }
+  }
+
+  const countryArray = Object.values(countryData);
+  const country = filter(countryArray, { languages: [browserLang] });
+
+  for (const data of country) {
+    const denom = `u${data.currency.toLowerCase()}`;
+
+    if (denoms.includes(denom)) {
+      setCookie("currency", denom);
+      return denom;
+    }
+  }
+  return DEFAULT_CURRENCY;
 }
