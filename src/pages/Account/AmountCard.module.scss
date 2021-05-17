@@ -27,7 +27,8 @@
 }
 
 .action {
-  @include flex();
+  @include flex(center, flex-end);
+  flex-direction: column;
 }
 
 .amount {
@@ -37,6 +38,18 @@
 
   @media (min-width: $breakpoint) {
     font-size: 20px;
+  }
+}
+
+.currency {
+  color: $brand;
+  opacity: 0.5;
+  @media (max-width: $breakpoint - 1) {
+    font-size: 11px;
+  }
+
+  @media (min-width: $breakpoint) {
+    font-size: 13px;
   }
 }
 

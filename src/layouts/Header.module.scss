@@ -50,7 +50,7 @@
 .search {
   position: absolute;
   top: 20px;
-  right: 230px;
+  right: 330px;
   width: 34%;
   max-width: 640px;
   margin-left: -320px;
@@ -62,12 +62,22 @@
   }
 }
 
-.networks {
+.currency {
   position: absolute;
   top: 24px;
   right: 40px;
   @media (max-width: $breakpoint) {
     top: 8px;
     right: 15px;
+  }
+}
+
+.networks {
+  position: absolute;
+  top: 24px;
+  right: 150px;
+  @media (max-width: $breakpoint) {
+    top: 8px;
+    right: 100px;
   }
 }
