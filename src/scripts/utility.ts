@@ -112,7 +112,7 @@ export function getDefaultCurrency(denoms: string[]) {
         const denom = `u${currency.toLowerCase()}`;
 
         if (denoms.includes(denom)) {
-          setCookie("currency", denom);
+          setCookie("currency", denom, 7);
           return denom;
         }
       }
@@ -127,7 +127,7 @@ export function getDefaultCurrency(denoms: string[]) {
       const denom = `u${data.currency.toLowerCase()}`;
 
       if (denoms.includes(denom)) {
-        setCookie("currency", denom);
+        setCookie("currency", denom, 7);
         return denom;
       }
     }
