@@ -37,7 +37,7 @@ const Root = () => {
   const defaultCurrency = getCookie("currency") || DEFAULT_CURRENCY;
   const [currency, setCurrency] = useState(defaultCurrency);
   const selectCurrency = (currency: string) => {
-    setCookie("currency", currency);
+    setCookie("currency", currency, 7);
     setCurrency(currency);
   };
 
