@@ -138,6 +138,12 @@
       "icon": "https://whitelist.mirror.finance/icon/COIN.png",
       "tags": ["Mirror"]
     },
+    "terra1l5lrxtwd98ylfy09fn866au6dp76gu8ywnudls": {
+      "category": "cw20Token",
+      "name": "mGLXY",
+      "icon": "https://whitelist.mirror.finance/icon/GLXY.png",
+      "tags": ["Mirror"]
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -430,6 +436,18 @@
       "category": "Terraswap",
       "name": "Terraswap mCOIN-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/COIN.png",
+      "tags": ["Mirror"]
+    },
+    "terra1ze5f2lm5clq2cdd9y2ve3lglfrq6ap8cqncld8": {
+      "category": "Terraswap",
+      "name": "Terraswap mGLXY-UST Pair",
+      "icon": "https://whitelist.mirror.finance/icon/GLXY.png",
+      "tags": ["Mirror"]
+    },
+    "terra1pjgzke6h5v4nz978z3a92gqajwhn8yyh5kv4zv": {
+      "category": "Terraswap",
+      "name": "Terraswap mGLXY-UST LP",
+      "icon": "https://whitelist.mirror.finance/icon/GLXY.png",
       "tags": ["Mirror"]
     },
     "terra1zw0kfxrxgrs5l087mjm79hcmj3y8z6tljuhpmc": {
