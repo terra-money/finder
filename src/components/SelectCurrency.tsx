@@ -17,7 +17,7 @@ const SelectCurrency = (props: Props) => {
   const denom = currencyArray?.includes(currency) ? currency : DEFAULT_CURRENCY;
 
   useEffect(() => {
-    if (!getCookie("currency") && currencyArray) {
+    if (!getCookie("currency") && currencyArray && navigator.cookieEnabled) {
       const currency = getDefaultCurrency(currencyArray);
       selectCurrency(currency);
     }

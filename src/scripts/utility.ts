@@ -4,7 +4,6 @@ import isBase64 from "is-base64";
 import { Dictionary } from "ramda";
 import { countries, Country } from "countries-list";
 import networksConfig from "../config/networks";
-import { setCookie } from "./cookie";
 import { isInteger } from "./math";
 import { filter } from "lodash";
 
@@ -97,7 +96,9 @@ export function isJson(param: any) {
 }
 
 export function getDefaultCurrency(denoms: string[]) {
-  if (!navigator.language) return DEFAULT_CURRENCY;
+  if (!navigator.language) {
+    return DEFAULT_CURRENCY;
+  }
 
   const browserLang = navigator.language;
   const countryData = countries as Dictionary<Country>;
@@ -112,7 +113,6 @@ export function getDefaultCurrency(denoms: string[]) {
         const denom = `u${currency.toLowerCase()}`;
 
         if (denoms.includes(denom)) {
-          setCookie("currency", denom);
           return denom;
         }
       }
@@ -127,7 +127,6 @@ export function getDefaultCurrency(denoms: string[]) {
       const denom = `u${data.currency.toLowerCase()}`;
 
       if (denoms.includes(denom)) {
-        setCookie("currency", denom);
         return denom;
       }
     }
