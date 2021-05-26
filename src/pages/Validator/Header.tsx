@@ -29,13 +29,15 @@ const Header = (v: Validator) => (
             </Badge>
           </h1>
           <p className={s.p}>
-            <a
-              href={prependProtocol(v.description.website)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {v.description.website}
-            </a>
+            {v.description.website && (
+              <a
+                href={prependProtocol(v.description.website)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {v.description.website}
+              </a>
+            )}
           </p>
           <p className={s.p}>{v.description.details}</p>
         </section>
