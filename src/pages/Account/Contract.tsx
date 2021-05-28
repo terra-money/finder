@@ -17,6 +17,8 @@ import AvailableList from "./AvailableList";
 import AmountCard from "./AmountCard";
 import Query from "./Query";
 import s from "./Contract.module.scss";
+import Delegations from "./Delegations";
+import Unbondings from "./Unbondings";
 
 const Contract = ({ address, code, info, ...data }: Contract) => {
   const { init_msg, timestamp, migratable, code_id } = data;
@@ -107,6 +109,15 @@ const Contract = ({ address, code, info, ...data }: Contract) => {
           </div>
         </Card>
       ) : undefined}
+
+      <WithFetch url={`/v1/staking/${address}`}>
+        {(staking: Staking) => (
+          <>
+            <Delegations staking={staking} />
+            <Unbondings staking={staking} />
+          </>
+        )}
+      </WithFetch>
 
       <Card title="Transactions" bordered headerClassName={s.cardTitle}>
         <div className={s.cardBodyContainer}>
