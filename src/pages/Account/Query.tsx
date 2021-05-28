@@ -7,10 +7,11 @@ import "ace-builds/src-noconflict/theme-github";
 import AceEditor from "react-ace";
 import c from "classnames";
 import apiClient from "../../apiClient";
-import { isJson } from "../../scripts/utility";
+import { fcdUrl, isJson } from "../../scripts/utility";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
 import s from "./Query.module.scss";
+import { useNetwork } from "../../HOCs/WithFetch";
 
 const ACE_PROPS = {
   mode: "json",
@@ -30,6 +31,8 @@ const Query = () => {
   const [query, setQuery] = useState<string>();
   const [data, setData] = useState<any>();
   const [error, setError] = useState<Error>();
+  const network = useNetwork();
+  const fcd = fcdUrl(network);
 
   const reset = () => {
     setError(undefined);
@@ -41,7 +44,7 @@ const Query = () => {
     e.preventDefault();
 
     try {
-      const url = `https://lcd.terra.dev/wasm/contracts/${address}/store`;
+      const url = `${fcd}/wasm/contracts/${address}/store`;
       const params = query && { query_msg: JSON.parse(query) };
       const { data } = await apiClient.get<{ result: any }>(url, { params });
       setData(data.result);
