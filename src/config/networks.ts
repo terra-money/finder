@@ -28,7 +28,7 @@ const networks = [
     mantle: "https://tequila-mantle.terra.dev"
   },
   {
-    key: "bombay-0005",
+    key: "bombay-0006",
     fcd: "https://bombay-fcd.terra.dev",
     mantle: "https://bombay-mantle.terra.dev"
   },
