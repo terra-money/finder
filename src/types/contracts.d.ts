@@ -1,13 +1,13 @@
 interface Contract {
   owner: string;
   code_id: number;
-  init_msg: string;
+  init_msg: string | object;
   txhash?: string;
   timestamp?: string;
   address: string;
   admin?: string;
   migratable?: boolean;
-  migrate_msg: null;
+  migrate_msg?: string | object;
   info?: Info;
   code?: Code;
 }
