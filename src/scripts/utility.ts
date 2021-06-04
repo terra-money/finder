@@ -134,3 +134,21 @@ export function getDefaultCurrency(denoms: string[]) {
 
   return DEFAULT_CURRENCY;
 }
+
+export const prettifyExecuteMsg = (str: string | object) => {
+  if (typeof str === "string" && isBase64(str)) {
+    const decoded = Buffer.from(str, "base64").toString();
+    try {
+      const parsed = JSON.parse(decoded);
+      if (typeof parsed === "object") {
+        Object.keys(parsed).forEach(key => {
+          parsed[key].msg = JSON.parse(decodeBase64(parsed[key].msg));
+        });
+      }
+      return JSON.stringify(parsed, undefined, 2);
+    } catch (e) {
+      return JSON.stringify(decoded, undefined, 2);
+    }
+  }
+  return JSON.stringify(str, undefined, 2);
+};

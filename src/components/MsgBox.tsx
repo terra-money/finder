@@ -3,30 +3,12 @@ import CoinComponent from "../components/Coin";
 import {
   sliceMsgType,
   isTerraAddress,
-  isValidatorAddress
+  isValidatorAddress,
+  prettifyExecuteMsg
 } from "../scripts/utility";
 import format from "../scripts/format";
-import { decodeBase64 } from "../scripts/utility";
 import s from "./Msg.module.scss";
 import Address from "./Address";
-
-const prettifyExecuteMsg = (str: string) => {
-  const decoded = JSON.parse(decodeBase64(str));
-
-  try {
-    const parsed = decoded;
-
-    if (typeof parsed === "object") {
-      Object.keys(parsed).forEach(key => {
-        parsed[key].msg = JSON.parse(decodeBase64(parsed[key].msg));
-      });
-    }
-
-    return JSON.stringify(parsed, undefined, 2);
-  } catch (e) {
-    return JSON.stringify(decoded, undefined, 2);
-  }
-};
 
 const getContent = (msg: Msg, key: string) => {
   if (isTerraAddress(msg.value[key]) || isValidatorAddress(msg.value[key])) {
