@@ -20,7 +20,7 @@ import s from "./Contract.module.scss";
 import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
 
-const Contract = ({ address, code, info, ...data }: Contract) => {
+const Contract = ({ address, admin, code, info, ...data }: Contract) => {
   const { init_msg, timestamp, migratable, code_id } = data;
   const link = code?.info.url && (
     <ExtLink href={code?.info.url}>{code?.info.url}</ExtLink>
@@ -29,6 +29,7 @@ const Contract = ({ address, code, info, ...data }: Contract) => {
   const network = useNetwork();
   const tokens = useTokenBalance(address);
   const { search, pathname } = useLocation();
+  const migratableValue = migratable !== undefined && String(migratable);
 
   return (
     <>
@@ -71,7 +72,8 @@ const Contract = ({ address, code, info, ...data }: Contract) => {
           { th: "Description", td: info?.description },
           { th: "InitMsg", td: renderCodes(init_msg) },
           { th: "Timestamp", td: timestamp && format.date(timestamp) },
-          { th: "Migratable", td: String(migratable) }
+          { th: "Migratable", td: migratableValue },
+          { th: "Admin", td: admin }
         ])}
       </Card>
 
