@@ -21,7 +21,7 @@ import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
 
 const Contract = ({ address, code, info, ...data }: Contract) => {
-  const { init_msg, timestamp, migratable, code_id } = data;
+  const { init_msg, timestamp, code_id } = data;
   const link = code?.info.url && (
     <ExtLink href={code?.info.url}>{code?.info.url}</ExtLink>
   );
@@ -70,8 +70,7 @@ const Contract = ({ address, code, info, ...data }: Contract) => {
           { th: "Name", td: info?.name },
           { th: "Description", td: info?.description },
           { th: "InitMsg", td: renderCodes(init_msg) },
-          { th: "Timestamp", td: timestamp && format.date(timestamp) },
-          { th: "Migratable", td: String(migratable) }
+          { th: "Timestamp", td: timestamp && format.date(timestamp) }
         ])}
       </Card>
 
