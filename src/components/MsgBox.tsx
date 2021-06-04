@@ -11,10 +11,10 @@ import s from "./Msg.module.scss";
 import Address from "./Address";
 
 const prettifyExecuteMsg = (str: string) => {
-  const decoded = JSON.parse(decodeBase64(str));
+  const decoded = decodeBase64(str);
 
   try {
-    const parsed = decoded;
+    const parsed = JSON.parse(decoded);
 
     if (typeof parsed === "object") {
       Object.keys(parsed).forEach(key => {
