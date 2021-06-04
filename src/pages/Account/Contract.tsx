@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import format from "../../scripts/format";
-import { decodeBase64 } from "../../scripts/utility";
 import WithFetch, { useNetwork } from "../../HOCs/WithFetch";
 import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import Card from "../../components/Card";
@@ -19,9 +18,10 @@ import Query from "./Query";
 import s from "./Contract.module.scss";
 import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
+import WasmMsg from "../../components/WasmMsg";
 
 const Contract = ({ address, admin, code, info, ...data }: Contract) => {
-  const { init_msg, timestamp, migratable, code_id } = data;
+  const { init_msg, migrate_msg, timestamp, migratable, code_id } = data;
   const link = code?.info.url && (
     <ExtLink href={code?.info.url}>{code?.info.url}</ExtLink>
   );
@@ -70,7 +70,11 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
         {renderTable([
           { th: "Name", td: info?.name },
           { th: "Description", td: info?.description },
-          { th: "InitMsg", td: renderCodes(init_msg) },
+          { th: "InitMsg", td: init_msg && <WasmMsg msg={init_msg} /> },
+          {
+            th: "MigrateMsg",
+            td: migrate_msg && <WasmMsg msg={migrate_msg} />
+          },
           { th: "Timestamp", td: timestamp && format.date(timestamp) },
           { th: "Migratable", td: migratableValue },
           { th: "Admin", td: admin }
@@ -147,14 +151,3 @@ const renderTable = (data: { th: string; td: ReactNode }[]) => (
     </tbody>
   </Table>
 );
-
-const renderCodes = (codes: string): ReactNode => {
-  try {
-    const node = (
-      <pre>{JSON.stringify(JSON.parse(decodeBase64(codes)), null, 2)}</pre>
-    );
-    return node;
-  } catch (error) {
-    return null;
-  }
-};

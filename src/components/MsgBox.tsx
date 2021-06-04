@@ -6,27 +6,9 @@ import {
   isValidatorAddress
 } from "../scripts/utility";
 import format from "../scripts/format";
-import { decodeBase64 } from "../scripts/utility";
 import s from "./Msg.module.scss";
 import Address from "./Address";
-
-const prettifyExecuteMsg = (str: string) => {
-  const decoded = JSON.parse(decodeBase64(str));
-
-  try {
-    const parsed = decoded;
-
-    if (typeof parsed === "object") {
-      Object.keys(parsed).forEach(key => {
-        parsed[key].msg = JSON.parse(decodeBase64(parsed[key].msg));
-      });
-    }
-
-    return JSON.stringify(parsed, undefined, 2);
-  } catch (e) {
-    return JSON.stringify(decoded, undefined, 2);
-  }
-};
+import WasmMsg from "./WasmMsg";
 
 const getContent = (msg: Msg, key: string) => {
   if (isTerraAddress(msg.value[key]) || isValidatorAddress(msg.value[key])) {
@@ -42,7 +24,7 @@ const getContent = (msg: Msg, key: string) => {
   } else if (key === "ask_denom" || key === "denom") {
     return format.denom(msg.value[key]);
   } else if (key === "execute_msg") {
-    return <pre>{prettifyExecuteMsg(msg.value[key])}</pre>;
+    return <WasmMsg msg={msg.value[key]} />;
   } else {
     return Array.isArray(msg.value[key])
       ? msg.value[key].map((j: any, index: number) => (
