@@ -5,6 +5,7 @@ interface Contract {
   txhash?: string;
   timestamp?: string;
   address: string;
+  admin?: string;
   migratable: boolean;
   migrate_msg: null;
   info?: Info;
