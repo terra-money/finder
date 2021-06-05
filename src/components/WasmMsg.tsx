@@ -8,7 +8,9 @@ const isBase64Extended = (value: string) =>
   isBase64(value);
 
 const reviver = (_: string, value: any) =>
-  isBase64Extended(value) ? JSON.parse(decodeBase64(value), reviver) : value;
+  typeof value === "string" && isBase64Extended(value)
+    ? JSON.parse(decodeBase64(value), reviver)
+    : value;
 
 const prettifyWasmMsg = (str: string | object) => {
   if (typeof str === "string" && isBase64Extended(str)) {
