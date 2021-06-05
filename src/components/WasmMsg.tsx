@@ -5,11 +5,8 @@ import { decodeBase64 } from "../scripts/utility";
 const isBase64Extended = (value: string) =>
   typeof value === "string" && !value.startsWith("terra1") && isBase64(value);
 
-function reviver(_: string, value: any) {
-  return isBase64Extended(value)
-    ? JSON.parse(decodeBase64(value), reviver)
-    : value;
-}
+const reviver = (_: string, value: any) =>
+  isBase64Extended(value) ? JSON.parse(decodeBase64(value), reviver) : value;
 
 const prettifyWasmMsg = (str: string | object) => {
   if (typeof str === "string" && isBase64Extended(str)) {
