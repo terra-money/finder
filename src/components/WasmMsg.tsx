@@ -15,7 +15,7 @@ const prettifyWasmMsg = (str: string | object) => {
   if (typeof str === "string" && isBase64Extended(str)) {
     const decoded = decodeBase64(str);
     try {
-      return JSON.stringify(JSON.parse(decoded.toString(), reviver), null, 2);
+      return JSON.stringify(JSON.parse(decoded, reviver), null, 2);
     } catch (_) {
       return decoded;
     }
