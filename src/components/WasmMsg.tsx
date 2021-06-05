@@ -1,6 +1,7 @@
 import isBase64 from "is-base64";
 import { decodeBase64 } from "../scripts/utility";
 
+// is-base64 takes terra1 address as base64 as well; prevent this.
 const isBase64Extended = (value: string) =>
   typeof value === "string" && !value.startsWith("terra1") && isBase64(value);
 
