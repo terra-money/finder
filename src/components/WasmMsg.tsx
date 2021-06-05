@@ -16,7 +16,6 @@ const prettifyWasmMsg = (str: string | object) => {
     try {
       return JSON.stringify(JSON.parse(decoded.toString(), reviver), null, 2);
     } catch (_) {
-      console.log(_);
       return decoded;
     }
   }
