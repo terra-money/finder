@@ -144,6 +144,12 @@
       "icon": "https://whitelist.mirror.finance/icon/GLXY.png",
       "tags": ["Mirror"]
     },
+    "terra1s5eczhe0h0jutf46re52x5z4r03c8hupacxmdr": {
+      "category": "cw20Token",
+      "name": "SPEC",
+      "icon": "https://terra.spec.finance/assets/SPEC.png",
+      "tags": ["Spectrum"]
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -449,6 +455,12 @@
       "name": "Terraswap mGLXY-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/GLXY.png",
       "tags": ["Mirror"]
+    },
+    "terra1y9kxxm97vu4ex3uy0rgdr5h2vt7aze5sqx7jyl": {
+      "category": "Terraswap",
+      "name": "Terraswap SPEC-UST LP",
+      "icon": "https://terra.spec.finance/assets/SPEC.png",
+      "tags": ["Spectrum"]
     },
     "terra1zw0kfxrxgrs5l087mjm79hcmj3y8z6tljuhpmc": {
       "category": "Terraswap",
@@ -818,6 +830,12 @@
       "icon": "https://whitelist.mirror.finance/icon/COIN.png",
       "tags": ["Mirror"]
     },
+    "terra1kvsxd94ue6f4rtchv2l6me5k07uh26s7637cza": {
+      "category": "cw20Token",
+      "name": "SPEC",
+      "icon": "https://terra.spec.finance/assets/SPEC.png",
+      "tags": ["Spectrum"]
+    },
     "terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3": {
       "category": "shuttle",
       "name": "ETH",
@@ -1111,6 +1129,12 @@
       "name": "Terraswap mCOIN-UST LP",
       "icon": "https://whitelist.mirror.finance/icon/COIN.png",
       "tags": ["Mirror"]
+    },
+    "terra1ntt4mdhr9lukayenntgltqppw4yy6hts7wr67d": {
+      "category": "Terraswap",
+      "name": "Terraswap SPEC-UST LP",
+      "icon": "https://terra.spec.finance/assets/SPEC.png",
+      "tags": ["Spectrum"]
     },
     "terra1rfzwcdhhu502xws6r5pxw4hx8c6vms772d6vyu": {
       "category": "Terraswap",
