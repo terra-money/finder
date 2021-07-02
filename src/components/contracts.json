@@ -144,6 +144,12 @@
       "icon": "https://whitelist.mirror.finance/icon/GLXY.png",
       "tags": ["Mirror"]
     },
+    "terra1kcthelkax4j9x8d3ny6sdag0qmxxynl3qtcrpy": {
+      "category": "cw20Token",
+      "name": "MINE",
+      "icon": "https://assets.pylon.rocks/logo/MINE.png",
+      "tags": ["Pylon"]
+    },
     "terra13yxhrk08qvdf5zdc9ss5mwsg5sf7zva9xrgwgc": {
       "category": "shuttle",
       "name": "ETH",
@@ -818,6 +824,12 @@
       "icon": "https://whitelist.mirror.finance/icon/COIN.png",
       "tags": ["Mirror"]
     },
+    "terra1lqm5tutr5xcw9d5vc4457exa3ghd4sr9mzwdex": {
+      "category": "cw20Token",
+      "name": "MINE",
+      "icon": "https://assets.pylon.rocks/logo/MINE.png",
+      "tags": ["Pylon"]
+    },
     "terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3": {
       "category": "shuttle",
       "name": "ETH",
@@ -1479,6 +1491,12 @@
       "name": "mCOIN",
       "icon": "https://whitelist.mirror.finance/icon/COIN.png",
       "tags": ["Mirror"]
+    },
+    "terra1lqm5tutr5xcw9d5vc4457exa3ghd4sr9mzwdex": {
+      "category": "cw20Token",
+      "name": "MINE",
+      "icon": "https://assets.pylon.rocks/logo/MINE.png",
+      "tags": ["Pylon"]
     },
     "terra10a29fyas9768pw8mewdrar3kzr07jz8f3n73t3": {
       "category": "shuttle",
