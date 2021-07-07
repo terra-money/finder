@@ -1,11 +1,16 @@
 @import "../../styles/list";
 
+.wrapper {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
 .success {
   color: $green;
-  font-weight: 500;
+  font-weight: bolder;
 }
 
 .fail {
   color: $red;
-  font-weight: 500;
 }

@@ -4,11 +4,11 @@ import { get, last, isArray, isObject } from "lodash";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
-import s from "./Tx.module.scss";
 import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
+import s from "./Tx.module.scss";
 
 function isSendTx(response: TxResponse) {
   const type = get(response, "tx.value.msg[0].type");
@@ -31,7 +31,7 @@ function getAmountAndDenom(tax: string) {
   };
 }
 
-export function getTotalTax(txResponse: TxResponse) {
+function getTotalTax(txResponse: TxResponse) {
   const logs = get(txResponse, "logs");
 
   if (!isArray(logs)) {
@@ -138,7 +138,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
                   <Copy
                     text={response.txhash}
                     style={{ display: "inline-block", position: "absolute" }}
-                  ></Copy>
+                  />
                 </div>
               </div>
             </div>
