@@ -1,7 +1,8 @@
 import "react-app-polyfill/ie9";
 import "core-js";
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
+import { RecoilRoot } from "recoil";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,11 +12,9 @@ import {
 import "./index.scss";
 import App from "./layouts/App";
 import NetworkContext from "./contexts/NetworkContext";
-import CurrencyContext from "./contexts/CurrencyContext";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
-import { DEFAULT_CURRENCY, DEFAULT_NETWORK } from "./scripts/utility";
-import { getCookie, setCookie } from "./scripts/cookie";
+import { DEFAULT_NETWORK } from "./scripts/utility";
 
 if (
   process.env.REACT_APP_SENTRY_DSN &&
@@ -34,21 +33,14 @@ const Root = () => {
     push(pathnames.join("/"));
   };
 
-  const defaultCurrency = getCookie("currency") || DEFAULT_CURRENCY;
-  const [currency, setCurrency] = useState(defaultCurrency);
-  const selectCurrency = (currency: string) => {
-    setCookie("currency", currency, 7);
-    setCurrency(currency);
-  };
-
   return (
-    <NetworkContext.Provider value={{ network, selectNetwork }}>
-      <CurrencyContext.Provider value={{ currency, selectCurrency }}>
+    <RecoilRoot>
+      <NetworkContext.Provider value={{ network, selectNetwork }}>
         <Switch>
           <App />
         </Switch>
-      </CurrencyContext.Provider>
-    </NetworkContext.Provider>
+      </NetworkContext.Provider>
+    </RecoilRoot>
   );
 };
 

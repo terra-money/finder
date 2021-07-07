@@ -1,7 +1,4 @@
-import React from "react";
-import c from "classnames";
 import format from "../scripts/format";
-import s from "./Amount.module.scss";
 
 type Props = {
   estimated?: boolean;
@@ -15,7 +12,7 @@ const Amount = (props: Props) => {
   const { estimated, fontSize, className, denom, children } = props;
   const [integer, decimal] = format.amount(children || "0").split(".");
   return (
-    <span className={c(s.component, className)} style={{ fontSize }}>
+    <span className={className} style={{ fontSize }}>
       {estimated && "≈ "}
       {integer}
       <small>

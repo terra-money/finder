@@ -3,22 +3,22 @@ import { Link, useLocation } from "react-router-dom";
 import format from "../../scripts/format";
 import WithFetch, { useNetwork } from "../../HOCs/WithFetch";
 import useTokenBalance from "../../hooks/cw20/useTokenBalance";
+import Flex from "../../components/Flex";
+import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
 import ExtLink from "../../components/ExtLink";
-import Info from "../../components/Info";
 import Loading from "../../components/Loading";
-import Flex from "../../components/Flex";
-import ModalWithButton from "../../components/ModalWithButton";
-import CopyAddress from "./CopyAddress";
-import Txs from "./Txs";
-import AvailableList from "./AvailableList";
-import AmountCard from "./AmountCard";
-import Query from "./Query";
-import s from "./Contract.module.scss";
-import Delegations from "./Delegations";
-import Unbondings from "./Unbondings";
 import WasmMsg from "../../components/WasmMsg";
+import ModalWithButton from "../../components/ModalWithButton";
+import Txs from "./Txs";
+import Query from "./Query";
+import Unbondings from "./Unbondings";
+import AmountCard from "./AmountCard";
+import CopyAddress from "./CopyAddress";
+import Delegations from "./Delegations";
+import AvailableList from "./AvailableList";
+import s from "./Contract.module.scss";
 
 const Contract = ({ address, admin, code, info, ...data }: Contract) => {
   const { init_msg, migrate_msg, timestamp, migratable, code_id } = data;
@@ -107,7 +107,7 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
               .map((t, i) => (
                 <AmountCard
                   key={i}
-                  denom={t.name}
+                  denom={t.symbol}
                   amount={t.balance}
                   icon={t.icon}
                 />

@@ -134,3 +134,9 @@ export function getDefaultCurrency(denoms: string[]) {
 
   return DEFAULT_CURRENCY;
 }
+
+export function transformChainId(chainId: string) {
+  //for Terra assets
+  const chain = chainId.split("-")[0];
+  return chain === "columbus" ? "mainnet" : "testnet";
+}

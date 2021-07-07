@@ -1,36 +1,35 @@
-import { useContext, useEffect } from "react";
-import { useRequest } from "../HOCs/WithFetch";
-import CurrencyContext from "../contexts/CurrencyContext";
-import s from "./SelectCurrency.module.scss";
+import { useEffect } from "react";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { getCookie } from "../scripts/cookie";
 import { DEFAULT_CURRENCY, getDefaultCurrency } from "../scripts/utility";
+import { Currency } from "../store/CurrencyStore";
+import { Denoms } from "../store/DenomStore";
+import s from "./SelectCurrency.module.scss";
 
 type Props = {
   className?: string;
 };
 
 const SelectCurrency = (props: Props) => {
-  const { currency, selectCurrency } = useContext(CurrencyContext);
-  const response: ActiveDenom = useRequest({ url: `/oracle/denoms/actives` });
-  const currencyArray = response.data?.result.filter(str => str !== "uluna");
-
-  const denom = currencyArray?.includes(currency) ? currency : DEFAULT_CURRENCY;
+  const [currency, setCurrency] = useRecoilState(Currency);
+  const denoms = useRecoilValue(Denoms);
+  const denom = denoms.includes(currency) ? currency : DEFAULT_CURRENCY;
 
   useEffect(() => {
-    if (!getCookie("currency") && currencyArray && navigator.cookieEnabled) {
-      const currency = getDefaultCurrency(currencyArray);
-      selectCurrency(currency);
+    if (!getCookie("currency") && navigator.cookieEnabled) {
+      const currency = getDefaultCurrency(denoms);
+      setCurrency(currency);
     }
-  }, [selectCurrency, currencyArray]);
+  }, [setCurrency, denoms]);
 
   return (
     <div className={props.className}>
       <select
         className={s.select}
         value={denom.substr(1).toUpperCase()}
-        onChange={e => selectCurrency(`u${e.target.value}`.toLowerCase())}
+        onChange={e => setCurrency(`u${e.target.value}`.toLowerCase())}
       >
-        {currencyArray?.map((currency, key) => {
+        {denoms.map((currency, key) => {
           const activeDenom = currency.substr(1).toUpperCase();
           return <option key={key}>{activeDenom}</option>;
         })}
