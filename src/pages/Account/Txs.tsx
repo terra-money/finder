@@ -1,42 +1,26 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { isEmpty } from "lodash";
 import WithFetch from "../../HOCs/WithFetch";
 import FlexTable from "../../components/FlexTable";
 import Pagination, { PaginationProps } from "../../components/Pagination";
 import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
+import Icon from "../../components/Icon";
 import Finder from "../../components/Finder";
-import CoinComponent from "../../components/Coin";
-import { isEmpty } from "lodash";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import NetworkContext from "../../contexts/NetworkContext";
 import s from "./Txs.module.scss";
 
-type Amount = {
-  amount: [
-    {
-      amount: string;
-      denom: string;
-    }
-  ];
-  from_address: string;
+type Fee = {
+  denom: string;
+  amount: string;
 };
 
-const getAmount = (prop: Amount, address: string) => {
-  if (!prop.amount?.[0]) return "-";
-
-  const { denom, amount } = prop.amount[0];
-  const from_address = prop.from_address;
-
-  return (
-    <>
-      {from_address === address ? "-" : "+"}
-      <CoinComponent amount={amount} denom={denom} />
-    </>
-  );
-};
+const getTxFee = (prop: Fee) =>
+  prop && `${format.amount(prop.amount)} ${format.denom(prop.denom)}`;
 
 const Txs = ({
   address,
@@ -61,14 +45,18 @@ const Txs = ({
     const isSuccess = !response.code;
     return [
       <span>
-        <Finder q="tx" network={network} v={txhash}>
-          {format.truncate(txhash, [8, 8])}
-        </Finder>
+        <div className={s.wrapper}>
+          <Finder q="tx" network={network} v={txhash}>
+            {format.truncate(txhash, [8, 8])}
+          </Finder>
+          {isSuccess ? (
+            <Icon name="check" className={s.success} />
+          ) : (
+            <Icon name="warning" className={s.fail} />
+          )}
+        </div>
       </span>,
       <span className="type">{sliceMsgType(txBody.value.msg[0].type)}</span>,
-      <span className={isSuccess ? s.success : s.fail}>
-        {isSuccess ? `Success` : `Failed`}
-      </span>,
       <span>
         <Finder q="blocks" network={network} v={height}>
           {height}
@@ -76,11 +64,10 @@ const Txs = ({
         <span>({chainId})</span>
       </span>,
       <span>{fromISOTime(timestamp.toString())}</span>,
-      <span>{getAmount(txBody.value.msg[0].value, address)}</span>
+      <span>{getTxFee(txBody?.value?.fee?.amount?.[0])}</span>
     ];
   };
-
-  const head = [`Tx hash`, `Type`, `Result`, `Block`, `Timestamp`, `Amount`];
+  const head = [`Tx hash`, `Type`, `Block`, `Timestamp`, `Fee`];
   return (
     <WithFetch
       url={`/v1/txs`}
@@ -96,7 +83,7 @@ const Txs = ({
                 body={txs.map(getRow)}
                 tableStyle={{ border: "none" }}
                 headStyle={{ background: "none" }}
-              ></FlexTable>
+              />
             </Pagination>
           );
         } else {

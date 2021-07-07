@@ -1,21 +1,18 @@
-import React, { ReactNode, useContext } from "react";
+import React, { ReactNode } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { Dictionary } from "ramda";
+import { useRecoilValue } from "recoil";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
 import Loading from "../../components/Loading";
-import contracts from "../../components/contracts.json";
+import { Whitelist } from "../../store/WhitelistStore";
 import WithFetch from "../../HOCs/WithFetch";
-import { Tokens } from "../../hooks/cw20/useTokenBalance";
-import NetworkContext from "../../contexts/NetworkContext";
 import Txs from "./Txs";
 import s from "./TokenDetails.module.scss";
 
 const TokenDetails = () => {
   const { address = "" } = useParams<{ address: string }>();
   const { search, pathname } = useLocation();
-  const { network: currentChain } = useContext(NetworkContext);
-  const whitelist = (contracts as Dictionary<Tokens>)[currentChain];
+  const whitelist = useRecoilValue(Whitelist);
   const size = { width: 32, height: 32 };
 
   return (

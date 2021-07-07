@@ -14,8 +14,8 @@ import Unbondings from "./Unbondings";
 import Txs from "./Txs";
 import Vesting from "./Vesting";
 import CopyAddress from "./CopyAddress";
-import s from "./Account.module.scss";
 import AmountCard from "./AmountCard";
+import s from "./Account.module.scss";
 
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
@@ -55,7 +55,7 @@ const Account = () => {
                   .map((t, i) => (
                     <AmountCard
                       key={i}
-                      denom={t.name}
+                      denom={t.symbol}
                       amount={t.balance}
                       icon={t.icon}
                     />

@@ -2,16 +2,13 @@ import { gql } from "@apollo/client";
 
 interface Item {
   contract: string;
-  category: string;
   msg: object;
 }
 
 const stringify = (msg: object) => JSON.stringify(msg).replace(/"/g, '\\"');
 
-const aliasItem = ({ contract, msg, category }: Item) => {
-  if (category !== "cw20Token") return;
-
-  return `
+const aliasItem = ({ contract, msg }: Item) =>
+  `
     ${contract}: WasmContractsContractAddressStore(
       ContractAddress: "${contract}"
       QueryMsg: "${stringify(msg)}"
@@ -19,7 +16,6 @@ const aliasItem = ({ contract, msg, category }: Item) => {
       Height
       Result
     }`;
-};
 
 const alias = (list: Item[]) => gql`
   query {
