@@ -13,6 +13,15 @@ The Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explo
 npm install
 ```
 
+### Configure the environement variables
+
+Edit `.env.development` if required. For example:
+```
+HOST=localhost
+HTTPS=false
+BROWSER=none     
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm start
