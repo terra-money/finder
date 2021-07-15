@@ -16,10 +16,12 @@ npm install
 ### Configure the environement variables
 
 Edit `.env.development` if required. For example:
+
 ```
 HOST=localhost
 HTTPS=false
-BROWSER=none     
+BROWSER=none
+REACT_APP_DEFAULT_NETWORK=localterra
 ```
 
 ### Compiles and hot-reloads for development
