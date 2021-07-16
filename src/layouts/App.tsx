@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { Dictionary } from "ramda";
 import routes from "../routes";
 import ErrorBoundary from "../components/ErrorBoundary";
+import Loading from "../components/Loading";
+import create from "../logfinder/create";
 import { useNetwork, useRequest } from "../HOCs/WithFetch";
 import { Denoms } from "../store/DenomStore";
+import { LogfinderRuleSet } from "../store/LogfinderRuleSetStore";
 import useTerraAssets from "../hooks/useTerraAssets";
 import Header from "./Header";
 import { Whitelist } from "../store/WhitelistStore";
@@ -29,13 +32,19 @@ const App = () => {
 
   const setWhitelist = useSetRecoilState(Whitelist);
   const setContracts = useSetRecoilState(Contracts);
+  const setRuleArray = useSetRecoilState(LogfinderRuleSet);
   const setDenoms = useSetRecoilState(Denoms);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    const ruleArray = create(network);
+    setRuleArray(ruleArray);
+
     if (whitelist && contracts && response.data?.result) {
       setWhitelist(whitelist[network]);
       setContracts(contracts[network]);
       setDenoms(response.data.result);
+      setLoading(false);
     }
   }, [
     response,
@@ -44,11 +53,14 @@ const App = () => {
     contracts,
     chainId,
     setDenoms,
+    setRuleArray,
     setWhitelist,
     setContracts
   ]);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <section className={s.main}>
       <Header />
       <section className={s.content}>
