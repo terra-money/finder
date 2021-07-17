@@ -14,3 +14,9 @@
 .fail {
   color: $red;
 }
+
+.amount {
+  display: flex;
+  white-space: pre;
+  flex-direction: column;
+}
