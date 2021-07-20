@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { Dictionary } from "ramda";
 import routes from "../routes";
 import ErrorBoundary from "../components/ErrorBoundary";
-import Loading from "../components/Loading";
 import create from "../logfinder/create";
 import { useNetwork, useRequest } from "../HOCs/WithFetch";
 import { Denoms } from "../store/DenomStore";
@@ -34,7 +33,6 @@ const App = () => {
   const setContracts = useSetRecoilState(Contracts);
   const setRuleArray = useSetRecoilState(LogfinderRuleSet);
   const setDenoms = useSetRecoilState(Denoms);
-  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const ruleArray = create(network);
@@ -44,7 +42,6 @@ const App = () => {
       setWhitelist(whitelist[network]);
       setContracts(contracts[network]);
       setDenoms(response.data.result);
-      setLoading(false);
     }
   }, [
     response,
@@ -58,9 +55,7 @@ const App = () => {
     setContracts
   ]);
 
-  return loading ? (
-    <Loading />
-  ) : (
+  return (
     <section className={s.main}>
       <Header />
       <section className={s.content}>
