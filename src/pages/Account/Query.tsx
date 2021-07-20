@@ -29,7 +29,7 @@ const ACE_PROPS = {
 const Query = () => {
   const { address = "" } = useParams<{ address: string }>();
   const [query, setQuery] = useState<string>();
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<string>();
   const [error, setError] = useState<Error>();
   const network = useNetwork();
   const fcd = fcdUrl(network);
@@ -47,7 +47,9 @@ const Query = () => {
       const url = `${fcd}/wasm/contracts/${address}/store`;
       const params = query && { query_msg: JSON.parse(query) };
       const { data } = await apiClient.get<{ result: any }>(url, { params });
-      setData(data.result);
+      const result = JSON.stringify(data.result, null, 2);
+
+      setData(result);
     } catch (error) {
       setError(error);
     }
@@ -80,13 +82,13 @@ const Query = () => {
         <article className={s.innerHeader}>
           <h2 className={c(s.title, s.subTitle)}>JSON Output</h2>
           <Copy
-            text={JSON.stringify(data, null, 2)}
+            text={data}
             buttonLabel="COPY"
             classNames={{ button: s.copyButton, wrapper: s.copyWrapper }}
           />
         </article>
 
-        <section className={s.result}>{JSON.stringify(data, null, 2)}</section>
+        <section className={s.result}>{data}</section>
       </section>
     </>
   ) : (
