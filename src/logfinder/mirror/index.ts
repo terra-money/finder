@@ -1,16 +1,17 @@
 import { LogFindersRuleSet } from "../types";
-import mainnet from "./mainnet";
-import testnet from "./testnet";
+import { createMirrorRules } from "./rules";
+import { mainnet, testnet } from "./addresses";
 
 const create = (network: string) => {
-  const rules = network === "mainnet" ? mainnet : testnet;
+  const addresses = network === "mainnet" ? mainnet : testnet;
+  const rules = createMirrorRules(addresses);
 
-  const mirrorOpenPositionRuleSet: LogFindersRuleSet = {
+  const openPositionRuleSet: LogFindersRuleSet = {
     rule: rules.openPosition,
     transform: (fragment, matched) => ({
       msgType: "mirror/open-position",
       canonicalMsg: [
-        `Deposit ${matched[4].value} (Position ID: ${matched[2].value})`,
+        `Deposit ${matched[4].value} (Position ID: ${matched[0]})`,
         `Mint ${matched[3].value}`
       ],
       amountIn: `${matched[3].value}`,
@@ -19,7 +20,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorDepositRuleSet: LogFindersRuleSet = {
+  const depositRuleSet: LogFindersRuleSet = {
     rule: rules.depositRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/deposit",
@@ -31,7 +32,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorWithdrawRuleSet: LogFindersRuleSet = {
+  const withdrawRuleSet: LogFindersRuleSet = {
     rule: rules.withdrawRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/withdraw",
@@ -43,7 +44,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorBurnRuleSet: LogFindersRuleSet = {
+  const burnRuleSet: LogFindersRuleSet = {
     rule: rules.burnRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/burn",
@@ -55,37 +56,37 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorStakeLPRuleSet: LogFindersRuleSet = {
+  const stakeLPRuleSet: LogFindersRuleSet = {
     rule: rules.stakeLPRule,
     transform: (fragment, matched) => ({
-      msgType: "mirror/stake-lp",
+      msgType: "mirror/stake-LP",
       canonicalMsg: [`Stake ${matched[8].value}${matched[0].value}`],
       amountOut: `${matched[8].value}${matched[0].value}`,
       payload: fragment
     })
   };
 
-  const mirrorUnstakeLPRuleSet: LogFindersRuleSet = {
+  const unstakeLPRuleSet: LogFindersRuleSet = {
     rule: rules.unstakeLPRule,
     transform: (fragment, matched) => ({
-      msgType: "mirror/unstake-lp",
+      msgType: "mirror/unstake-LP",
       canonicalMsg: [`Unstake ${matched[8].value}${matched[4].value}`],
       amountIn: `${matched[8].value}${matched[4].value}`,
       payload: fragment
     })
   };
 
-  const mirrorLPStakingRewardRuleSet: LogFindersRuleSet = {
+  const lpStakingRewardRuleSet: LogFindersRuleSet = {
     rule: rules.lpStakingRewardRule,
     transform: (fragment, matched) => ({
-      msgType: "mirror/lp-staking-reward",
+      msgType: "mirror/LP-staking-reward",
       canonicalMsg: [`Claim Reward ${matched[7].value}${matched[3].value}`],
       amountIn: `${matched[7].value}${matched[3].value}`,
       payload: fragment
     })
   };
 
-  const mirrorGovStakeRuleSet: LogFindersRuleSet = {
+  const govStakeRuleSet: LogFindersRuleSet = {
     rule: rules.govStakeRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/governance-stake",
@@ -97,7 +98,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorGovUnstakeRuleSet: LogFindersRuleSet = {
+  const govUnstakeRuleSet: LogFindersRuleSet = {
     rule: rules.govUnstakeRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/governance-unstake",
@@ -109,7 +110,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorCreatePollRuleSet: LogFindersRuleSet = {
+  const createPollRuleSet: LogFindersRuleSet = {
     rule: rules.createPollRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/create-poll",
@@ -119,7 +120,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorCastVoteRuleSet: LogFindersRuleSet = {
+  const castVoteRuleSet: LogFindersRuleSet = {
     rule: rules.castVoteRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/cast-vote",
@@ -130,7 +131,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorAirdropRuleSet: LogFindersRuleSet = {
+  const airdropRuleSet: LogFindersRuleSet = {
     rule: rules.airdropRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/airdrop",
@@ -140,7 +141,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorBuySubmitOrderRuleSet: LogFindersRuleSet = {
+  const buySubmitOrderRuleSet: LogFindersRuleSet = {
     rule: rules.buySubmitOrderRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/submit-order-buy",
@@ -152,7 +153,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorSellSubmitOrderRuleSet: LogFindersRuleSet = {
+  const sellSubmitOrderRuleSet: LogFindersRuleSet = {
     rule: rules.sellSubmitOrderRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/submit-order-sell",
@@ -164,7 +165,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorCancelOrderRuleSet: LogFindersRuleSet = {
+  const cancelOrderRuleSet: LogFindersRuleSet = {
     rule: rules.cancelOrderRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/cancel-order",
@@ -174,7 +175,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorBuyExecuteOrderRuleSet: LogFindersRuleSet = {
+  const buyExecuteOrderRuleSet: LogFindersRuleSet = {
     rule: rules.buyExecuteOrderRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/execute-order-buy",
@@ -185,7 +186,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorSellExecuteOrderRuleSet: LogFindersRuleSet = {
+  const sellExecuteOrderRuleSet: LogFindersRuleSet = {
     rule: rules.sellExecuteOrderRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/execute-order-sell",
@@ -196,16 +197,16 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorLPStakeRuleSet: LogFindersRuleSet = {
+  const lpStakeRuleSet: LogFindersRuleSet = {
     rule: rules.longFarm,
     transform: (fragment, matched) => ({
-      msgType: "mirror/lp-stake",
+      msgType: "mirror/LP-stake",
       canonicalMsg: [`Stake ${matched[4].value} to ${matched[0].value}`],
       payload: fragment
     })
   };
 
-  const mirrorBorrowRuleSet: LogFindersRuleSet = {
+  const borrowRuleSet: LogFindersRuleSet = {
     rule: rules.borrow,
     transform: (fragment, matched) => ({
       msgType: "mirror/borrow",
@@ -216,7 +217,7 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorUnlockAmountRuleSet: LogFindersRuleSet = {
+  const unlockAmountRuleSet: LogFindersRuleSet = {
     rule: rules.unlockAmount,
     transform: (fragment, matched) => ({
       msgType: "mirror/unlock-amount",
@@ -226,30 +227,28 @@ const create = (network: string) => {
     })
   };
 
-  const mirrorRuleArray: LogFindersRuleSet[] = [
-    mirrorOpenPositionRuleSet,
-    mirrorDepositRuleSet,
-    mirrorWithdrawRuleSet,
-    mirrorBurnRuleSet,
-    mirrorStakeLPRuleSet,
-    mirrorUnstakeLPRuleSet,
-    mirrorLPStakingRewardRuleSet,
-    mirrorGovStakeRuleSet,
-    mirrorGovUnstakeRuleSet,
-    mirrorCreatePollRuleSet,
-    mirrorCastVoteRuleSet,
-    mirrorAirdropRuleSet,
-    mirrorBuySubmitOrderRuleSet,
-    mirrorSellSubmitOrderRuleSet,
-    mirrorCancelOrderRuleSet,
-    mirrorBuyExecuteOrderRuleSet,
-    mirrorSellExecuteOrderRuleSet,
-    mirrorLPStakeRuleSet,
-    mirrorBorrowRuleSet,
-    mirrorUnlockAmountRuleSet
+  return [
+    openPositionRuleSet,
+    depositRuleSet,
+    withdrawRuleSet,
+    burnRuleSet,
+    stakeLPRuleSet,
+    unstakeLPRuleSet,
+    lpStakingRewardRuleSet,
+    govStakeRuleSet,
+    govUnstakeRuleSet,
+    createPollRuleSet,
+    castVoteRuleSet,
+    airdropRuleSet,
+    buySubmitOrderRuleSet,
+    sellSubmitOrderRuleSet,
+    cancelOrderRuleSet,
+    buyExecuteOrderRuleSet,
+    sellExecuteOrderRuleSet,
+    lpStakeRuleSet,
+    borrowRuleSet,
+    unlockAmountRuleSet
   ];
-
-  return mirrorRuleArray;
 };
 
 export default create;
