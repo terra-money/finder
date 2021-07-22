@@ -1,17 +1,19 @@
-const bLunaAddress = "terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp";
-const bLunaHubAddress = "terra1mtwph2juhj0rvjz7dy92gvl6xvukaxu8rfv8ts";
-const bLunaRwardAddress = "terra17yap3mhph35pcwvhza38c2lkj7gzywzy05h7l0";
-const aUSTAddress = "terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu";
-const ANCAddress = "terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76";
-const ANCPairAddress = "terra1gm5p3ner9x9xpwugn9sp6gvhd0lwrtkyrecdn3";
-const marketAddress = "terra1sepfj7s0aeg5967uxnfk4thzlerrsktkpelm5s";
-const bLunaCustodyAddress = "terra1ptjp2vfjrwh0j0faj9r6katm640kgjxnwwq9kn";
-const LPStakingAddress = "terra1897an2xux840p9lrh6py3ryankc6mspw49xse3";
-const AncUstLPAddress = "terra1gecs98vcuktyfkrve9czrpgtg0m3aq586x6gzm";
-const govAddress = "terra1f32xyep306hhcxxxf7mlyh0ucggc00rm2s9da5";
-const airdropAddress = "terra146ahqn6d3qgdvmj8cj96hh03dzmeedhsf0kxqm";
+import { AnchorAddresses } from "./addresses";
 
-const mainnet = {
+export const createAnchorRules = ({
+  bLunaAddress,
+  bLunaHubAddress,
+  bLunaRwardAddress,
+  aUSTAddress,
+  ANCAddress,
+  ANCPairAddress,
+  marketAddress,
+  bLunaCustodyAddress,
+  LPStakingAddress,
+  AncUstLPAddress,
+  govAddress,
+  airdropAddress
+}: AnchorAddresses) => ({
   depositStableRule: {
     type: "from_contract",
     attributes: [
@@ -347,6 +349,4 @@ const mainnet = {
       ["vote_option"]
     ]
   }
-};
-
-export default mainnet;
+});

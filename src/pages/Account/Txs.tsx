@@ -47,6 +47,24 @@ const formatAmount = (amount: string) => {
   }
 };
 
+const getRenderAmount = (
+  amountList: string[] | undefined,
+  target: string | undefined,
+  address: string,
+  amountArray: JSX.Element[]
+) => {
+  amountList?.forEach(amount => {
+    const coin = formatAmount(amount.trim());
+    if (coin) {
+      if (target && target === address) {
+        amountArray.push(coin);
+      } else if (!target) {
+        amountArray.push(coin);
+      }
+    }
+  });
+};
+
 const getAmount = (
   txResponse: TxResponse,
   ruleArray: LogFindersRuleSet[],
@@ -57,22 +75,15 @@ const getAmount = (
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
 
-  if (matchLogs) {
-    matchLogs.forEach(msg => {
-      if (msg.transformed?.amountIn) {
-        msg.transformed?.amountIn.split(",").forEach(amount => {
-          const coin = formatAmount(amount.trim());
-          coin && amountIn.push(coin);
-        });
-      }
-      if (msg.transformed?.amountOut) {
-        msg.transformed?.amountOut.split(",").forEach(amount => {
-          const coin = formatAmount(amount.trim());
-          coin && amountOut.push(coin);
-        });
-      }
-    });
-  }
+  matchLogs?.forEach(msg => {
+    const msgAmountIn = msg.transformed?.amountIn?.split(",");
+    const msgAmountOut = msg.transformed?.amountOut?.split(",");
+    const target = msg.transformed?.target;
+
+    getRenderAmount(msgAmountIn, target, address, amountIn);
+    getRenderAmount(msgAmountOut, target, address, amountOut);
+  });
+
   //amount row limit
   return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
 };

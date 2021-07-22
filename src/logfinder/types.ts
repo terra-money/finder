@@ -10,6 +10,7 @@ export interface TransformResult {
   payload: LogFragment;
   amountIn?: string;
   amountOut?: string;
+  target?: string;
 }
 
 export interface LogFindersRuleSet {

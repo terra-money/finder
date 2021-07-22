@@ -1,11 +1,13 @@
-const mintAddress = "terra1wfz7h3aqf4cjmjcvc6s8lxdhh7k30nkczyf0mj";
-const stakingAddress = "terra17f7zu97865jmknk7p2glqvxzhduk78772ezac5";
-const govAddress = "terra1wh39swv7nq36pnefnupttm2nr96kz7jjddyt2x";
-const airdropAddress = "terra1kalp2knjm4cs3f59ukr4hdhuuncp648eqrgshw";
-const limitOrderAddress = "terra1zpr8tq3ts96mthcdkukmqq4y9lhw0ycevsnw89";
-const MIRAddress = "terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6";
+import { MirrorAddresses } from "./addresses";
 
-const mainnet = {
+export const createMirrorRules = ({
+  mintAddress,
+  stakingAddress,
+  govAddress,
+  airdropAddress,
+  limitOrderAddress,
+  MIRAddress
+}: MirrorAddresses) => ({
   openPosition: {
     type: "from_contract",
     attributes: [
@@ -175,7 +177,7 @@ const mainnet = {
       ["action", "submit_order"],
       ["order_id"],
       ["bidder_addr"],
-      ["offer_asset"],
+      ["offer_asset", (value: string) => !value.includes("terra1")],
       ["ask_asset"]
     ]
   },
@@ -191,7 +193,7 @@ const mainnet = {
       ["action", "submit_order"],
       ["order_id"],
       ["bidder_addr"],
-      ["offer_asset"],
+      ["offer_asset", (value: string) => value.includes("terra1")],
       ["ask_asset"]
     ]
   },
@@ -284,6 +286,4 @@ const mainnet = {
       ["tax_amount"]
     ]
   }
-};
-
-export default mainnet;
+});
