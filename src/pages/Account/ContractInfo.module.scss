@@ -1,0 +1,45 @@
+@import "../../styles/variables";
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  border-radius: 5px;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+  border: solid 1px #e4e8f6;
+  padding: 15px 0px 15px 25px;
+  margin-bottom: 21px;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+
+  @media (max-width: $breakpoint) {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.name {
+  font-size: 20px;
+  font-weight: 500;
+  display: flex;
+  @media (max-width: $breakpoint) {
+    font-size: 15px;
+  }
+}
+
+.symbol {
+  color: #5493f7;
+}
+
+.vertical {
+  border-left: 1px solid #d2d9f0;
+  height: 20px;
+  margin: 5px 10px 5px 10px;
+  @media (max-width: $breakpoint) {
+    height: 12px;
+  }
+}
