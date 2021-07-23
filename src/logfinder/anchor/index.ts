@@ -14,8 +14,8 @@ const create = (network: string) => {
         `Deposit ${matched[4].value}uusd to ${matched[0].value}`,
         `Mint ${matched[3].value}${matched[5].value}`
       ],
-      amountIn: `${matched[4].value}uusd`,
-      amountOut: `${matched[3].value}${matched[5].value}`,
+      amountIn: `${matched[3].value}${matched[5].value}`,
+      amountOut: `${matched[4].value}uusd`,
       target: matched[2].value,
       payload: fragment
     })
@@ -42,6 +42,7 @@ const create = (network: string) => {
       msgType: "anchor/bond-luna",
       canonicalMsg: [`Mint ${matched[4].value}${matched[5].value}`],
       amountIn: `${matched[4].value}${matched[5].value}`,
+      amountOut: `${matched[3].value}uluna`,
       target: matched[2].value,
       payload: fragment
     })
@@ -81,7 +82,7 @@ const create = (network: string) => {
         `Claim ${matched[3].value}uusd rewards from ${matched[0].value}`
       ],
       amountIn: `${matched[3].value}uusd`,
-      target: matched[3].value,
+      target: matched[2].value,
       payload: fragment
     })
   };
@@ -127,7 +128,7 @@ const create = (network: string) => {
         `Withdraw ${matched[3].value}${matched[4].value} from ${matched[0].value}`
       ],
       amountIn: `${matched[3].value}${matched[4].value}`,
-      target: matched[3].value,
+      target: matched[2].value,
       payload: fragment
     })
   };
