@@ -221,7 +221,7 @@ const create = () => {
   const msgUndelegateRuleSet: LogFindersRuleSet = {
     rule: rules.msgUndelegateRule,
     transform: (fragment, matched) => ({
-      msgType: "terra/undelegete",
+      msgType: "terra/undelegate",
       canonicalMsg: [
         `Undelegete ${matched[1].value}uluna to ${matched[0].value}`
       ],
