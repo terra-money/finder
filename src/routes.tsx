@@ -5,7 +5,6 @@ import Block from "./pages/Block";
 import Tx from "./pages/Tx";
 import Address from "./pages/Account/Address";
 import Contract from "./pages/Account/Contract";
-import TokenDetails from "./pages/Account/TokenDetails";
 import Txs from "./pages/Txs";
 import Validator from "./pages/Validator";
 import NotFound from "./components/NotFound";
@@ -21,7 +20,6 @@ export default (
     <Route path="/:network/address/:address" component={Address} />
     <Route path="/:network/account/:address" component={Address} />
     <Route path="/:network/contract/:address" component={Contract} />
-    <Route path="/:network/token/:address" component={TokenDetails} />
     <Route path="*" component={NotFound} />
   </Switch>
 );

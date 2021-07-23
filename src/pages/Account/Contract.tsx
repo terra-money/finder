@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import format from "../../scripts/format";
-import WithFetch, { useNetwork } from "../../HOCs/WithFetch";
+import WithFetch from "../../HOCs/WithFetch";
 import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import Flex from "../../components/Flex";
 import Info from "../../components/Info";
@@ -18,6 +18,7 @@ import AmountCard from "./AmountCard";
 import CopyAddress from "./CopyAddress";
 import Delegations from "./Delegations";
 import AvailableList from "./AvailableList";
+import ContractInfo from "./ContractInfo";
 import s from "./Contract.module.scss";
 
 const Contract = ({ address, admin, code, info, ...data }: Contract) => {
@@ -26,7 +27,6 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
     <ExtLink href={code?.info.url}>{code?.info.url}</ExtLink>
   );
 
-  const network = useNetwork();
   const tokens = useTokenBalance(address);
   const { search, pathname } = useLocation();
   const migratableValue = migratable !== undefined && String(migratable);
@@ -34,20 +34,8 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
   return (
     <>
       <h2 className="title">Smart Contract</h2>
-
-      <WithFetch
-        url={`/wasm/contracts/${address}/store?query_msg={"token_info":{}}`}
-        loading={<Loading />}
-        renderError={() => null}
-      >
-        <Card className={s.cardTitle}>
-          <h1>This smart contract is a token.</h1>
-          <Link to={`/${network}/token/${address}`}>View token profile</Link>
-        </Card>
-      </WithFetch>
-
+      <ContractInfo address={address} />
       <CopyAddress>{address}</CopyAddress>
-
       <Card
         title={
           <Flex>
