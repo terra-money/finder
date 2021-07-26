@@ -16,7 +16,7 @@ const Search = ({ className, history }: Props) => {
     e.preventDefault();
 
     if (value) {
-      history.push(getEndpointByKeyword(value, network));
+      history.push(getEndpointByKeyword(value.trim(), network));
     }
   };
 
