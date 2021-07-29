@@ -17,13 +17,9 @@ const SelectNetworks = (props: Props) => {
         value={network}
         onChange={e => selectNetwork(e.target.value)}
       >
-        {networksConfig.map(({ key, selectable }, index) => {
-          if (selectable === false || !key) {
-            return null;
-          }
-
-          return <option key={index}>{key}</option>;
-        })}
+        {networksConfig.map(({ key }, index) => (
+          <option key={index}>{key}</option>
+        ))}
       </select>
       <div className={s.addon}>
         <i className="material-icons">arrow_drop_down</i>
