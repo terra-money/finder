@@ -125,7 +125,7 @@ const create = (network: string) => {
     transform: (fragment, matched) => ({
       msgType: "mirror/cast-vote",
       canonicalMsg: [
-        `Vote to Poll (Poll ID: ${matched[2].value}) (${matched[1].value})`
+        `Vote to Poll (Poll ID: ${matched[2].value}) (${matched[5].value})`
       ],
       payload: fragment
     })
@@ -201,7 +201,7 @@ const create = (network: string) => {
     rule: rules.longFarm,
     transform: (fragment, matched) => ({
       msgType: "mirror/LP-stake",
-      canonicalMsg: [`Stake ${matched[4].value} to ${matched[0].value}`],
+      canonicalMsg: [`Stake LP to ${matched[0].value}`],
       payload: fragment
     })
   };
