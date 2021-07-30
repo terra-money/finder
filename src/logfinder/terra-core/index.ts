@@ -264,7 +264,9 @@ const create = () => {
     rule: rules.msgBeginRedelegateRule,
     transform: (fragment, matched) => ({
       msgType: "terra/begin-redelegate",
-      canonicalMsg: [`Redelegate ${matched[2].value} to ${matched[1].value}`],
+      canonicalMsg: [
+        `Redelegate ${matched[2].value}uluna to ${matched[1].value}`
+      ],
       payload: fragment
     })
   };

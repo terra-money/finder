@@ -1,13 +1,17 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { get, last, isArray, isObject } from "lodash";
+import { useRecoilValue } from "recoil";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
-import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
+import { getMatchLog } from "../../logfinder/format";
+import { fromISOTime, sliceMsgType } from "../../scripts/utility";
+import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
+import Action from "./Action";
 import s from "./Tx.module.scss";
 
 function isSendTx(response: TxResponse) {
@@ -122,6 +126,7 @@ function getTotalFee(txResponse: TxResponse) {
 const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const { match } = props;
   const { hash } = match.params;
+  const ruleArray = useRecoilValue(LogfinderRuleSet);
 
   return (
     <WithFetch url={`/v1/tx/${hash}`} loading={<Loading />}>
@@ -193,6 +198,20 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
                 {parseInt(response.gas_wanted).toLocaleString()}
               </div>
             </div>
+            {getMatchLog(JSON.stringify(response), ruleArray) && (
+              <div className={s.row}>
+                <div className={s.head}>Action</div>
+                <div className={s.action}>
+                  {getMatchLog(JSON.stringify(response), ruleArray)?.map(log =>
+                    log.transformed?.canonicalMsg.map((msg, key) =>
+                      !msg.includes("undefined") ? (
+                        <Action action={msg} key={key} />
+                      ) : undefined
+                    )
+                  )}
+                </div>
+              </div>
+            )}
             <div className={s.row}>
               <div className={s.head}>Memo</div>
               <div className={s.body}>

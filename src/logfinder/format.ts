@@ -57,6 +57,13 @@ const getTransformed = (
   transformed: TransformResult
 ) => {
   const type = transformed.msgType;
+
+  if (type === "terra/send") {
+    if (![match[0].value, match[1].value].includes(address)) {
+      return undefined;
+    }
+  }
+
   const sender = type === "terra/send" ? match[1].value : match[2].value;
 
   const amount =
