@@ -21,9 +21,8 @@ const App = () => {
   const chainId = useNetwork();
   const network = transformChainId(chainId);
 
-  const { data: whitelist } = useTerraAssets<Dictionary<TokenList>>(
-    "cw20/tokens.json"
-  );
+  const { data: whitelist } =
+    useTerraAssets<Dictionary<TokenList>>("cw20/tokens.json");
   const { data: contracts } = useTerraAssets<Dictionary<ContractList>>(
     "cw20/contracts.json"
   );

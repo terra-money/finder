@@ -1,44 +1,44 @@
-import { TxInfo } from "@terra-money/terra.js";
-import { createLogMatcher } from "./execute";
+import { TxInfo, Event } from "@terra-money/terra.js";
 import { collector } from "./collector";
-import { LogFinderResult, LogFindersRuleSet, TransformResult } from "./types";
+import { LogFinderResult, TransformResult } from "./types";
+import { ReturningLogFinderResult } from "@terra-money/log-finder";
 
 export const getMatchLog = (
   data: string,
-  ruleArray: LogFindersRuleSet[],
+  logMatcher: (
+    events: Event[]
+  ) => ReturningLogFinderResult<TransformResult>[][],
   address?: string
 ) => {
   const tx: TxInfo = JSON.parse(data);
 
   try {
-    const logMatcher = createLogMatcher(ruleArray);
     if (tx.logs) {
-      const matched: LogFinderResult[] = [];
-
-      for (const log of tx.logs) {
+      const matched: LogFinderResult[][] = tx.logs.map(log => {
         const matchLog = logMatcher(log.events);
-        matchLog
+        const matchedPerLog = matchLog
           ?.flat()
           .filter(Boolean)
-          .forEach(data => {
+          .map(data => {
             if (data.transformed && address) {
               const { match, transformed } = data;
               const type = transformed.msgType;
               if (["terra/send", "token/transfer"].includes(type)) {
                 const result = getTransformed(address, match, transformed);
-                matched.push({
+                return {
                   ...data,
                   transformed: result,
                   timestamp: tx.timestamp
-                });
-                return;
+                };
               }
             }
-            matched.push({ ...data, timestamp: tx.timestamp });
+            return { ...data, timestamp: tx.timestamp };
           });
-      }
 
-      const logMatched = collector(matched);
+        return matchedPerLog;
+      });
+
+      const logMatched = matched.map(match => collector(match)).flat();
       return logMatched.length > 0 ? logMatched : undefined;
     }
   } catch {

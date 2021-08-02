@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { get, last, isArray, isObject } from "lodash";
 import { useRecoilValue } from "recoil";
@@ -9,6 +9,7 @@ import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
 import { getMatchLog } from "../../logfinder/format";
+import { createLogMatcher } from "../../logfinder/execute";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
@@ -128,107 +129,118 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
   const ruleArray = useRecoilValue(LogfinderRuleSet);
 
+  const logMatcher = useMemo(() => {
+    return createLogMatcher(ruleArray);
+  }, [ruleArray]);
+
   return (
     <WithFetch url={`/v1/tx/${hash}`} loading={<Loading />}>
-      {(response: TxResponse) => (
-        <>
-          <h2 className="title">Transaction Details</h2>
+      {(response: TxResponse) => {
+        const matchedLog = getMatchLog(JSON.stringify(response), logMatcher);
+        return (
+          <>
+            <h2 className="title">Transaction Details</h2>
 
-          <div className={s.list}>
-            <div className={s.row}>
-              <div className={s.head}>Transaction hash</div>
-              <div className={s.body}>
-                <div>
-                  {response.txhash}
-                  <Copy
-                    text={response.txhash}
-                    style={{ display: "inline-block", position: "absolute" }}
-                  />
+            <div className={s.list}>
+              <div className={s.row}>
+                <div className={s.head}>Transaction hash</div>
+                <div className={s.body}>
+                  <div>
+                    {response.txhash}
+                    <Copy
+                      text={response.txhash}
+                      style={{ display: "inline-block", position: "absolute" }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Status</div>
-              <div className={s.body}>
-                {!response.code ? (
-                  <span className={s.success}>Success</span>
-                ) : (
-                  <>
-                    <p className={s.fail}>Failed</p>
-                    <p className={s.failedMsg}>
-                      {get(last(response.logs), "log.message") ||
-                        get(response, "raw_log")}
-                    </p>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Network</div>
-              <div className={s.body}>{response.chainId}</div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Block</div>
-              <div className={s.body}>
-                <Finder q="blocks" v={response.height}>
-                  {response.height}
-                </Finder>
-              </div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Timestamp</div>
-              <div className={s.body}>
-                {fromISOTime(response.timestamp.toString())}
-              </div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Transaction fee</div>
-              <div className={s.body}>{getTotalFee(response)}</div>
-            </div>
-            {isSendTx(response) && (
               <div className={s.row}>
-                <div className={s.head}>Tax</div>
-                <div className={s.body}>{getTotalTax(response)}</div>
-              </div>
-            )}
-            <div className={s.row}>
-              <div className={s.head}>Gas (Used/Requested)</div>
-              <div className={s.body}>
-                {parseInt(response.gas_used).toLocaleString()}/
-                {parseInt(response.gas_wanted).toLocaleString()}
-              </div>
-            </div>
-            {getMatchLog(JSON.stringify(response), ruleArray) && (
-              <div className={s.row}>
-                <div className={s.head}>Action</div>
-                <div className={s.action}>
-                  {getMatchLog(JSON.stringify(response), ruleArray)?.map(log =>
-                    log.transformed?.canonicalMsg.map((msg, key) =>
-                      !msg.includes("undefined") ? (
-                        <Action action={msg} key={key} />
-                      ) : undefined
-                    )
+                <div className={s.head}>Status</div>
+                <div className={s.body}>
+                  {!response.code ? (
+                    <span className={s.success}>Success</span>
+                  ) : (
+                    <>
+                      <p className={s.fail}>Failed</p>
+                      <p className={s.failedMsg}>
+                        {get(last(response.logs), "log.message") ||
+                          get(response, "raw_log")}
+                      </p>
+                    </>
                   )}
                 </div>
               </div>
-            )}
-            <div className={s.row}>
-              <div className={s.head}>Memo</div>
-              <div className={s.body}>
-                {response.tx.value.memo ? response.tx.value.memo : "-"}
+              <div className={s.row}>
+                <div className={s.head}>Network</div>
+                <div className={s.body}>{response.chainId}</div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Block</div>
+                <div className={s.body}>
+                  <Finder q="blocks" v={response.height}>
+                    {response.height}
+                  </Finder>
+                </div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Timestamp</div>
+                <div className={s.body}>
+                  {fromISOTime(response.timestamp.toString())}
+                </div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Transaction fee</div>
+                <div className={s.body}>{getTotalFee(response)}</div>
+              </div>
+              {isSendTx(response) && (
+                <div className={s.row}>
+                  <div className={s.head}>Tax</div>
+                  <div className={s.body}>{getTotalTax(response)}</div>
+                </div>
+              )}
+              <div className={s.row}>
+                <div className={s.head}>Gas (Used/Requested)</div>
+                <div className={s.body}>
+                  {parseInt(response.gas_used).toLocaleString()}/
+                  {parseInt(response.gas_wanted).toLocaleString()}
+                </div>
+              </div>
+              {matchedLog && (
+                <div className={s.row}>
+                  <div className={s.head}>Action</div>
+                  <div className={s.action}>
+                    {matchedLog.map(log =>
+                      log.transformed?.canonicalMsg.map((msg, key) =>
+                        !msg.includes("undefined") ? (
+                          <Action action={msg} key={key} />
+                        ) : undefined
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+              <div className={s.row}>
+                <div className={s.head}>Memo</div>
+                <div className={s.body}>
+                  {response.tx.value.memo ? response.tx.value.memo : "-"}
+                </div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Message</div>
+                <div className={s.body}>
+                  {response.tx.value.msg.map((msg, index) => (
+                    <MsgBox
+                      msg={msg}
+                      log={response.logs?.[index]}
+                      key={index}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-            <div className={s.row}>
-              <div className={s.head}>Message</div>
-              <div className={s.body}>
-                {response.tx.value.msg.map((msg, index) => (
-                  <MsgBox msg={msg} log={response.logs?.[index]} key={index} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+          </>
+        );
+      }}
     </WithFetch>
   );
 };
