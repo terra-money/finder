@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { isEmpty } from "lodash";
-import { Coin } from "@terra-money/terra.js";
+import { Coin, Event } from "@terra-money/terra.js";
+import { ReturningLogFinderResult } from "@terra-money/log-finder";
 import WithFetch from "../../HOCs/WithFetch";
-import FlexTable from "../../components/FlexTable";
 import Pagination, { PaginationProps } from "../../components/Pagination";
+import FlexTable from "../../components/FlexTable";
 import Loading from "../../components/Loading";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
@@ -15,8 +16,9 @@ import CoinComponent from "../../components/Coin";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import NetworkContext from "../../contexts/NetworkContext";
-import { LogFindersRuleSet } from "../../logfinder/types";
+import { TransformResult } from "../../logfinder/types";
 import { getMatchLog } from "../../logfinder/format";
+import { createLogMatcher } from "../../logfinder/execute";
 import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
 import s from "./Txs.module.scss";
 
@@ -67,11 +69,13 @@ const getRenderAmount = (
 
 const getAmount = (
   txResponse: TxResponse,
-  ruleArray: LogFindersRuleSet[],
+  logMatcher: (
+    events: Event[]
+  ) => ReturningLogFinderResult<TransformResult>[][],
   address: string
 ) => {
   const tx = JSON.stringify(txResponse);
-  const matchLogs = getMatchLog(tx, ruleArray, address);
+  const matchLogs = getMatchLog(tx, logMatcher, address);
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
 
@@ -107,10 +111,14 @@ const Txs = ({
     history.push({ search: searchParams.toString() });
   };
 
+  const logMatcher = useMemo(() => {
+    return createLogMatcher(ruleArray);
+  }, [ruleArray]);
+
   const getRow = (response: TxResponse) => {
     const { tx: txBody, txhash, height, timestamp, chainId } = response;
     const isSuccess = !response.code;
-    const [amountIn, amountOut] = getAmount(response, ruleArray, address);
+    const [amountIn, amountOut] = getAmount(response, logMatcher, address);
     return [
       <span>
         <div className={s.wrapper}>
