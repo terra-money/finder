@@ -26,10 +26,10 @@ const create = (network: string) => {
     transform: (fragment, matched) => ({
       msgType: "anchor/redeem-stable",
       canonicalMsg: [
-        `Withdraw ${matched[7].value}uusd from ${matched[5].value}`,
+        `Withdraw ${matched[8].value}uusd from ${matched[5].value}`,
         `Burn ${matched[7].value}${matched[9].value}`
       ],
-      amountIn: `${matched[7].value}uusd`,
+      amountIn: `${matched[8].value}uusd`,
       amountOut: `${matched[7].value}${matched[9].value}`,
       target: matched[2].value,
       payload: fragment
