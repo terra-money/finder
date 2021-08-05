@@ -82,6 +82,7 @@ const create = (network: string) => {
       msgType: "mirror/LP-staking-reward",
       canonicalMsg: [`Claim Reward ${matched[7].value}${matched[3].value}`],
       amountIn: `${matched[7].value}${matched[3].value}`,
+      target: matched[6].value,
       payload: fragment
     })
   };
@@ -137,6 +138,7 @@ const create = (network: string) => {
       msgType: "mirror/airdrop",
       canonicalMsg: [`Claim ${matched[9].value}${matched[5].value}`],
       amountIn: `${matched[9].value}${matched[5].value}`,
+      target: matched[3].value,
       payload: fragment
     })
   };

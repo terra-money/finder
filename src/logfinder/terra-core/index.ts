@@ -294,7 +294,7 @@ const create = () => {
     transform: (fragment, matched) => ({
       msgType: "terra/instantiate-contract",
       canonicalMsg: [
-        `Instantiate ${matched[2].value} to code ${matched[1].value}`
+        `Instantiate ${matched[2].value} from code ${matched[1].value}`
       ],
       payload: fragment
     })
