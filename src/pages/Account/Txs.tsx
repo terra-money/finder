@@ -16,7 +16,7 @@ import CoinComponent from "../../components/Coin";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import NetworkContext from "../../contexts/NetworkContext";
-import { TransformResult } from "../../logfinder/types";
+import { LogFinderResult, TransformResult } from "../../logfinder/types";
 import { getMatchLog } from "../../logfinder/format";
 import { createLogMatcher } from "../../logfinder/execute";
 import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
@@ -67,6 +67,44 @@ const getRenderAmount = (
   });
 };
 
+const getMultiSendAmount = (
+  matchedLogs: LogFinderResult[],
+  address: string,
+  amountIn: JSX.Element[],
+  amountOut: JSX.Element[]
+) => {
+  const amountInMap = new Map<string, Coin>();
+  const amountOutMap = new Map<string, Coin>();
+
+  matchedLogs.forEach(log => {
+    const recipient = log.match[0].value;
+    const coin = Coin.fromString(log.match[1].value);
+    const amountStack = amountInMap.get(coin.denom);
+    const stack = amountStack ? coin.add(amountStack) : coin;
+
+    if (recipient === address) {
+      amountInMap.set(coin.denom, stack);
+    } else {
+      amountOutMap.set(coin.denom, stack);
+    }
+  });
+
+  amountInMap.forEach(coin =>
+    amountIn.push(
+      <CoinComponent amount={coin.amount.toString()} denom={coin.denom} />
+    )
+  );
+
+  amountOutMap.forEach(coin =>
+    amountOut.push(
+      <CoinComponent amount={coin.amount.toString()} denom={coin.denom} />
+    )
+  );
+
+  amountInMap.clear();
+  amountOutMap.clear();
+};
+
 const getAmount = (
   txResponse: TxResponse,
   logMatcher: (
@@ -79,15 +117,18 @@ const getAmount = (
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
 
-  matchLogs?.forEach(msg => {
-    const msgAmountIn = msg.transformed?.amountIn?.split(",");
-    const msgAmountOut = msg.transformed?.amountOut?.split(",");
-    const target = msg.transformed?.target;
+  if (matchLogs?.[0].transformed?.msgType === "terra/multi-send") {
+    getMultiSendAmount(matchLogs, address, amountIn, amountOut);
+  } else {
+    matchLogs?.forEach(msg => {
+      const msgAmountIn = msg.transformed?.amountIn?.split(",");
+      const msgAmountOut = msg.transformed?.amountOut?.split(",");
+      const target = msg.transformed?.target;
 
-    getRenderAmount(msgAmountIn, target, address, amountIn);
-    getRenderAmount(msgAmountOut, target, address, amountOut);
-  });
-
+      getRenderAmount(msgAmountIn, target, address, amountIn);
+      getRenderAmount(msgAmountOut, target, address, amountOut);
+    });
+  }
   //amount row limit
   return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
 };
