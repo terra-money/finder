@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
 import useTokenBalance from "../../hooks/cw20/useTokenBalance";
@@ -28,7 +27,6 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
   );
 
   const tokens = useTokenBalance(address);
-  const { search, pathname } = useLocation();
   const migratableValue = migratable !== undefined && String(migratable);
 
   return (
@@ -113,11 +111,7 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
         )}
       </WithFetch>
 
-      <Card title="Transactions" bordered headerClassName={s.cardTitle}>
-        <div className={s.cardBodyContainer}>
-          <Txs address={address} search={search} pathname={pathname} />
-        </div>
-      </Card>
+      <Txs address={address} />
     </>
   );
 };

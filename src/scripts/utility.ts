@@ -3,9 +3,10 @@ import distanceInWordsToNow from "date-fns/formatDistanceToNow";
 import isBase64 from "is-base64";
 import { Dictionary } from "ramda";
 import { countries, Country } from "countries-list";
+import { filter } from "lodash";
+import { Coin } from "@terra-money/terra.js";
 import networksConfig from "../config/networks";
 import { isInteger } from "./math";
-import { filter } from "lodash";
 
 export const DEFAULT_NETWORK =
   process.env.REACT_APP_DEFAULT_NETWORK ||
@@ -15,6 +16,7 @@ export const DEFAULT_CURRENCY = `uusd`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
+export const REG_EXP_TERRA_ADDRESS = /(terra[0-9][a-z0-9]{38})/g;
 
 export function getEndpointByKeyword(keyword: string, network: string) {
   if (isInteger(keyword)) {
@@ -143,3 +145,18 @@ export function transformChainId(chainId: string) {
   const chain = chainId.split("-")[0];
   return chain === "columbus" ? "mainnet" : "testnet";
 }
+
+export const splitCoinData = (coin: string) => {
+  try {
+    const coinData = Coin.fromString(coin);
+    const amount = coinData.amount.toString();
+    const denom = coinData.denom;
+    return { amount, denom };
+  } catch {
+    const denom = coin.match(REG_EXP_TERRA_ADDRESS)?.[0];
+    const amount = coin.split(REG_EXP_TERRA_ADDRESS)[0];
+    if (denom && amount) {
+      return { amount, denom };
+    }
+  }
+};

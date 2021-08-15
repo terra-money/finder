@@ -22,19 +22,13 @@ const Validator = ({ match }: RouteComponentProps<{ address: string }>) => {
           </Card>
 
           <h2>Delegations</h2>
-          <div className="row">
-            <div className="col col-8">
-              <Card title="Power events" bordered>
-                <Delegations address={v.operatorAddress} />
-              </Card>
-            </div>
+          <Card title="Power events" bordered>
+            <Delegations address={v.operatorAddress} />
+          </Card>
 
-            <div className="col col-4">
-              <Card title="Delegators" bordered>
-                <Delegators address={v.operatorAddress} />
-              </Card>
-            </div>
-          </div>
+          <Card title="Delegators" bordered>
+            <Delegators address={v.operatorAddress} />
+          </Card>
 
           <h2>Rewards and commissions</h2>
           <div className="row">

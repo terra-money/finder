@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { get, last, isArray, isObject } from "lodash";
+import { get, last, isArray, isObject, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
@@ -8,7 +8,7 @@ import Copy from "../../components/Copy";
 import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
-import { getMatchLog } from "../../logfinder/format";
+import { getMatchMsg } from "../../logfinder/format";
 import { createLogMatcher } from "../../logfinder/execute";
 import { fromISOTime, sliceMsgType } from "../../scripts/utility";
 import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
@@ -136,7 +136,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   return (
     <WithFetch url={`/v1/tx/${hash}`} loading={<Loading />}>
       {(response: TxResponse) => {
-        const matchedLog = getMatchLog(JSON.stringify(response), logMatcher);
+        const matchedMsg = getMatchMsg(JSON.stringify(response), logMatcher);
         return (
           <>
             <h2 className="title">Transaction Details</h2>
@@ -205,15 +205,17 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
                   {parseInt(response.gas_wanted).toLocaleString()}
                 </div>
               </div>
-              {matchedLog && (
+              {!isEmpty(matchedMsg?.flat()) && (
                 <div className={s.row}>
                   <div className={s.head}>Action</div>
                   <div className={s.action}>
-                    {matchedLog.map(log =>
-                      log.transformed?.canonicalMsg.map((msg, key) =>
-                        !msg.includes("undefined") ? (
-                          <Action action={msg} key={key} />
-                        ) : undefined
+                    {matchedMsg?.map(matchedLog =>
+                      matchedLog.map(log =>
+                        log.transformed?.canonicalMsg.map((msg, key) => {
+                          return !msg.includes("undefined") ? (
+                            <Action action={msg} key={key} />
+                          ) : undefined;
+                        })
                       )
                     )}
                   </div>

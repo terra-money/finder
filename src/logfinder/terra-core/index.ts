@@ -105,6 +105,10 @@ const rules = {
   msgInstantiateContractRule: {
     type: "instantiate_contract",
     attributes: [["owner"], ["code_id"], ["contract_address"]]
+  },
+  msgMultiSendRule: {
+    type: "transfer",
+    attributes: [["recipient"], ["amount"]]
   }
 };
 
@@ -313,6 +317,15 @@ const create = () => {
     })
   };
 
+  const msgMultiSendRuleSet: LogFindersRuleSet = {
+    rule: rules.msgMultiSendRule,
+    transform: (fragment, matched) => ({
+      msgType: "terra/multi-send",
+      canonicalMsg: [`Send ${matched[1].value} to ${matched[0].value}`],
+      payload: fragment
+    })
+  };
+
   return [
     msgSendRuleSet,
     msgWithdrawDelegationRewardRuleSet,
@@ -333,7 +346,8 @@ const create = () => {
     msgStoreCodeRuleSet,
     msgMigrateContractRuleSet,
     msgInstantiateContractRuleSet,
-    msgSwapTerraSwapRuleSet
+    msgSwapTerraSwapRuleSet,
+    msgMultiSendRuleSet
   ];
 };
 export default create;

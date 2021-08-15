@@ -1,27 +1,25 @@
-import React from "react";
-import { useLocation, useParams } from "react-router-dom";
-import Loading from "../../components/Loading";
-import Info from "../../components/Info";
-import Icon from "../../components/Icon";
-import Flex from "../../components/Flex";
-import Pop from "../../components/Pop";
-import Card from "../../components/Card";
+import { useParams } from "react-router-dom";
 import WithFetch from "../../HOCs/WithFetch";
-import useTokenBalance from "../../hooks/cw20/useTokenBalance";
-import AvailableList from "./AvailableList";
 import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
-import Txs from "./Txs";
-import Vesting from "./Vesting";
 import CopyAddress from "./CopyAddress";
+import Txs from "./Txs";
+import useTokenBalance from "../../hooks/cw20/useTokenBalance";
+import Vesting from "./Vesting";
+import Pop from "../../components/Pop";
+import Flex from "../../components/Flex";
+import Card from "../../components/Card";
+import Icon from "../../components/Icon";
+import AvailableList from "./AvailableList";
+import Info from "../../components/Info";
 import AmountCard from "./AmountCard";
+import Loading from "../../components/Loading";
 import s from "./Account.module.scss";
 
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
 
 const Account = () => {
-  const { search, pathname } = useLocation();
   const { address = "" } = useParams<{ address: string }>();
   const tokens = useTokenBalance(address);
 
@@ -98,12 +96,7 @@ const Account = () => {
               </>
             )}
           </WithFetch>
-
-          <Card title="Transactions" bordered headerClassName={s.cardTitle}>
-            <div className={s.cardBodyContainer}>
-              <Txs address={address} search={search} pathname={pathname} />
-            </div>
-          </Card>
+          <Txs address={address} />
         </>
       )}
     </WithFetch>

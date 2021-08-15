@@ -1,18 +1,15 @@
-import React, { useContext } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { get, isEmpty } from "lodash";
 import s from "./Txs.module.scss";
 import FlexTable from "../../components/FlexTable";
-import Pagination, { PaginationProps } from "../../components/Pagination";
-import Loading from "../../components/Loading";
+import Pagination from "../../components/Pagination";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
 import { fromNow, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
-import WithFetch from "../../HOCs/WithFetch";
-import NetworkContext from "../../contexts/NetworkContext";
+import useFCD from "../../hooks/useFCD";
 
 const getRow = (response: TxResponse) => {
   const { txhash, tx, height, timestamp } = response;
@@ -40,52 +37,45 @@ const getRow = (response: TxResponse) => {
   ];
 };
 
-const Txs = (
-  props: RouteComponentProps<{ height: string; offset: string }>
-) => {
+const Txs = (props: RouteComponentProps<{ height: string }>) => {
   const { height } = props.match.params;
-  const { network } = useContext(NetworkContext);
-  const history = useHistory();
-  const searchParams = new URLSearchParams(props.location.search);
-  const offset = +(searchParams.get("offset") || 0);
 
-  const goNext = (offset: number) => {
-    searchParams.set("offset", `${offset}`);
-    history.push({ search: searchParams.toString() });
-  };
+  const [txList, setTxList] = useState<JSX.Element[][]>([]);
+  const [offset, setOffset] = useState<number>(0);
+  const [next, setNext] = useState<number>(0);
+  const url = `/v1/txs?block=${height}&offset=${offset}`;
+  const { data } = useFCD<{ next: number; txs: TxResponse[] }>(url);
+
+  useEffect(() => {
+    if (data) {
+      const { next, txs } = data;
+      const element = txs.map(getRow);
+
+      setTxList(stack => [...stack, ...element]);
+      setNext(next);
+    }
+  }, [data]);
 
   const head = [`TxHash`, `Type`, `Fee`, `Height`, `Time`];
 
   return (
     <div className={s.tableContainer}>
-      <WithFetch
-        url="/v1/txs"
-        params={{ block: height, offset, chainId: network }}
-        loading={<Loading />}
-      >
-        {({ txs, next }: { txs: TxResponse[] } & PaginationProps) => {
-          if (!isEmpty(txs)) {
-            return (
-              <>
-                <h2 className="title">
-                  Transactions<span>for Block #{height}</span>
-                </h2>
-                <Pagination next={next} title="translation" action={goNext}>
-                  <FlexTable head={head} body={txs.map(getRow)} />
-                </Pagination>
-              </>
-            );
-          } else {
-            return (
-              <Card>
-                <Info icon="info_outline" title="">
-                  No more transactions
-                </Info>
-              </Card>
-            );
-          }
-        }}
-      </WithFetch>
+      {txList.length ? (
+        <>
+          <h2 className="title">
+            Transactions<span>for Block #{height}</span>
+          </h2>
+          <Pagination next={next} title="translation" action={setOffset}>
+            <FlexTable head={head} body={txList} />
+          </Pagination>
+        </>
+      ) : (
+        <Card>
+          <Info icon="info_outline" title="">
+            No more transactions
+          </Info>
+        </Card>
+      )}
     </div>
   );
 };

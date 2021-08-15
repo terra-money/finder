@@ -3,7 +3,7 @@ import { collector } from "./collector";
 import { LogFinderResult, TransformResult } from "./types";
 import { ReturningLogFinderResult } from "@terra-money/log-finder";
 
-export const getMatchLog = (
+export const getMatchMsg = (
   data: string,
   logMatcher: (
     events: Event[]
@@ -38,7 +38,7 @@ export const getMatchLog = (
         return matchedPerLog;
       });
 
-      const logMatched = matched.map(match => collector(match)).flat();
+      const logMatched = matched.map(match => collector(match));
       return logMatched.length > 0 ? logMatched : undefined;
     }
   } catch {

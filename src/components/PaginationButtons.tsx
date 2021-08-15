@@ -3,26 +3,31 @@ import s from "./PaginationButtons.module.scss";
 type Props = {
   action?: (offset: number) => void;
   offset?: number;
+  loading?: boolean;
 };
 
-const PaginationButtons = ({ action, offset }: Props) => {
-  const renderAction = (key: string, children: string, disabled: boolean) =>
-    disabled ? (
-      <span className={s[key]}>{children}</span>
-    ) : (
-      <button
-        onClick={() => action && offset && action(offset)}
-        className={s[key]}
-      >
-        {children}
-      </button>
-    );
-
-  return (
-    <div className={s.wrapper}>
-      <div className={s.component}>{renderAction("next", "›", !offset)}</div>
+const PaginationButtons = ({ action, offset, loading }: Props) =>
+  offset ? (
+    <div className={s.component}>
+      {renderAction("MORE", offset, action, loading)}
     </div>
+  ) : (
+    <></>
   );
-};
 
 export default PaginationButtons;
+
+const renderAction = (
+  children: string,
+  offset: number | undefined,
+  action: ((offset: number) => void) | undefined,
+  loading?: boolean
+) => (
+  <button
+    onClick={() => action && offset && action(offset)}
+    className={s.button}
+    disabled={loading}
+  >
+    {loading ? "Loading..." : children}
+  </button>
+);
