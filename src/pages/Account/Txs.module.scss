@@ -1,5 +1,13 @@
 @import "../../styles/list";
 
+.cardTitle {
+  background: $table-head;
+}
+
+.cardBodyContainer {
+  overflow-x: auto;
+}
+
 .wrapper {
   width: 200px;
   display: flex;

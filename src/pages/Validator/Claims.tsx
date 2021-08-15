@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import format from "../../scripts/format";
-import WithFetch from "../../HOCs/WithFetch";
 import Pagination from "../../components/Pagination";
 import Finder from "../../components/Finder";
 import Table from "../../components/Table";
 import Coin from "../../components/Coin";
+import useFCD from "../../hooks/useFCD";
 
 interface Claim {
   tx: string;
@@ -40,8 +40,27 @@ const renderClaim = (claim: Claim, index: number) =>
     </tr>
   );
 
+type Response = {
+  limit: number;
+  claims: Claim[];
+  next: number;
+};
+
 const Claims = ({ address }: { address: string }) => {
   const [offset, setOffset] = useState<number>(0);
+  const [next, setNext] = useState<number>(0);
+  const [claims, setClaims] = useState<Claim[]>([]);
+
+  const url = `/v1/staking/validators/${address}/claims`;
+  const { data } = useFCD<Response>(url, offset);
+
+  useEffect(() => {
+    if (data) {
+      const { claims, next } = data;
+      setClaims(stack => [...stack, ...claims]);
+      setNext(next);
+    }
+  }, [data]);
 
   const renderHead = () => (
     <tr>
@@ -53,19 +72,12 @@ const Claims = ({ address }: { address: string }) => {
   );
 
   return (
-    <WithFetch
-      url={`/v1/staking/validators/${address}/claims`}
-      params={{ offset }}
-    >
-      {({ claims = [], ...pagination }) => (
-        <Pagination {...pagination} title="claims" action={setOffset}>
-          <Table>
-            <thead>{renderHead()}</thead>
-            <tbody>{claims.map(renderClaim)}</tbody>
-          </Table>
-        </Pagination>
-      )}
-    </WithFetch>
+    <Pagination next={next} title="claims" action={setOffset}>
+      <Table>
+        <thead>{renderHead()}</thead>
+        <tbody>{claims.map(renderClaim)}</tbody>
+      </Table>
+    </Pagination>
   );
 };
 

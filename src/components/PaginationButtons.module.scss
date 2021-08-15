@@ -3,17 +3,15 @@
 
 $size: 38px;
 
-.wrapper {
-  @include flex(flex-end);
-  margin-bottom: 10px;
-}
-
 .component {
-  border: 1px solid $line;
-  border-radius: 2px;
+  @include flex(center);
+  margin-bottom: 10px;
   margin-top: 20px;
+  background-color: rgba($color: #edf4fe, $alpha: 0.5);
+  border-radius: 19px;
 
-  display: inline-flex;
+  transition: background-color 0.2s;
+
   height: $size;
   user-select: none;
 
@@ -26,24 +24,24 @@ $size: 38px;
     color: $line;
     cursor: default;
   }
+
+  &:hover {
+    background-color: #edf4fe;
+  }
 }
 
 .text {
   background: $brand;
   color: white;
-  font-size: 12px;
-  line-height: $size;
   padding: 0 15px;
 }
 
-.start,
-.prev,
-.next,
-.end {
-  @include flex();
-  width: $size;
-}
+.button {
+  opacity: 1;
 
-.prev {
-  border-right: 1px solid #d8ddf0;
+  height: 100%;
+  width: 100%;
+
+  font-size: 12px;
+  font-weight: 500;
 }

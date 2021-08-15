@@ -136,8 +136,8 @@ const create = (network: string) => {
     rule: rules.airdropRule,
     transform: (fragment, matched) => ({
       msgType: "mirror/airdrop",
-      canonicalMsg: [`Claim ${matched[9].value}${matched[5].value}`],
-      amountIn: `${matched[9].value}${matched[5].value}`,
+      canonicalMsg: [`Claim ${matched[4].value}${matched[5].value}`],
+      amountIn: `${matched[4].value}${matched[5].value}`,
       target: matched[3].value,
       payload: fragment
     })
