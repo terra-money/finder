@@ -279,6 +279,17 @@ const create = (network: string) => {
     })
   };
 
+  const bETHmintRule: LogFindersRuleSet = {
+    rule: rules.bETHmintRule,
+    transform: (fragment, matched) => ({
+      msgType: "anchor/mint-bETH",
+      canonicalMsg: [`Mint ${matched[3].value}${matched[0].value}`],
+      amountIn: `${matched[3].value}${matched[0].value}`,
+      target: matched[6].value,
+      payload: fragment
+    })
+  };
+
   return [
     depositStableRuleSet,
     redeemStableRuleSet,
@@ -301,7 +312,8 @@ const create = (network: string) => {
     govStakeRuleSet,
     govUntakeRuleSet,
     createPollRuleSet,
-    castVoteRuleSet
+    castVoteRuleSet,
+    bETHmintRule
   ];
 };
 

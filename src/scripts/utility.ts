@@ -16,7 +16,7 @@ export const DEFAULT_CURRENCY = `uusd`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
-export const REG_EXP_TERRA_ADDRESS = /(terra[0-9][a-z0-9]{38})/g;
+export const TERRA_ADDRESS_REGEX = /(terra[0-9][a-z0-9]{38})/g;
 
 export function getEndpointByKeyword(keyword: string, network: string) {
   if (isInteger(keyword)) {
@@ -153,8 +153,8 @@ export const splitCoinData = (coin: string) => {
     const denom = coinData.denom;
     return { amount, denom };
   } catch {
-    const denom = coin.match(REG_EXP_TERRA_ADDRESS)?.[0];
-    const amount = coin.split(REG_EXP_TERRA_ADDRESS)[0];
+    const denom = coin.match(TERRA_ADDRESS_REGEX)?.[0];
+    const amount = coin.replace(TERRA_ADDRESS_REGEX, "");
     if (denom && amount) {
       return { amount, denom };
     }

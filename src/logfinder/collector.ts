@@ -6,7 +6,15 @@ export const collector = (result: LogFinderResult[]) => {
     if (value.transformed) {
       const action = value.transformed.msgType.split("/")[1];
 
-      if (!["transfer", "send", "delegate", "undelegate"].includes(action)) {
+      if (
+        ![
+          "transfer",
+          "send",
+          "delegate",
+          "undelegate",
+          "begin-redelegate"
+        ].includes(action)
+      ) {
         returnArray.push(value);
       }
     }

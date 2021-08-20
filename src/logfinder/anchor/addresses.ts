@@ -1,12 +1,15 @@
 export interface AnchorAddresses {
   bLunaAddress: string;
+  bETHAddress: string;
   bLunaHubAddress: string;
   bLunaRwardAddress: string;
+  bETHRwardAddress: string;
   aUSTAddress: string;
   ANCAddress: string;
   ANCPairAddress: string;
   marketAddress: string;
   bLunaCustodyAddress: string;
+  bETHCustodyAddress: string;
   LPStakingAddress: string;
   AncUstLPAddress: string;
   govAddress: string;
@@ -25,7 +28,10 @@ export const mainnet: AnchorAddresses = {
   LPStakingAddress: "terra1897an2xux840p9lrh6py3ryankc6mspw49xse3",
   AncUstLPAddress: "terra1gecs98vcuktyfkrve9czrpgtg0m3aq586x6gzm",
   govAddress: "terra1f32xyep306hhcxxxf7mlyh0ucggc00rm2s9da5",
-  airdropAddress: "terra146ahqn6d3qgdvmj8cj96hh03dzmeedhsf0kxqm"
+  airdropAddress: "terra146ahqn6d3qgdvmj8cj96hh03dzmeedhsf0kxqm",
+  bETHAddress: "terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun",
+  bETHRwardAddress: "terra1939tzfn4hn960ychpcsjshu8jds3zdwlp8jed9",
+  bETHCustodyAddress: "terra10cxuzggyvvv44magvrh3thpdnk9cmlgk93gmx2"
 };
 
 export const testnet: AnchorAddresses = {
@@ -40,5 +46,8 @@ export const testnet: AnchorAddresses = {
   LPStakingAddress: "terra19nxz35c8f7t3ghdxrxherym20tux8eccar0c3k",
   AncUstLPAddress: "terra1vg0qyq92ky9z9dp0j9fv5rmr2s80sg605dah6f",
   govAddress: "terra16ckeuu7c6ggu52a8se005mg5c0kd2kmuun63cu",
-  airdropAddress: "terra1u5ywhlve3wugzqslqvm8ks2j0nsvrqjx0mgxpk"
+  airdropAddress: "terra1u5ywhlve3wugzqslqvm8ks2j0nsvrqjx0mgxpk",
+  bETHAddress: "terra19mkj9nec6e3y5754tlnuz4vem7lzh4n0lc2s3l",
+  bETHRwardAddress: "terra1ja3snkedk4t0zp7z3ljd064hcln8dsv5x004na",
+  bETHCustodyAddress: "terra1j6fey5tl70k9fvrv7mea7ahfr8u2yv7l23w5e6"
 };
