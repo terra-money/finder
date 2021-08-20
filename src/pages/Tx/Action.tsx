@@ -4,7 +4,7 @@ import Flex from "../../components/Flex";
 import {
   isTerraAddress,
   isValidatorAddress,
-  REG_EXP_TERRA_ADDRESS
+  TERRA_ADDRESS_REGEX
 } from "../../scripts/utility";
 import { transformAssets } from "./format";
 import s from "./Action.module.scss";
@@ -23,7 +23,7 @@ const Action = (prop: Prop) => {
   const renderArray: JSX.Element[] = action.split(" ").map(string => {
     if (isTerraAddress(string) || isValidatorAddress(string)) {
       return <Address address={string} hideIcon truncate className={s.value} />;
-    } else if (!string.match(REG_EXP_TERRA_ADDRESS) && string.includes(",")) {
+    } else if (!string.match(TERRA_ADDRESS_REGEX) && string.includes(",")) {
       //123213ukrw,13132uusd,31421uluna....
       return (
         <span className={s.value}>
@@ -34,7 +34,7 @@ const Action = (prop: Prop) => {
       );
     } else if (string.match(AmountDenomRegExp)) {
       string = string.replace(",", "");
-      const amount = string.replace(REG_EXP_TERRA_ADDRESS, "");
+      const amount = string.replace(TERRA_ADDRESS_REGEX, "");
       const address = string.replace(amount, "");
 
       return (
