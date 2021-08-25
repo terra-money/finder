@@ -227,7 +227,7 @@ const create = () => {
     transform: (fragment, matched) => ({
       msgType: "terra/undelegate",
       canonicalMsg: [
-        `Undelegete ${matched[1].value}uluna to ${matched[0].value}`
+        `Undelegate ${matched[1].value}uluna to ${matched[0].value}`
       ],
       amountIn: `${matched[1].value}uluna`,
       payload: fragment
