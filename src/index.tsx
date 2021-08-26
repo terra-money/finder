@@ -9,6 +9,7 @@ import {
   useHistory,
   useLocation
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import "./index.scss";
 import App from "./layouts/App";
 import NetworkContext from "./contexts/NetworkContext";
@@ -23,6 +24,8 @@ if (
   Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 }
 
+const queryClient = new QueryClient();
+
 const Root = () => {
   const { push } = useHistory();
   const location = useLocation();
@@ -35,11 +38,13 @@ const Root = () => {
 
   return (
     <RecoilRoot>
-      <NetworkContext.Provider value={{ network, selectNetwork }}>
-        <Switch>
-          <App />
-        </Switch>
-      </NetworkContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <NetworkContext.Provider value={{ network, selectNetwork }}>
+          <Switch>
+            <App />
+          </Switch>
+        </NetworkContext.Provider>
+      </QueryClientProvider>
     </RecoilRoot>
   );
 };

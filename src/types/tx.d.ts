@@ -76,6 +76,6 @@ interface TxResponse {
   gas_used: string;
   tags: Tag[];
   tx: Tx;
-  timestamp: Date;
+  timestamp: string;
   chainId?: string;
 }

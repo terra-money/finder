@@ -10,10 +10,19 @@
   text-align: center;
 }
 
+.header {
+  margin: 10px 0 30px;
+}
+
 .title {
   font-size: 20px;
   font-weight: bold;
-  margin: 10px 0 30px;
+  margin-bottom: 5px;
+}
+
+.timestamp {
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .processing {
@@ -21,16 +30,17 @@
   font-size: 14px;
   font-weight: bold;
   text-transform: uppercase;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   white-space: nowrap;
 
   .item {
     margin: 0 10px;
   }
-}
 
-.timestamp {
-  font-size: 10px;
+  .text {
+    width: 6em;
+    flex: none;
+  }
 }
 
 .icons {
