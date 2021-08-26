@@ -5,7 +5,7 @@ import classNames from "classnames";
 import Icon from "../../components/Icon";
 import styles from "./Pending.module.scss";
 
-const Pending = ({ timestamp }: { timestamp: Date }) => {
+const Pending = ({ timestamp }: { timestamp: string }) => {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
