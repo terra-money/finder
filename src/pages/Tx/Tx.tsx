@@ -13,6 +13,7 @@ import { createLogMatcher } from "../../logfinder/execute";
 import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
 import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
+import Pending from "./Pending";
 import s from "./Tx.module.scss";
 
 function isSendTx(response: TxResponse) {
@@ -138,9 +139,11 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
       {(response: TxResponse) => {
         const matchedMsg = getMatchMsg(JSON.stringify(response), logMatcher);
         const isPending = response.height ? false : true;
+
         return (
           <>
             <h2 className="title">Transaction Details</h2>
+            {isPending && <Pending timestamp={response.timestamp} />}
 
             <div className={s.list}>
               <div className={s.row}>

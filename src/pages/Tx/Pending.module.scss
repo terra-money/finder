@@ -1,0 +1,51 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.component {
+  border: 1px solid $line;
+  border-radius: 3px;
+  box-shadow: 0 0 10px 0 rgba(black, 0.08);
+  margin-bottom: 20px;
+  padding: 40px;
+  text-align: center;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0 30px;
+}
+
+.processing {
+  @include flex;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+
+  .item {
+    margin: 0 10px;
+  }
+}
+
+.timestamp {
+  font-size: 10px;
+}
+
+.icon {
+  &:nth-child(2) {
+    opacity: 0.66;
+  }
+
+  &:nth-child(3) {
+    opacity: 0.33;
+  }
+}
+
+.muted {
+  opacity: 0.33;
+}
+
+.desc {
+  font-size: 14px;
+}
