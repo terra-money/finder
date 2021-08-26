@@ -10,9 +10,10 @@ import WithFetch from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
 import { getMatchMsg } from "../../logfinder/format";
 import { createLogMatcher } from "../../logfinder/execute";
-import { fromISOTime, sliceMsgType } from "../../scripts/utility";
+import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
 import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
+import Pending from "./Pending";
 import s from "./Tx.module.scss";
 
 function isSendTx(response: TxResponse) {
@@ -137,9 +138,12 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
     <WithFetch url={`/v1/tx/${hash}`} loading={<Loading />}>
       {(response: TxResponse) => {
         const matchedMsg = getMatchMsg(JSON.stringify(response), logMatcher);
+        const isPending = response.height ? false : true;
+
         return (
           <>
             <h2 className="title">Transaction Details</h2>
+            {isPending && <Pending timestamp={response.timestamp} />}
 
             <div className={s.list}>
               <div className={s.row}>
@@ -157,7 +161,9 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
               <div className={s.row}>
                 <div className={s.head}>Status</div>
                 <div className={s.body}>
-                  {!response.code ? (
+                  {isPending ? (
+                    <span className={s.pending}>Pending</span>
+                  ) : !response.code ? (
                     <span className={s.success}>Success</span>
                   ) : (
                     <>
@@ -174,37 +180,59 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
                 <div className={s.head}>Network</div>
                 <div className={s.body}>{response.chainId}</div>
               </div>
-              <div className={s.row}>
-                <div className={s.head}>Block</div>
-                <div className={s.body}>
-                  <Finder q="blocks" v={response.height}>
-                    {response.height}
-                  </Finder>
+              {isPending ? (
+                <></>
+              ) : (
+                <div className={s.row}>
+                  <div className={s.head}>Block</div>
+                  <div className={s.body}>
+                    <Finder q="blocks" v={response.height}>
+                      {response.height}
+                    </Finder>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className={s.row}>
-                <div className={s.head}>Timestamp</div>
-                <div className={s.body}>
-                  {fromISOTime(response.timestamp.toString())}
-                </div>
+                {isPending ? (
+                  <>
+                    <div className={s.head}>Last Seen</div>
+                    <div className={s.body}>
+                      {fromNow(response.timestamp.toString())}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className={s.head}>Timestamp</div>
+                    <div className={s.body}>
+                      {fromISOTime(response.timestamp.toString())}
+                    </div>
+                  </>
+                )}
               </div>
               <div className={s.row}>
                 <div className={s.head}>Transaction fee</div>
                 <div className={s.body}>{getTotalFee(response)}</div>
               </div>
-              {isSendTx(response) && (
-                <div className={s.row}>
-                  <div className={s.head}>Tax</div>
-                  <div className={s.body}>{getTotalTax(response)}</div>
-                </div>
+              {isPending ? (
+                <></>
+              ) : (
+                <>
+                  {isSendTx(response) && (
+                    <div className={s.row}>
+                      <div className={s.head}>Tax</div>
+                      <div className={s.body}>{getTotalTax(response)}</div>
+                    </div>
+                  )}
+                  <div className={s.row}>
+                    <div className={s.head}>Gas (Used/Requested)</div>
+                    <div className={s.body}>
+                      {parseInt(response.gas_used).toLocaleString()}/
+                      {parseInt(response.gas_wanted).toLocaleString()}
+                    </div>
+                  </div>
+                </>
               )}
-              <div className={s.row}>
-                <div className={s.head}>Gas (Used/Requested)</div>
-                <div className={s.body}>
-                  {parseInt(response.gas_used).toLocaleString()}/
-                  {parseInt(response.gas_wanted).toLocaleString()}
-                </div>
-              </div>
+
               {!isEmpty(matchedMsg?.flat()) && (
                 <div className={s.row}>
                   <div className={s.head}>Action</div>
