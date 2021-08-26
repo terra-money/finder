@@ -33,6 +33,10 @@
   font-size: 10px;
 }
 
+.icons {
+  @include flex;
+}
+
 .icon {
   &:nth-child(2) {
     opacity: 0.66;

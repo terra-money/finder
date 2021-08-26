@@ -33,7 +33,7 @@ const Pending = ({ timestamp }: { timestamp: Date }) => {
           </p>
         </div>
 
-        <div className={styles.item}>
+        <div className={classNames(styles.item, styles.icons)}>
           <Icon name="chevron_right" className={styles.icon} />
           <Icon name="chevron_right" className={styles.icon} />
           <Icon name="chevron_right" className={styles.icon} />
