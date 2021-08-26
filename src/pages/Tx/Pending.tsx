@@ -17,20 +17,22 @@ const Pending = ({ timestamp }: { timestamp: string }) => {
     end: now
   });
 
+  const fromNow = [minutes, seconds]
+    .map(str => String(str).padStart(2, "0"))
+    .join(":");
+
   return (
     <article className={styles.component}>
       <CircularProgress size={60} thickness={2} />
 
-      <h1 className={styles.title}>Broadcasting transaction</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Broadcasting transaction</h1>
+        <small className={styles.timestamp}>{fromNow}</small>
+      </header>
 
       <section className={styles.processing}>
-        <div className={styles.item}>
+        <div className={classNames(styles.item, styles.text)}>
           <h2>Queued</h2>
-          <p className={styles.timestamp}>
-            {[minutes, seconds]
-              .map(str => String(str).padStart(2, "0"))
-              .join(":")}
-          </p>
         </div>
 
         <div className={classNames(styles.item, styles.icons)}>
@@ -39,9 +41,8 @@ const Pending = ({ timestamp }: { timestamp: string }) => {
           <Icon name="chevron_right" className={styles.icon} />
         </div>
 
-        <div className={classNames(styles.item, styles.muted)}>
+        <div className={classNames(styles.item, styles.text, styles.muted)}>
           <h2>Processed</h2>
-          <p className={styles.timestamp}>Pending</p>
         </div>
       </section>
 
