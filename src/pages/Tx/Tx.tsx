@@ -129,20 +129,16 @@ function getTotalFee(txResponse: TxResponse) {
     .join(", ");
 }
 
-const Txs = (props: RouteComponentProps<{ hash: string }>) => {
-  const { match } = props;
+const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
   const ruleArray = useRecoilValue(LogfinderRuleSet);
-
   const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
-  const { tx: txResponse, isLoading, error } = usePollTxHash(hash);
-
-  const isPending = !txResponse?.height;
-  const response = txResponse;
+  const { data: response, isLoading } = usePollTxHash(hash);
 
   if (isLoading) return <Loading />;
-  if (error || !response) return <NotFound keyword={hash} />;
+  if (!response) return <NotFound keyword={hash} />;
 
+  const isPending = !response.height;
   const matchedMsg =
     response && getMatchMsg(JSON.stringify(response), logMatcher);
 
@@ -277,35 +273,54 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
 export default Txs;
 
 /* hooks */
-export const usePollTxHash = (txhash: string) => {
-  const [result, setResult] = useState<TxResponse>();
-
-  const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
+const INTERVAL = 1000;
+const usePollTxHash = (txhash: string) => {
   const network = useNetwork();
   const fcd = fcdUrl(network);
-  const pendingQuery = useQuery(
-    [network, txhash, "mempool"],
-    () => apiClient.get(fcd + `/v1/mempool/${txhash}`),
-    { refetchInterval, enabled: !!txhash }
-  );
-  const { refetch, error, isLoading } = useQuery([network, txhash, "tx"], () =>
-    apiClient.get(fcd + `/v1/tx/${txhash}`)
-  );
-  const pendingResult: TxResponse = pendingQuery?.data?.data;
 
+  /* store pending tx to hanlde delay */
+  const [stored, setStored] = useState<TxResponse>();
+
+  /* polling pending tx */
+  const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
+
+  /* query: tx */
+  const { refetch: refetchTx, ...txQuery } = useQuery(
+    [network, txhash, "tx"],
+    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`)
+  );
+
+  // if tx not exists(null or no height), start polling pending tx
   useEffect(() => {
-    if (pendingResult) {
-      setRefetchInterval(1000);
+    if (!txQuery.data?.data?.height) {
+      setRefetchInterval(INTERVAL);
     } else {
       setRefetchInterval(false);
     }
+  }, [txQuery.data]);
 
-    const refetchTx = async () => {
-      const txsResult = await refetch();
-      setResult(txsResult.data?.data);
-    };
-    refetchTx();
-  }, [pendingResult, refetch, pendingQuery.error]);
+  /* query: pending tx */
+  const pendingQuery = useQuery(
+    [network, txhash, "mempool"],
+    () => apiClient.get<TxResponse>(fcd + `/v1/mempool/${txhash}`),
+    {
+      refetchInterval,
+      enabled: !!refetchInterval,
+      // if data exists, store to show on delay
+      onSuccess: data => data.data && setStored(data.data)
+    }
+  );
 
-  return { tx: result, isLoading, error };
+  // if pending tx does not exist, stop polling and query tx again
+  useEffect(() => {
+    if (!pendingQuery.data) {
+      setRefetchInterval(false);
+      refetchTx();
+    }
+  }, [pendingQuery.data, refetchTx]);
+
+  return {
+    data: txQuery.data?.data || pendingQuery.data?.data || stored,
+    isLoading: txQuery.isLoading || pendingQuery.isLoading
+  };
 };
