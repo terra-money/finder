@@ -135,25 +135,13 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const ruleArray = useRecoilValue(LogfinderRuleSet);
 
   const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
-  const [response, setResponse] = useState<TxResponse>();
-  const {
-    tx: txResponse,
-    pending: pendingTx,
-    isLoading,
-    error
-  } = usePollTxHash(hash);
+  const { tx: txResponse, isLoading, error } = usePollTxHash(hash);
 
-  const isPending = !txResponse && pendingTx;
-  useEffect(() => {
-    if (txResponse) {
-      setResponse(txResponse);
-    } else if (pendingTx) {
-      setResponse(pendingTx.data);
-    }
-  }, [txResponse, pendingTx]);
+  const isPending = !txResponse?.height;
+  const response = txResponse;
 
   if (isLoading) return <Loading />;
-  if (error || !response || !pendingTx) return <NotFound keyword={hash} />;
+  if (error || !response) return <NotFound keyword={hash} />;
 
   const matchedMsg =
     response && getMatchMsg(JSON.stringify(response), logMatcher);
@@ -295,20 +283,15 @@ export const usePollTxHash = (txhash: string) => {
   const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
   const network = useNetwork();
   const fcd = fcdUrl(network);
-  const {
-    data: pending,
-    isLoading,
-    error
-  } = useQuery(
-    [network, txhash],
+  const pendingQuery = useQuery(
+    [network, txhash, "mempool"],
     () => apiClient.get(fcd + `/v1/mempool/${txhash}`),
     { refetchInterval, enabled: !!txhash }
   );
-
-  const { refetch } = useQuery([], () =>
+  const { refetch, error, isLoading } = useQuery([network, txhash, "tx"], () =>
     apiClient.get(fcd + `/v1/tx/${txhash}`)
   );
-  const pendingResult: TxResponse = pending?.data;
+  const pendingResult: TxResponse = pendingQuery?.data?.data;
 
   useEffect(() => {
     if (pendingResult) {
@@ -322,7 +305,7 @@ export const usePollTxHash = (txhash: string) => {
       setResult(txsResult.data?.data);
     };
     refetchTx();
-  }, [pendingResult, refetch, error]);
+  }, [pendingResult, refetch, pendingQuery.error]);
 
-  return { tx: result, pending, isLoading, error };
+  return { tx: result, isLoading, error };
 };
