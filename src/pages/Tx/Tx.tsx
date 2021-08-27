@@ -143,7 +143,7 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
     error
   } = usePollTxHash(hash);
 
-  const isPending = !response;
+  const isPending = !txResponse && pendingTx;
   useEffect(() => {
     if (txResponse) {
       setResponse(txResponse);
@@ -305,10 +305,8 @@ export const usePollTxHash = (txhash: string) => {
     { refetchInterval, enabled: !!txhash }
   );
 
-  const { refetch } = useQuery(
-    [],
-    () => apiClient.get(fcd + `/v1/tx/${txhash}`),
-    { enabled: !error }
+  const { refetch } = useQuery([], () =>
+    apiClient.get(fcd + `/v1/tx/${txhash}`)
   );
   const pendingResult: TxResponse = pending?.data;
 
