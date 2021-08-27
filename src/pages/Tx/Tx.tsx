@@ -129,22 +129,18 @@ function getTotalFee(txResponse: TxResponse) {
     .join(", ");
 }
 
-const Txs = (props: RouteComponentProps<{ hash: string }>) => {
-  const { match } = props;
+const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
   const ruleArray = useRecoilValue(LogfinderRuleSet);
-
-  const logMatcher = useMemo(() => {
-    return createLogMatcher(ruleArray);
-  }, [ruleArray]);
-
-  const { data: response, isLoading, error } = usePollTxHash(hash);
+  const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
+  const { data: response, isLoading } = usePollTxHash(hash);
 
   if (isLoading) return <Loading />;
-  if (error || !response) return <NotFound keyword={hash} />;
+  if (!response) return <NotFound keyword={hash} />;
 
-  const matchedMsg = getMatchMsg(JSON.stringify(response), logMatcher);
-  const isPending = response.height ? false : true;
+  const isPending = !response.height;
+  const matchedMsg =
+    response && getMatchMsg(JSON.stringify(response), logMatcher);
 
   return (
     <>
@@ -277,26 +273,54 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
 export default Txs;
 
 /* hooks */
-export const usePollTxHash = (txhash: string) => {
-  const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
+const INTERVAL = 1000;
+const usePollTxHash = (txhash: string) => {
   const network = useNetwork();
   const fcd = fcdUrl(network);
-  const { data, isLoading, error } = useQuery(
-    [network, txhash],
-    () => apiClient.get(fcd + `/v1/tx/${txhash}`),
-    { refetchInterval, enabled: !!txhash }
+
+  /* store pending tx to hanlde delay */
+  const [stored, setStored] = useState<TxResponse>();
+
+  /* polling pending tx */
+  const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
+
+  /* query: tx */
+  const { refetch: refetchTx, ...txQuery } = useQuery(
+    [network, txhash, "tx"],
+    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`)
   );
 
-  const result: TxResponse = data?.data;
-  const height = result && result.height;
-
+  // if tx not exists(null or no height), start polling pending tx
   useEffect(() => {
-    if (height) {
-      setRefetchInterval(false);
+    if (!txQuery.data?.data?.height) {
+      setRefetchInterval(INTERVAL);
     } else {
-      setRefetchInterval(1000);
+      setRefetchInterval(false);
     }
-  }, [height]);
+  }, [txQuery.data]);
 
-  return { data: result, isLoading, error };
+  /* query: pending tx */
+  const pendingQuery = useQuery(
+    [network, txhash, "mempool"],
+    () => apiClient.get<TxResponse>(fcd + `/v1/mempool/${txhash}`),
+    {
+      refetchInterval,
+      enabled: !!refetchInterval,
+      // if data exists, store to show on delay
+      onSuccess: data => data.data && setStored(data.data)
+    }
+  );
+
+  // if pending tx does not exist, stop polling and query tx again
+  useEffect(() => {
+    if (!pendingQuery.data) {
+      setRefetchInterval(false);
+      refetchTx();
+    }
+  }, [pendingQuery.data, refetchTx]);
+
+  return {
+    data: txQuery.data?.data || pendingQuery.data?.data || stored,
+    isLoading: txQuery.isLoading || pendingQuery.isLoading
+  };
 };
