@@ -134,17 +134,29 @@ const Txs = (props: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
   const ruleArray = useRecoilValue(LogfinderRuleSet);
 
-  const logMatcher = useMemo(() => {
-    return createLogMatcher(ruleArray);
-  }, [ruleArray]);
+  const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
+  const [response, setResponse] = useState<TxResponse>();
+  const {
+    tx: txResponse,
+    pending: pendingTx,
+    isLoading,
+    error
+  } = usePollTxHash(hash);
 
-  const { data: response, isLoading, error } = usePollTxHash(hash);
+  const isPending = !response;
+  useEffect(() => {
+    if (txResponse) {
+      setResponse(txResponse);
+    } else if (pendingTx) {
+      setResponse(pendingTx.data);
+    }
+  }, [txResponse, pendingTx]);
 
   if (isLoading) return <Loading />;
-  if (error || !response) return <NotFound keyword={hash} />;
+  if (error || !response || !pendingTx) return <NotFound keyword={hash} />;
 
-  const matchedMsg = getMatchMsg(JSON.stringify(response), logMatcher);
-  const isPending = response.height ? false : true;
+  const matchedMsg =
+    response && getMatchMsg(JSON.stringify(response), logMatcher);
 
   return (
     <>
@@ -278,25 +290,41 @@ export default Txs;
 
 /* hooks */
 export const usePollTxHash = (txhash: string) => {
+  const [result, setResult] = useState<TxResponse>();
+
   const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
   const network = useNetwork();
   const fcd = fcdUrl(network);
-  const { data, isLoading, error } = useQuery(
+  const {
+    data: pending,
+    isLoading,
+    error
+  } = useQuery(
     [network, txhash],
-    () => apiClient.get(fcd + `/v1/tx/${txhash}`),
+    () => apiClient.get(fcd + `/v1/mempool/${txhash}`),
     { refetchInterval, enabled: !!txhash }
   );
 
-  const result: TxResponse = data?.data;
-  const height = result && result.height;
+  const { refetch } = useQuery(
+    [],
+    () => apiClient.get(fcd + `/v1/tx/${txhash}`),
+    { enabled: !error }
+  );
+  const pendingResult: TxResponse = pending?.data;
 
   useEffect(() => {
-    if (height) {
-      setRefetchInterval(false);
-    } else {
+    if (pendingResult) {
       setRefetchInterval(1000);
+    } else {
+      setRefetchInterval(false);
     }
-  }, [height]);
 
-  return { data: result, isLoading, error };
+    const refetchTx = async () => {
+      const txsResult = await refetch();
+      setResult(txsResult.data?.data);
+    };
+    refetchTx();
+  }, [pendingResult, refetch, error]);
+
+  return { tx: result, pending, isLoading, error };
 };
