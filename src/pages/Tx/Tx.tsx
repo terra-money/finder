@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get, last, isArray, isObject, isEmpty } from "lodash";
@@ -287,7 +287,8 @@ const usePollTxHash = (txhash: string) => {
   /* query: tx */
   const { refetch: refetchTx, ...txQuery } = useQuery(
     [network, txhash, "tx"],
-    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`)
+    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`),
+    { refetchOnWindowFocus: false }
   );
 
   // if tx not exists(null or no height), start polling pending tx
@@ -307,20 +308,28 @@ const usePollTxHash = (txhash: string) => {
       refetchInterval,
       enabled: !!refetchInterval,
       // if data exists, store to show on delay
-      onSuccess: data => data.data && setStored(data.data)
+      onSuccess: data => data.data && setStored(data.data),
+      retry: 1
     }
   );
 
   // if pending tx does not exist, stop polling and query tx again
   useEffect(() => {
-    if (!pendingQuery.data) {
+    if (pendingQuery.error) {
+      setRefetchInterval(false);
+    } else if (!pendingQuery.data) {
       setRefetchInterval(false);
       refetchTx();
     }
-  }, [pendingQuery.data, refetchTx]);
+  }, [pendingQuery.data, refetchTx, pendingQuery.error]);
+
+  useEffect(() => {
+    setStored(undefined);
+  }, [txhash]);
 
   return {
     data: txQuery.data?.data || pendingQuery.data?.data || stored,
-    isLoading: txQuery.isLoading || pendingQuery.isLoading
+    isLoading:
+      !pendingQuery.error && (txQuery.isLoading || pendingQuery.isLoading)
   };
 };
