@@ -1,14 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get, last, isArray, isObject, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
 import apiClient from "../../apiClient";
-import NotFound from "../../components/NotFound";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
-import Loading from "../../components/Loading";
 import { useNetwork } from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
 import { getMatchMsg } from "../../logfinder/format";
@@ -19,6 +17,7 @@ import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
 import Pending from "./Pending";
 import s from "./Tx.module.scss";
+import Searching from "./Searching";
 
 function isSendTx(response: TxResponse) {
   const type = get(response, "tx.value.msg[0].type");
@@ -133,12 +132,12 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
   const ruleArray = useRecoilValue(LogfinderRuleSet);
   const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
-  const { data: response, isLoading } = usePollTxHash(hash);
+  const { data: response, progressState } = usePollTxHash(hash);
 
-  if (isLoading) return <Loading />;
-  if (!response) return <NotFound keyword={hash} />;
+  if (!response)
+    return <Searching state={progressState} hash={hash}/>;
 
-  const isPending = !response.height;
+  const isPending = !response?.height;
   const matchedMsg =
     response && getMatchMsg(JSON.stringify(response), logMatcher);
 
@@ -241,11 +240,11 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             <div className={s.action}>
               {matchedMsg?.map(matchedLog =>
                 matchedLog.map(log =>
-                  log.transformed?.canonicalMsg.map((msg, key) => {
-                    return !msg.includes("undefined") ? (
+                  log.transformed?.canonicalMsg.map((msg, key) => 
+                     !msg.includes("undefined") ? (
                       <Action action={msg} key={key} />
-                    ) : undefined;
-                  })
+                    ) : undefined
+                  )
                 )
               )}
             </div>
@@ -278,6 +277,8 @@ const usePollTxHash = (txhash: string) => {
   const network = useNetwork();
   const fcd = fcdUrl(network);
 
+  const [progress, setProgress] = useState<number>(0);
+
   /* store pending tx to hanlde delay */
   const [stored, setStored] = useState<TxResponse>();
 
@@ -287,7 +288,8 @@ const usePollTxHash = (txhash: string) => {
   /* query: tx */
   const { refetch: refetchTx, ...txQuery } = useQuery(
     [network, txhash, "tx"],
-    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`)
+    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`),
+    { refetchOnWindowFocus: false }
   );
 
   // if tx not exists(null or no height), start polling pending tx
@@ -305,22 +307,36 @@ const usePollTxHash = (txhash: string) => {
     () => apiClient.get<TxResponse>(fcd + `/v1/mempool/${txhash}`),
     {
       refetchInterval,
-      enabled: !!refetchInterval,
+      enabled: progress < 1 || !!refetchInterval,
+      retry: false,
+      refetchOnWindowFocus: false,
       // if data exists, store to show on delay
-      onSuccess: data => data.data && setStored(data.data)
+      onSuccess: data => data.data && setStored(data.data),
     }
   );
 
+
   // if pending tx does not exist, stop polling and query tx again
   useEffect(() => {
-    if (!pendingQuery.data) {
+    if (pendingQuery.error || pendingQuery.data) {
+      setProgress(state => state + 0.1);
+    } else if (!pendingQuery.data) {
       setRefetchInterval(false);
       refetchTx();
     }
-  }, [pendingQuery.data, refetchTx]);
+  }, [pendingQuery.data, refetchTx, pendingQuery.error]);
+
+  useEffect(()=>{
+    if(progress > 1) setRefetchInterval(false)
+  },[progress])
+
+  useEffect(() => {
+    setStored(undefined);
+    setProgress(0);
+  }, [txhash, network]);
 
   return {
     data: txQuery.data?.data || pendingQuery.data?.data || stored,
-    isLoading: txQuery.isLoading || pendingQuery.isLoading
+    progressState: progress
   };
 };
