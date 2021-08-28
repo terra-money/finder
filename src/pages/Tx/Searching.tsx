@@ -1,33 +1,57 @@
-import "./Searching.scss";
+import { useEffect, useState } from "react";
+import c from "classnames"
+import { intervalToDuration } from "date-fns";
+import s from "./Searching.module.scss";
+import { useNetwork } from "../../HOCs/WithFetch";
 
-const Searching = ({ state }: { state: number }) => {
+const Searching = ({ state,hash }: { state: number,hash:string }) => {
   const progressState = (state / 1) * 100;
   const isSearch = progressState < 100;
+  const searching = "#2043b5"
+  const failed = "#ff5561"
+  const network = useNetwork()
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+   setNow(new Date());
+
+  }, [network,hash]);
+
+  const { minutes, seconds } = intervalToDuration({
+    start: new Date(),
+    end: now
+  });
+
+  const fromNow = [minutes, seconds]
+    .map(str => String(str).padStart(2, "0"))
+    .join(":");
+
+
   return (
-    <div className="wrapper">
-      <div className="progressTitle">
+    <section className={s.wrapper}>
+      <span className={s.progressTitle}>
         {isSearch ? "Searching transaction" : "Transaction not found"}
-      </div>
+      </span>
       <div
         className={
-          isSearch ? "progress progress-striped active" : "progress active"
+          isSearch ? c(s.progress, s.progressStriped, s.active) : c(s.progress, s.active)
         }
       >
         <div
-          className="progress-bar"
+          className={s.progressBar}
           style={{
             width: `${isSearch ? progressState : "100"}%`,
-            backgroundColor: `${!isSearch ? "red" : "#2043b5"}`,
-            height: "10px"
+            backgroundColor: `${isSearch ? searching: failed}`,
           }}
         />
       </div>
-      <div className="text">
+      <span className={s.timer} style={{ color: `${isSearch ? searching: failed}`}}>{fromNow}</span>
+      <span className={s.text}>
         {isSearch
           ? "Please wait while looking for transaction"
           : "Sorry, we couldn't find any results"}
-      </div>
-    </div>
+      </span>
+    </section>
   );
 };
 

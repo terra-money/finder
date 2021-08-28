@@ -134,10 +134,8 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
   const { data: response, progressState } = usePollTxHash(hash);
 
-  //if (!response) return <NotFound keyword={hash} />;
-
-  if (!response || progressState < 1)
-    return <Searching state={progressState} />;
+  if (!response)
+    return <Searching state={progressState} hash={hash}/>;
 
   const isPending = !response?.height;
   const matchedMsg =
@@ -242,11 +240,11 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             <div className={s.action}>
               {matchedMsg?.map(matchedLog =>
                 matchedLog.map(log =>
-                  log.transformed?.canonicalMsg.map((msg, key) => {
-                    return !msg.includes("undefined") ? (
+                  log.transformed?.canonicalMsg.map((msg, key) => 
+                     !msg.includes("undefined") ? (
                       <Action action={msg} key={key} />
-                    ) : undefined;
-                  })
+                    ) : undefined
+                  )
                 )
               )}
             </div>
@@ -311,19 +309,26 @@ const usePollTxHash = (txhash: string) => {
       refetchInterval,
       enabled: progress < 1 || !!refetchInterval,
       retry: false,
+      refetchOnWindowFocus: false,
       // if data exists, store to show on delay
-      onSuccess: data => data.data && setStored(data.data)
+      onSuccess: data => data.data && setStored(data.data),
     }
   );
+
+
   // if pending tx does not exist, stop polling and query tx again
   useEffect(() => {
-    if (pendingQuery.error) {
+    if (pendingQuery.error || pendingQuery.data) {
       setProgress(state => state + 0.1);
     } else if (!pendingQuery.data) {
       setRefetchInterval(false);
       refetchTx();
     }
   }, [pendingQuery.data, refetchTx, pendingQuery.error]);
+
+  useEffect(()=>{
+    if(progress > 1) setRefetchInterval(false)
+  },[progress])
 
   useEffect(() => {
     setStored(undefined);
@@ -332,8 +337,6 @@ const usePollTxHash = (txhash: string) => {
 
   return {
     data: txQuery.data?.data || pendingQuery.data?.data || stored,
-    isLoading:
-      !pendingQuery.error && (txQuery.isLoading || pendingQuery.isLoading),
     progressState: progress
   };
 };
