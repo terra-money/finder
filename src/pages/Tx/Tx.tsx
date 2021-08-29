@@ -91,24 +91,20 @@ function getTotalTax(txResponse: TxResponse) {
 }
 
 function getTotalFee(txResponse: TxResponse) {
-  const fee = get(txResponse, "tx.value.fee");
-  const amount = fee.amount;
-  const result: { [key: string]: string } = {};
+  const amount = get(txResponse, "tx.value.fee.amount");
 
   if (!amount) {
     return `0 Luna`;
   }
+
+  const result: { [key: string]: string } = {};
 
   amount.forEach((a: CoinData) => {
     if (!isObject(a)) {
       return;
     }
 
-    try {
-      result[a.denom] = a.amount;
-    } catch (err) {
-      // ignore JSON.parse error
-    }
+    result[a.denom] = a.amount;
   });
 
   const keys = Object.keys(result);
@@ -134,8 +130,9 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
   const { data: response, progressState } = usePollTxHash(hash);
 
-  if (!response)
-    return <Searching state={progressState} hash={hash}/>;
+  if (!response) {
+    return <Searching state={progressState} hash={hash} />;
+  }
 
   const isPending = !response?.height;
   const matchedMsg =
@@ -240,8 +237,8 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             <div className={s.action}>
               {matchedMsg?.map(matchedLog =>
                 matchedLog.map(log =>
-                  log.transformed?.canonicalMsg.map((msg, key) => 
-                     !msg.includes("undefined") ? (
+                  log.transformed?.canonicalMsg.map((msg, key) =>
+                    !msg.includes("undefined") ? (
                       <Action action={msg} key={key} />
                     ) : undefined
                   )
@@ -273,70 +270,64 @@ export default Txs;
 
 /* hooks */
 const INTERVAL = 1000;
+
 const usePollTxHash = (txhash: string) => {
   const network = useNetwork();
   const fcd = fcdUrl(network);
 
+  const [stored, setStored] = useState<TxResponse>();
   const [progress, setProgress] = useState<number>(0);
 
-  /* store pending tx to hanlde delay */
-  const [stored, setStored] = useState<TxResponse>();
+  /* polling tx */
+  const [refetchTx, setRefetchTx] = useState<boolean>(true);
 
-  /* polling pending tx */
-  const [refetchInterval, setRefetchInterval] = useState<number | false>(false);
+  /* polling mempool tx */
+  const [refetchMempool, setRefetchMempool] = useState<boolean>(true);
 
   /* query: tx */
-  const { refetch: refetchTx, ...txQuery } = useQuery(
+  const { refetch, ...txQuery } = useQuery(
     [network, txhash, "tx"],
     () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`),
-    { refetchOnWindowFocus: false }
+    {
+      refetchInterval: INTERVAL,
+      refetchOnWindowFocus: false,
+      enabled: refetchTx,
+      onSuccess: data => data.data && setStored(data.data)
+    }
   );
 
-  // if tx not exists(null or no height), start polling pending tx
-  useEffect(() => {
-    if (!txQuery.data?.data?.height) {
-      setRefetchInterval(INTERVAL);
-    } else {
-      setRefetchInterval(false);
-    }
-  }, [txQuery.data]);
-
-  /* query: pending tx */
-  const pendingQuery = useQuery(
+  /* query: mempool tx */
+  const mempoolQuery = useQuery(
     [network, txhash, "mempool"],
     () => apiClient.get<TxResponse>(fcd + `/v1/mempool/${txhash}`),
     {
-      refetchInterval,
-      enabled: progress < 1 || !!refetchInterval,
-      retry: false,
+      refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
-      // if data exists, store to show on delay
-      onSuccess: data => data.data && setStored(data.data),
+      enabled: refetchMempool,
+      onSuccess: data => data.data && setStored(data.data)
     }
   );
 
-
-  // if pending tx does not exist, stop polling and query tx again
+  // if tx not exists(null or no height), start polling mempool tx
   useEffect(() => {
-    if (pendingQuery.error || pendingQuery.data) {
-      setProgress(state => state + 0.1);
-    } else if (!pendingQuery.data) {
-      setRefetchInterval(false);
-      refetchTx();
+    if (txQuery.data?.data) {
+      setRefetchTx(false);
+      setRefetchMempool(false);
     }
-  }, [pendingQuery.data, refetchTx, pendingQuery.error]);
 
-  useEffect(()=>{
-    if(progress > 1) setRefetchInterval(false)
-  },[progress])
+    if (mempoolQuery.data?.data) {
+      setRefetchMempool(false);
+    }
+
+    setProgress(state => state + 0.0333);
+  }, [mempoolQuery.data, txQuery.data]);
 
   useEffect(() => {
-    setStored(undefined);
     setProgress(0);
   }, [txhash, network]);
 
   return {
-    data: txQuery.data?.data || pendingQuery.data?.data || stored,
+    data: stored,
     progressState: progress
   };
 };

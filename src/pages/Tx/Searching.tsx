@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
-import c from "classnames"
+import c from "classnames";
 import { intervalToDuration } from "date-fns";
 import s from "./Searching.module.scss";
 import { useNetwork } from "../../HOCs/WithFetch";
 
-const Searching = ({ state,hash }: { state: number,hash:string }) => {
+const Searching = ({ state, hash }: { state: number; hash: string }) => {
   const progressState = (state / 1) * 100;
   const isSearch = progressState < 100;
-  const searching = "#2043b5"
-  const failed = "#ff5561"
-  const network = useNetwork()
+  const searching = "#2043b5";
+  const failed = "#ff5561";
+  const network = useNetwork();
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
-   setNow(new Date());
-
-  }, [network,hash]);
+    setNow(new Date());
+  }, [network, hash]);
 
   const { minutes, seconds } = intervalToDuration({
     start: new Date(),
@@ -26,7 +25,6 @@ const Searching = ({ state,hash }: { state: number,hash:string }) => {
     .map(str => String(str).padStart(2, "0"))
     .join(":");
 
-
   return (
     <section className={s.wrapper}>
       <span className={s.progressTitle}>
@@ -34,22 +32,29 @@ const Searching = ({ state,hash }: { state: number,hash:string }) => {
       </span>
       <div
         className={
-          isSearch ? c(s.progress, s.progressStriped, s.active) : c(s.progress, s.active)
+          isSearch
+            ? c(s.progress, s.progressStriped, s.active)
+            : c(s.progress, s.active)
         }
       >
         <div
           className={s.progressBar}
           style={{
             width: `${isSearch ? progressState : "100"}%`,
-            backgroundColor: `${isSearch ? searching: failed}`,
+            backgroundColor: `${isSearch ? searching : failed}`
           }}
         />
       </div>
-      <span className={s.timer} style={{ color: `${isSearch ? searching: failed}`}}>{fromNow}</span>
+      <span
+        className={s.timer}
+        style={{ color: `${isSearch ? searching : failed}` }}
+      >
+        {fromNow}
+      </span>
       <span className={s.text}>
         {isSearch
           ? "Please wait while looking for transaction"
-          : "Sorry, we couldn't find any results"}
+          : "No such transaction was found"}
       </span>
     </section>
   );
