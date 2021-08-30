@@ -323,7 +323,10 @@ const usePollTxHash = (txhash: string) => {
   }, [mempoolQuery.data, txQuery.data]);
 
   useEffect(() => {
+    // Reset store, progress and refetch tx when hash, network changed
     setProgress(0);
+    setStored(undefined);
+    setRefetchTx(true);
   }, [txhash, network]);
 
   return {
