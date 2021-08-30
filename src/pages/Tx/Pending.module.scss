@@ -5,46 +5,37 @@
   border: 1px solid $line;
   border-radius: 3px;
   box-shadow: 0 0 10px 0 rgba(black, 0.08);
-  margin-bottom: 20px;
   padding: 40px;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .header {
-  margin: 10px 0 30px;
+  margin: 10px 0 40px;
 }
 
 .title {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
 .timestamp {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
+  margin-bottom: 10px;
 }
 
 .processing {
   @include flex;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 16px;
   text-transform: uppercase;
-  margin-bottom: 20px;
   white-space: nowrap;
-
   .item {
-    margin: 0 10px;
-  }
-
-  .text {
-    width: 6em;
-    flex: none;
+    margin-left: 5px;
   }
 }
 
 .icons {
-  @include flex;
 }
 
 .icon {
@@ -55,10 +46,6 @@
   &:nth-child(3) {
     opacity: 0.33;
   }
-}
-
-.muted {
-  opacity: 0.33;
 }
 
 .desc {

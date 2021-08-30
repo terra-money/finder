@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { intervalToDuration } from "date-fns";
 import { CircularProgress } from "@material-ui/core";
 import classNames from "classnames";
-import Icon from "../../components/Icon";
+import { ReactComponent as Icon } from "../../images/Queued.svg";
 import styles from "./Pending.module.scss";
 
 const Pending = ({ timestamp }: { timestamp: string }) => {
@@ -27,29 +27,20 @@ const Pending = ({ timestamp }: { timestamp: string }) => {
 
       <header className={styles.header}>
         <h1 className={styles.title}>Broadcasting transaction</h1>
-        <small className={styles.timestamp}>{fromNow}</small>
       </header>
 
       <section className={styles.processing}>
-        <div className={classNames(styles.item, styles.text)}>
+        <div className={styles.item}>
           <h2>Queued</h2>
         </div>
 
         <div className={classNames(styles.item, styles.icons)}>
-          <Icon name="chevron_right" className={styles.icon} />
-          <Icon name="chevron_right" className={styles.icon} />
-          <Icon name="chevron_right" className={styles.icon} />
-        </div>
-
-        <div className={classNames(styles.item, styles.text, styles.muted)}>
-          <h2>Processed</h2>
+          <Icon className={styles.icon} />
         </div>
       </section>
+      <p className={styles.timestamp}>{fromNow}</p>
 
-      <p className={styles.desc}>
-        The transaction has been successfully queued and will be processed
-        shortly.
-      </p>
+      <p className={styles.desc}>This transaction is in process.</p>
     </article>
   );
 };
