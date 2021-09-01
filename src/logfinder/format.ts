@@ -1,39 +1,34 @@
 import { TxInfo, Event } from "@terra-money/terra.js";
 import { collector } from "./collector";
-import { LogFinderResult, TransformResult } from "./types";
+import {
+  AmountTransformResult,
+  ActionLogFinderResult,
+  AmountLogFinderResult,
+  ActionTransformResult
+} from "./types";
 import { ReturningLogFinderResult } from "@terra-money/log-finder";
+import { useMemo } from "react";
+import { createAmountLogMatcher, createActionLogMatcher } from "./execute";
+import { useRecoilValue } from "recoil";
+import { AmountLogfinderRuleSet } from "../store/AmountLoginfderRuleSetStore";
+import { ActionLogfinderRuleSet } from "../store/ActionLogfinderRuleSetStore";
 
-export const getMatchMsg = (
+export const getMatchAction = (
   data: string,
   logMatcher: (
     events: Event[]
-  ) => ReturningLogFinderResult<TransformResult>[][],
-  address?: string
+  ) => ReturningLogFinderResult<ActionTransformResult>[][]
 ) => {
   const tx: TxInfo = JSON.parse(data);
 
   try {
     if (tx.logs) {
-      const matched: LogFinderResult[][] = tx.logs.map(log => {
+      const matched: ActionLogFinderResult[][] = tx.logs.map(log => {
         const matchLog = logMatcher(log.events);
         const matchedPerLog = matchLog
           ?.flat()
           .filter(Boolean)
-          .map(data => {
-            if (data.transformed && address) {
-              const { match, transformed } = data;
-              const type = transformed.msgType;
-              if (["terra/send", "token/transfer"].includes(type)) {
-                const result = getTransformed(address, match, transformed);
-                return {
-                  ...data,
-                  transformed: result,
-                  timestamp: tx.timestamp
-                };
-              }
-            }
-            return { ...data, timestamp: tx.timestamp };
-          });
+          .map(data => ({ ...data, timestamp: tx.timestamp }));
 
         return matchedPerLog;
       });
@@ -46,34 +41,84 @@ export const getMatchMsg = (
   }
 };
 
-type Match = {
-  key: string;
-  value: string;
+export const getMatchAmount = (
+  data: string,
+  logMatcher: (
+    events: Event[]
+  ) => ReturningLogFinderResult<AmountTransformResult>[][],
+  address: string
+) => {
+  const tx: TxInfo.Data = JSON.parse(data);
+  const msgTypes = tx.tx.value.msg;
+
+  try {
+    if (tx.logs) {
+      const { timestamp, txhash } = tx;
+      const matched: AmountLogFinderResult[][] = tx.logs.map((log, index) => {
+        const matchLog = logMatcher(log.events);
+        const matchedPerLog = matchLog
+          ?.flat()
+          .filter(Boolean)
+          .map(data => {
+            if (data.transformed) {
+              const { transformed } = data;
+              const { type, withdraw_date } = transformed;
+              const msgType = msgTypes[index].type.split("/")[1];
+              if (type === "delegate" && msgType === "MsgDelegate") {
+                return {
+                  ...data,
+                  timestamp: timestamp,
+                  txhash: txhash,
+                  transformed: { ...transformed, sender: address }
+                };
+              } else if (
+                type === "unDelegate" &&
+                msgType === "MsgUndelegate" &&
+                withdraw_date
+              ) {
+                const now = new Date();
+                const withdrawDate = new Date(withdraw_date);
+                return {
+                  ...data,
+                  timestamp: timestamp,
+                  txhash: txhash,
+                  transformed: {
+                    ...transformed,
+                    recipient: now > withdrawDate ? address : ""
+                  }
+                };
+              }
+            }
+
+            return { ...data, timestamp: timestamp, txhash: txhash };
+          });
+
+        return matchedPerLog;
+      });
+
+      const logMatched = matched.flat();
+      return logMatched.length > 0 ? logMatched : undefined;
+    }
+  } catch {
+    return undefined;
+  }
 };
 
-const getTransformed = (
-  address: string,
-  match: Match[],
-  transformed: TransformResult
-) => {
-  const type = transformed.msgType;
+/* hooks */
+export const useAmountLogMatcher = () => {
+  const ruleArray = useRecoilValue(AmountLogfinderRuleSet);
+  const logMatcher = useMemo(
+    () => createAmountLogMatcher(ruleArray),
+    [ruleArray]
+  );
+  return logMatcher;
+};
 
-  if (type === "terra/send") {
-    if (![match[0].value, match[1].value].includes(address)) {
-      return undefined;
-    }
-  }
-
-  const sender = type === "terra/send" ? match[1].value : match[2].value;
-
-  const amount =
-    type === "terra/send"
-      ? match[2].value
-      : `${match[4].value}${match[0].value}`; //if msgType === token/transfer
-
-  sender === address
-    ? (transformed.amountOut = amount)
-    : (transformed.amountIn = amount);
-
-  return transformed;
+export const useActionLogMatcher = () => {
+  const ruleArray = useRecoilValue(ActionLogfinderRuleSet);
+  const logMatcher = useMemo(
+    () => createActionLogMatcher(ruleArray),
+    [ruleArray]
+  );
+  return logMatcher;
 };

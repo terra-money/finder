@@ -1,7 +1,7 @@
-import { LogFinderResult } from "./types";
+import { ActionLogFinderResult } from "./types";
 
-export const collector = (result: LogFinderResult[]) => {
-  const returnArray: LogFinderResult[] = [];
+export const collector = (result: ActionLogFinderResult[]) => {
+  const returnArray: ActionLogFinderResult[] = [];
   result.forEach(value => {
     if (value.transformed) {
       const action = value.transformed.msgType.split("/")[1];

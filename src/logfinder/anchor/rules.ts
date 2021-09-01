@@ -394,5 +394,18 @@ export const createAnchorRules = ({
       ["holder_address"],
       ["amount"]
     ]
+  },
+  bETHburnRule: {
+    type: "from_contract",
+    attributes: [
+      ["contract_address", bETHAddress],
+      ["action", "burn"],
+      ["from"],
+      ["amount"],
+      ["contract_address", bETHRwardAddress],
+      ["action", "decrease_balance"],
+      ["holder_address"],
+      ["amount"]
+    ]
   }
 });
