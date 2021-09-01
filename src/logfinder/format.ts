@@ -1,4 +1,7 @@
+import { useMemo } from "react";
+import { useRecoilValue } from "recoil";
 import { TxInfo, Event } from "@terra-money/terra.js";
+import { ReturningLogFinderResult } from "@terra-money/log-finder";
 import { collector } from "./collector";
 import {
   AmountTransformResult,
@@ -6,10 +9,7 @@ import {
   AmountLogFinderResult,
   ActionTransformResult
 } from "./types";
-import { ReturningLogFinderResult } from "@terra-money/log-finder";
-import { useMemo } from "react";
 import { createAmountLogMatcher, createActionLogMatcher } from "./execute";
-import { useRecoilValue } from "recoil";
 import { AmountLogfinderRuleSet } from "../store/AmountLoginfderRuleSetStore";
 import { ActionLogfinderRuleSet } from "../store/ActionLogfinderRuleSetStore";
 
@@ -56,42 +56,11 @@ export const getMatchAmount = (
       const { timestamp, txhash } = tx;
       const matched: AmountLogFinderResult[][] = tx.logs.map((log, index) => {
         const matchLog = logMatcher(log.events);
+        const msgType = msgTypes[index].type.split("/")[1];
         const matchedPerLog = matchLog
           ?.flat()
           .filter(Boolean)
-          .map(data => {
-            if (data.transformed) {
-              const { transformed } = data;
-              const { type, withdraw_date } = transformed;
-              const msgType = msgTypes[index].type.split("/")[1];
-              if (type === "delegate" && msgType === "MsgDelegate") {
-                return {
-                  ...data,
-                  timestamp: timestamp,
-                  txhash: txhash,
-                  transformed: { ...transformed, sender: address }
-                };
-              } else if (
-                type === "unDelegate" &&
-                msgType === "MsgUndelegate" &&
-                withdraw_date
-              ) {
-                const now = new Date();
-                const withdrawDate = new Date(withdraw_date);
-                return {
-                  ...data,
-                  timestamp: timestamp,
-                  txhash: txhash,
-                  transformed: {
-                    ...transformed,
-                    recipient: now > withdrawDate ? address : ""
-                  }
-                };
-              }
-            }
-
-            return { ...data, timestamp: timestamp, txhash: txhash };
-          });
+          .map(data => formatLogs(data, msgType, address, timestamp, txhash));
 
         return matchedPerLog;
       });
@@ -102,6 +71,46 @@ export const getMatchAmount = (
   } catch {
     return undefined;
   }
+};
+
+const formatLogs = (
+  data: ReturningLogFinderResult<AmountTransformResult>,
+  msgType: string,
+  address: string,
+  timestamp: string,
+  txhash: string
+) => {
+  if (data.transformed) {
+    const { transformed } = data;
+    const { type, withdraw_date } = transformed;
+    const logData = {
+      ...data,
+      timestamp: timestamp,
+      txhash: txhash
+    };
+    if (type === "delegate" && msgType === "MsgDelegate") {
+      return {
+        ...logData,
+        transformed: { ...transformed, sender: address }
+      };
+    } else if (
+      type === "unDelegate" &&
+      msgType === "MsgUndelegate" &&
+      withdraw_date
+    ) {
+      const now = new Date();
+      const withdrawDate = new Date(withdraw_date);
+      return {
+        ...logData,
+        transformed: {
+          ...transformed,
+          recipient: now > withdrawDate ? address : ""
+        }
+      };
+    }
+  }
+
+  return { ...data, timestamp: timestamp, txhash: txhash };
 };
 
 /* hooks */
