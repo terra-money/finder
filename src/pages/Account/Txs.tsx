@@ -115,7 +115,6 @@ const getAmount = (address: string, matchedMsg?: LogFinderResult[][]) => {
 
 const Txs = ({ address }: { address: string }) => {
   const network = useNetwork();
-  const ruleArray = useRecoilValue(LogfinderRuleSet);
   const [offset, setOffset] = useState<number>(0);
 
   const { data, isLoading } = useFCD<{ next: number; txs: TxResponse[] }>(
@@ -126,9 +125,8 @@ const Txs = ({ address }: { address: string }) => {
   );
   const [txsRow, setTxsRow] = useState<JSX.Element[][]>([]);
 
-  const logMatcher = useMemo(() => {
-    return createLogMatcher(ruleArray);
-  }, [ruleArray]);
+  const ruleArray = useRecoilValue(LogfinderRuleSet);
+  const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
 
   useEffect(() => {
     if (data?.txs) {
@@ -142,9 +140,8 @@ const Txs = ({ address }: { address: string }) => {
       });
       setTxsRow(stack => [...stack, ...txRow]);
     }
-
-    return () => {};
-  }, [data, network, logMatcher, address]);
+    // eslint-disable-next-line
+  }, [data, network, address]);
 
   const head = [
     `Tx hash`,
