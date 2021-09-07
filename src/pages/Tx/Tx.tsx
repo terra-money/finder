@@ -319,7 +319,7 @@ const usePollTxHash = (txhash: string) => {
       setRefetchMempool(false);
     }
 
-    setProgress(state => state + 0.0333);
+    setProgress(state => (state + 0.0333) % 1);
   }, [mempoolQuery.data, txQuery.data]);
 
   useEffect(() => {
