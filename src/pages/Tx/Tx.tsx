@@ -1,23 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get, last, isArray, isObject, isEmpty } from "lodash";
-import { useRecoilValue } from "recoil";
 import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import { useNetwork } from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
-import { getMatchMsg } from "../../logfinder/format";
-import { createLogMatcher } from "../../logfinder/execute";
+import { getMatchAction, useActionLogMatcher } from "../../logfinder/format";
 import { fcdUrl } from "../../scripts/utility";
 import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
-import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
 import Pending from "./Pending";
-import s from "./Tx.module.scss";
 import Searching from "./Searching";
+import s from "./Tx.module.scss";
 
 function isSendTx(response: TxResponse) {
   const type = get(response, "tx.value.msg[0].type");
@@ -126,8 +123,7 @@ function getTotalFee(txResponse: TxResponse) {
 
 const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
-  const ruleArray = useRecoilValue(LogfinderRuleSet);
-  const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
+  const logMatcher = useActionLogMatcher();
   const { data: response, progressState } = usePollTxHash(hash);
 
   if (!response) {
@@ -136,7 +132,7 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
 
   const isPending = !response?.height;
   const matchedMsg =
-    response && getMatchMsg(JSON.stringify(response), logMatcher);
+    response && getMatchAction(JSON.stringify(response), logMatcher);
 
   return (
     <>

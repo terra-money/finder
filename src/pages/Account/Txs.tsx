@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import Pagination from "../../components/Pagination";
 import FlexTable from "../../components/FlexTable";
@@ -16,10 +15,8 @@ import {
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
-import { LogFinderResult } from "../../logfinder/types";
-import { getMatchMsg } from "../../logfinder/format";
-import { createLogMatcher } from "../../logfinder/execute";
-import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
+import { AmountLogFinderResult } from "../../logfinder/types";
+import { getMatchAmount, useAmountLogMatcher } from "../../logfinder/format";
 import useFCD from "../../hooks/useFCD";
 import { useNetwork } from "../../HOCs/WithFetch";
 import s from "./Txs.module.scss";
@@ -32,83 +29,77 @@ type Fee = {
 const getTxFee = (prop: Fee) =>
   prop && `${format.amount(prop.amount)} ${format.denom(prop.denom)}`;
 
-const getRenderAmount = (
-  amountList: string[] | undefined,
-  target: string | undefined,
-  address: string,
-  amountArray: JSX.Element[]
-) => {
+const getRenderAmount = (amountList: string[], amountArray: JSX.Element[]) => {
   amountList?.forEach(amount => {
     const coin = splitCoinData(amount.trim());
     if (coin) {
       const { amount, denom } = coin;
       const element = <Coin amount={amount} denom={denom} />;
-
-      if (!target || (target && target === address)) {
-        amountArray.push(element);
-      }
+      amountArray.push(element);
     }
   });
 };
 
 const getMultiSendAmount = (
-  matchedLogs: LogFinderResult[],
+  matchedLogs: AmountLogFinderResult[],
   address: string,
   amountIn: JSX.Element[],
   amountOut: JSX.Element[]
 ) => {
   const amountInMap = new Map<string, string>();
   const amountOutMap = new Map<string, string>();
-
   matchedLogs.forEach(log => {
-    const recipient = log.match[0].value;
-    const coin = log.match[1].value.split(",").map(splitCoinData);
-
-    coin.forEach(data => {
-      if (data) {
-        const { amount, denom } = data;
-        const amountInStack = amountInMap.get(denom);
-        const amountOutStack = amountOutMap.get(denom);
-
-        const inStack = amountInStack ? plus(amountInStack, amount) : amount;
-        const outStack = amountOutStack ? plus(amountOutStack, amount) : amount;
-
-        if (recipient === address) {
-          amountInMap.set(denom, inStack);
-        } else {
-          amountOutMap.set(denom, outStack);
+    if (log.transformed) {
+      const { recipient, amount } = log.transformed;
+      const coin = amount?.split(",").map(splitCoinData);
+      coin.forEach(data => {
+        if (data) {
+          const { amount, denom } = data;
+          const amountIn = amountInMap.get(denom);
+          const amountOut = amountOutMap.get(denom);
+          const inStack = amountIn ? plus(amountIn, amount) : amount;
+          const outStack = amountOut ? plus(amountOut, amount) : amount;
+          if (recipient === address) {
+            amountInMap.set(denom, inStack);
+          } else {
+            amountOutMap.set(denom, outStack);
+          }
         }
-      }
-    });
+      });
+    }
   });
-
   amountInMap.forEach((amount, denom) =>
     amountIn.push(<Coin amount={amount} denom={denom} />)
   );
-
   amountOutMap.forEach((amount, denom) =>
     amountOut.push(<Coin amount={amount} denom={denom} />)
   );
 };
 
-const getAmount = (address: string, matchedMsg?: LogFinderResult[][]) => {
+const getAmount = (address: string, matchedMsg?: AmountLogFinderResult[]) => {
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
-  matchedMsg?.forEach(matchedLog => {
-    if (matchedLog[0]?.transformed?.msgType === "terra/multi-send") {
-      getMultiSendAmount(matchedLog, address, amountIn, amountOut);
-    } else {
-      matchedLog?.forEach(log => {
-        const msgAmountIn = log.transformed?.amountIn?.split(",");
-        const msgAmountOut = log.transformed?.amountOut?.split(",");
-        const target = log.transformed?.target;
 
-        getRenderAmount(msgAmountIn, target, address, amountIn);
-        getRenderAmount(msgAmountOut, target, address, amountOut);
-      });
+  if (matchedMsg) {
+    for (const matchedLog of matchedMsg) {
+      if (matchedLog.transformed) {
+        const { sender, recipient, amount, type } = matchedLog.transformed;
+        const amounts = amount?.split(",");
+
+        if (type === "multiSend") {
+          getMultiSendAmount(matchedMsg, address, amountIn, amountOut);
+          return [amountIn, amountOut];
+        } else {
+          if (address === sender) {
+            getRenderAmount(amounts, amountOut);
+          }
+          if (address === recipient) {
+            getRenderAmount(amounts, amountIn);
+          }
+        }
+      }
     }
-  });
-
+  }
   //amount row limit
   return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
 };
@@ -125,13 +116,11 @@ const Txs = ({ address }: { address: string }) => {
   );
   const [txsRow, setTxsRow] = useState<JSX.Element[][]>([]);
 
-  const ruleArray = useRecoilValue(LogfinderRuleSet);
-  const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
-
+  const logMatcher = useAmountLogMatcher();
   useEffect(() => {
     if (data?.txs) {
       const txRow = data.txs.map(tx => {
-        const matchedLogs = getMatchMsg(
+        const matchedLogs = getMatchAmount(
           JSON.stringify(tx),
           logMatcher,
           address
@@ -190,7 +179,7 @@ const getRow = (
   response: TxResponse,
   network: string,
   address: string,
-  matchedMsg?: LogFinderResult[][]
+  matchedMsg?: AmountLogFinderResult[]
 ) => {
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;

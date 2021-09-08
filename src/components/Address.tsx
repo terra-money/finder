@@ -1,14 +1,14 @@
 import c from "classnames";
 import { useRecoilValue } from "recoil";
+import { Dictionary } from "ramda";
 import { AccAddress } from "@terra-money/terra.js";
 import format from "../scripts/format";
-import Finder from "./Finder";
-import s from "./Address.module.scss";
 import { Whitelist } from "../store/WhitelistStore";
 import { Contracts } from "../store/ContractStore";
-import { Dictionary } from "ramda";
+import Finder from "./Finder";
+import s from "./Address.module.scss";
 
-type Prop = {
+type Props = {
   address: string;
   hideIcon?: boolean;
   truncate?: boolean;
@@ -26,20 +26,17 @@ const formatAccAddress = (
   const tokens = whitelist?.[address];
   const contracts = contract?.[address];
   const renderAddress = truncate ? format.truncate(address, [8, 8]) : address;
+  const addressName = tokens?.symbol || contracts?.name;
 
   return (
     <div className={c(s.wrapper, className)}>
-      {tokens || contracts ? (
+      {addressName ? (
         <>
-          <Finder
-            q="address"
-            v={address}
-            children={tokens?.symbol || contracts?.name}
-          />
+          <Finder q="address" v={address} children={addressName} />
           {hideIcon ? undefined : (
             <img
               src={tokens?.icon || contracts?.icon}
-              alt={tokens?.symbol || contracts?.name}
+              alt={addressName}
               className={s.icon}
             />
           )}
@@ -65,9 +62,11 @@ const formatValidatorAddress = (
   );
 };
 
-const Address = ({ address, hideIcon, truncate, className }: Prop) => {
+const Address = (props: Props) => {
   const whitelist = useRecoilValue(Whitelist);
   const contracts = useRecoilValue(Contracts);
+
+  const { address, hideIcon, truncate, className } = props;
 
   if (AccAddress.validate(address)) {
     return formatAccAddress(

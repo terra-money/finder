@@ -1,4 +1,4 @@
-import { LogFindersRuleSet } from "../types";
+import { ActionLogFindersRuleSet } from "../types";
 
 const rules = {
   provideLiquidityRule: {
@@ -112,7 +112,7 @@ const rules = {
 };
 
 const create = () => {
-  const provideLiquidityRuleSet: LogFindersRuleSet = {
+  const provideLiquidityRuleSet: ActionLogFindersRuleSet = {
     rule: rules.provideLiquidityRule,
     transform: (fragment, matched) => ({
       msgType: "token/provide-liquidity",
@@ -120,12 +120,10 @@ const create = () => {
         `Provide ${matched[2].value} Liquidity to ${matched[0].value}`,
         `Mint ${matched[13].value}${matched[10].value}`
       ],
-      amountIn: `${matched[13].value}${matched[10].value}`,
-      amountOut: `${matched[2].value}`,
       payload: fragment
     })
   };
-  const withdrawLiquidityRuleSetTypeA: LogFindersRuleSet = {
+  const withdrawLiquidityRuleSetTypeA: ActionLogFindersRuleSet = {
     rule: rules.withdrawLiquidityRuleTypeA,
     transform: (fragment, matched) => ({
       msgType: "token/withdraw-liquidity",
@@ -133,13 +131,11 @@ const create = () => {
         `Withdraw ${matched[8].value} Liquidity from ${matched[5].value}`,
         `Burn ${matched[17].value}${matched[14].value}`
       ],
-      amountIn: `${matched[8].value}`,
-      amountOut: `${matched[17].value}${matched[14].value}`,
       payload: fragment
     })
   };
 
-  const withdrawLiquidityRuleSetTypeB: LogFindersRuleSet = {
+  const withdrawLiquidityRuleSetTypeB: ActionLogFindersRuleSet = {
     rule: rules.withdrawLiquidityRuleTypeB,
     transform: (fragment, matched) => ({
       msgType: "token/withdraw-liquidity",
@@ -147,13 +143,11 @@ const create = () => {
         `Withdraw ${matched[8].value} Liquidity from ${matched[5].value}`,
         `Burn ${matched[12].value}${matched[9].value}`
       ],
-      amountIn: `${matched[8].value}`,
-      amountOut: `${matched[12].value}${matched[9].value}`,
       payload: fragment
     })
   };
 
-  const transferRuleSet: LogFindersRuleSet = {
+  const transferRuleSet: ActionLogFindersRuleSet = {
     rule: rules.transferRule,
     transform: (fragment, matched) => ({
       msgType: "token/transfer",
