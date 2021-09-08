@@ -3,10 +3,11 @@ import { useSetRecoilState } from "recoil";
 import { Dictionary } from "ramda";
 import routes from "../routes";
 import ErrorBoundary from "../components/ErrorBoundary";
-import create from "../logfinder/create";
+import { amountCreate, actionCreate } from "../logfinder/create";
 import { useNetwork, useRequest } from "../HOCs/WithFetch";
 import { Denoms } from "../store/DenomStore";
-import { LogfinderRuleSet } from "../store/LogfinderRuleSetStore";
+import { ActionLogfinderRuleSet } from "../store/ActionLogfinderRuleSetStore";
+import { AmountLogfinderRuleSet } from "../store/AmountLoginfderRuleSetStore";
 import useTerraAssets from "../hooks/useTerraAssets";
 import Header from "./Header";
 import { Whitelist } from "../store/WhitelistStore";
@@ -30,13 +31,15 @@ const App = () => {
 
   const setWhitelist = useSetRecoilState(Whitelist);
   const setContracts = useSetRecoilState(Contracts);
-  const setRuleArray = useSetRecoilState(LogfinderRuleSet);
+  const setActionRuleArray = useSetRecoilState(ActionLogfinderRuleSet);
+  const setAmountRuleArray = useSetRecoilState(AmountLogfinderRuleSet);
   const setDenoms = useSetRecoilState(Denoms);
 
   useEffect(() => {
-    const ruleArray = create(network);
-    setRuleArray(ruleArray);
-
+    const actionRules = actionCreate(network);
+    const amountRules = amountCreate();
+    setActionRuleArray(actionRules);
+    setAmountRuleArray(amountRules);
     if (whitelist && contracts && response.data?.result) {
       setWhitelist(whitelist[network]);
       setContracts(contracts[network]);
@@ -49,9 +52,10 @@ const App = () => {
     contracts,
     chainId,
     setDenoms,
-    setRuleArray,
     setWhitelist,
-    setContracts
+    setContracts,
+    setActionRuleArray,
+    setAmountRuleArray
   ]);
 
   return (
