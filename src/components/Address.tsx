@@ -44,14 +44,16 @@ const formatAccAddress = (
           {showProtocolName && (
             <span className={s.protocol}>{contract.protocol}</span>
           )}
-          <Finder q="address" v={address} children={names} />
-          {hideIcon ? undefined : (
-            <img
-              src={token?.icon || contract?.icon}
-              alt={token?.symbol || contract?.name}
-              className={s.icon}
-            />
-          )}
+          <div className={s.addressWrapper}>
+            <Finder q="address" v={address} children={names} />
+            {hideIcon ? undefined : (
+              <img
+                src={token?.icon || contract?.icon}
+                alt={token?.symbol || contract?.name}
+                className={s.icon}
+              />
+            )}
+          </div>
         </>
       ) : (
         <Finder q="address" v={address} children={renderAddress} />
