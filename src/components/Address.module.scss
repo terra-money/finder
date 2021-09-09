@@ -3,10 +3,6 @@
 .wrapper {
   display: flex;
   align-items: center;
-  @media (max-width: $breakpoint) {
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }
 
 .icon {
@@ -17,9 +13,4 @@
 
 .protocol {
   margin-right: 5px;
-}
-
-.addressWrapper {
-  display: flex;
-  align-items: center;
 }
