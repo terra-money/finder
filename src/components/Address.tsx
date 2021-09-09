@@ -1,12 +1,12 @@
 import c from "classnames";
 import { useRecoilValue } from "recoil";
+import { Dictionary } from "ramda";
 import { AccAddress } from "@terra-money/terra.js";
 import format from "../scripts/format";
-import Finder from "./Finder";
-import s from "./Address.module.scss";
 import { Whitelist } from "../store/WhitelistStore";
 import { Contracts } from "../store/ContractStore";
-import { Dictionary } from "ramda";
+import Finder from "./Finder";
+import s from "./Address.module.scss";
 
 type Prop = {
   address: string;
@@ -18,31 +18,42 @@ type Prop = {
 const formatAccAddress = (
   address: string,
   whitelist: Dictionary<Whitelist>,
-  contract: Dictionary<Contracts>,
+  contracts: Dictionary<Contracts>,
   hideIcon?: boolean,
   truncate?: boolean,
   className?: string
 ) => {
-  const tokens = whitelist?.[address];
-  const contracts = contract?.[address];
+  const token = whitelist?.[address];
+  const contract = contracts?.[address];
   const renderAddress = truncate ? format.truncate(address, [8, 8]) : address;
+  const isLPtoken = contract?.name?.includes("LP");
+
+  const contractName = contract
+    ? isLPtoken
+      ? contract.name
+      : `(${contract.name} Contract)`
+    : undefined;
+
+  const names = token?.symbol || contractName;
+  const showProtocolName = !token?.symbol && !isLPtoken && contractName;
 
   return (
     <div className={c(s.wrapper, className)}>
-      {tokens || contracts ? (
+      {names ? (
         <>
-          <Finder
-            q="address"
-            v={address}
-            children={tokens?.symbol || contracts?.name}
-          />
-          {hideIcon ? undefined : (
-            <img
-              src={tokens?.icon || contracts?.icon}
-              alt={tokens?.symbol || contracts?.name}
-              className={s.icon}
-            />
+          {showProtocolName && (
+            <span className={s.protocol}>{contract.protocol}</span>
           )}
+          <div className={s.addressWrapper}>
+            <Finder q="address" v={address} children={names} />
+            {hideIcon ? undefined : (
+              <img
+                src={token?.icon || contract?.icon}
+                alt={token?.symbol || contract?.name}
+                className={s.icon}
+              />
+            )}
+          </div>
         </>
       ) : (
         <Finder q="address" v={address} children={renderAddress} />

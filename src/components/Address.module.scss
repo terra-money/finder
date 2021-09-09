@@ -1,10 +1,25 @@
+@import "../styles/variables.scss";
+
 .wrapper {
   display: flex;
   align-items: center;
+  @media (max-width: $breakpoint) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 .icon {
   width: 25px;
   height: 25px;
   margin-left: 10px;
+}
+
+.protocol {
+  margin-right: 5px;
+}
+
+.addressWrapper {
+  display: flex;
+  align-items: center;
 }

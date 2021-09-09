@@ -92,7 +92,7 @@ const create = (network: string) => {
     transform: (fragment, matched) => ({
       msgType: "anchor/deposit-collateral",
       canonicalMsg: [
-        `Deposit ${matched[4].value}${matched[0].value} to ${matched[11].value}`
+        `Deposit ${matched[4].value}${matched[0].value} collateral to ${matched[11].value}`
       ],
       amountOut: `${matched[4].value}${matched[0].value}`,
       target: matched[15].value,
@@ -125,7 +125,7 @@ const create = (network: string) => {
     transform: (fragment, matched) => ({
       msgType: "anchor/withdraw-collateral",
       canonicalMsg: [
-        `Withdraw ${matched[3].value}${matched[4].value} from ${matched[0].value}`
+        `Withdraw ${matched[3].value}${matched[4].value} collateral from ${matched[0].value}`
       ],
       amountIn: `${matched[3].value}${matched[4].value}`,
       target: matched[2].value,
