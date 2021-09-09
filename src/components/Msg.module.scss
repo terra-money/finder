@@ -46,11 +46,25 @@
 
 .events {
   margin-bottom: 20px;
+  @media (max-width: $breakpoint) {
+    tr,
+    th,
+    td {
+      display: block;
+    }
+    tr {
+      margin-bottom: 10px;
+    }
+  }
 }
 
 .eventType {
   font-weight: normal;
   font-size: 16px;
+  @media (max-width: $breakpoint) {
+    margin-top: 20px;
+    font-weight: 500;
+  }
 }
 
 .attrKey {
