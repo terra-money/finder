@@ -16,10 +16,10 @@ import {
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
-import { LogFinderResult } from "../../logfinder/types";
-import { getMatchMsg } from "../../logfinder/format";
-import { createLogMatcher } from "../../logfinder/execute";
-import { LogfinderRuleSet } from "../../store/LogfinderRuleSetStore";
+import { LogFinderAmountResult } from "../../logfinder/types";
+import { getTxAmounts } from "../../logfinder/format";
+import { createLogMatcherForAmounts } from "../../logfinder/execute";
+import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
 import { useNetwork } from "../../HOCs/WithFetch";
 import s from "./Txs.module.scss";
@@ -34,8 +34,6 @@ const getTxFee = (prop: Fee) =>
 
 const getRenderAmount = (
   amountList: string[] | undefined,
-  target: string | undefined,
-  address: string,
   amountArray: JSX.Element[]
 ) => {
   amountList?.forEach(amount => {
@@ -44,15 +42,13 @@ const getRenderAmount = (
       const { amount, denom } = coin;
       const element = <Coin amount={amount} denom={denom} />;
 
-      if (!target || (target && target === address)) {
-        amountArray.push(element);
-      }
+      amountArray.push(element);
     }
   });
 };
 
 const getMultiSendAmount = (
-  matchedLogs: LogFinderResult[],
+  matchedLogs: LogFinderAmountResult[],
   address: string,
   amountIn: JSX.Element[],
   amountOut: JSX.Element[]
@@ -91,20 +87,25 @@ const getMultiSendAmount = (
   );
 };
 
-const getAmount = (address: string, matchedMsg?: LogFinderResult[][]) => {
+const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
   matchedMsg?.forEach(matchedLog => {
-    if (matchedLog[0]?.transformed?.msgType === "terra/multi-send") {
+    if (matchedLog[0]?.transformed?.type === "terra/multi-send") {
       getMultiSendAmount(matchedLog, address, amountIn, amountOut);
     } else {
       matchedLog?.forEach(log => {
-        const msgAmountIn = log.transformed?.amountIn?.split(",");
-        const msgAmountOut = log.transformed?.amountOut?.split(",");
-        const target = log.transformed?.target;
+        const amounts = log.transformed?.amount?.split(",");
+        const sender = log.transformed?.sender;
+        const recipient = log.transformed?.recipient;
 
-        getRenderAmount(msgAmountIn, target, address, amountIn);
-        getRenderAmount(msgAmountOut, target, address, amountOut);
+        if (address === sender) {
+          getRenderAmount(amounts, amountIn);
+        }
+
+        if (address === recipient) {
+          getRenderAmount(amounts, amountOut);
+        }
       });
     }
   });
@@ -125,13 +126,16 @@ const Txs = ({ address }: { address: string }) => {
   );
   const [txsRow, setTxsRow] = useState<JSX.Element[][]>([]);
 
-  const ruleArray = useRecoilValue(LogfinderRuleSet);
-  const logMatcher = useMemo(() => createLogMatcher(ruleArray), [ruleArray]);
+  const ruleArray = useRecoilValue(LogfinderAmountRuleSet);
+  const logMatcher = useMemo(
+    () => createLogMatcherForAmounts(ruleArray),
+    [ruleArray]
+  );
 
   useEffect(() => {
     if (data?.txs) {
       const txRow = data.txs.map(tx => {
-        const matchedLogs = getMatchMsg(
+        const matchedLogs = getTxAmounts(
           JSON.stringify(tx),
           logMatcher,
           address
@@ -190,7 +194,7 @@ const getRow = (
   response: TxResponse,
   network: string,
   address: string,
-  matchedMsg?: LogFinderResult[][]
+  matchedMsg?: LogFinderAmountResult[][]
 ) => {
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;
