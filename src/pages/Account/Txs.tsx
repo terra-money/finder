@@ -91,7 +91,7 @@ const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
   matchedMsg?.forEach(matchedLog => {
-    if (matchedLog[0]?.transformed?.type === "terra/multi-send") {
+    if (matchedLog && matchedLog[0]?.transformed?.type === "multiSend") {
       getMultiSendAmount(matchedLog, address, amountIn, amountOut);
     } else {
       matchedLog?.forEach(log => {
