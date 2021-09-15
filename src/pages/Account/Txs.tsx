@@ -100,11 +100,11 @@ const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
         const recipient = log.transformed?.recipient;
 
         if (address === sender) {
-          getRenderAmount(amounts, amountIn);
+          getRenderAmount(amounts, amountOut);
         }
 
         if (address === recipient) {
-          getRenderAmount(amounts, amountOut);
+          getRenderAmount(amounts, amountIn);
         }
       });
     }
