@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import { Dictionary } from "ramda";
 import routes from "../routes";
 import ErrorBoundary from "../components/ErrorBoundary";
-import { createActionRuleSet, createAmountRuleSet } from "../logfinder/create";
+import { createActionRuleSet, createAmountRuleSet } from "../logfinder";
 import { useNetwork, useRequest } from "../HOCs/WithFetch";
 import { Denoms } from "../store/DenomStore";
 import {

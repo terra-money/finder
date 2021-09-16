@@ -9,8 +9,10 @@ import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import { useNetwork } from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
-import { getTxCanonicalMsgs } from "../../logfinder/format";
-import { createLogMatcherForActions } from "../../logfinder/execute";
+import {
+  getTxCanonicalMsgs,
+  createLogMatcherForActions
+} from "../../logfinder";
 import { fcdUrl } from "../../scripts/utility";
 import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
