@@ -1,8 +1,5 @@
 import { atom } from "recoil";
-import {
-  LogFindersActionRuleSet,
-  LogFindersAmountRuleSet
-} from "../logfinder/types";
+import { LogFindersActionRuleSet, LogFindersAmountRuleSet } from "../logfinder";
 
 export const LogfinderActionRuleSet = atom<LogFindersActionRuleSet[]>({
   key: "LogfinderActionRuleSetState",

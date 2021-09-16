@@ -16,9 +16,11 @@ import {
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
-import { LogFinderAmountResult } from "../../logfinder/types";
-import { getTxAmounts } from "../../logfinder/format";
-import { createLogMatcherForAmounts } from "../../logfinder/execute";
+import {
+  LogFinderAmountResult,
+  getTxAmounts,
+  createLogMatcherForAmounts
+} from "../../logfinder";
 import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
 import { useNetwork } from "../../HOCs/WithFetch";
