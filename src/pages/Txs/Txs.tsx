@@ -10,6 +10,7 @@ import Finder from "../../components/Finder";
 import { fromNow, sliceMsgType } from "../../scripts/utility";
 import format from "../../scripts/format";
 import useFCD from "../../hooks/useFCD";
+import { useNetwork } from "../../HOCs/WithFetch";
 
 const getRow = (response: TxResponse) => {
   const { txhash, tx, height, timestamp } = response;
@@ -46,6 +47,8 @@ const Txs = (props: RouteComponentProps<{ height: string }>) => {
   const url = `/v1/txs?block=${height}&offset=${offset}`;
   const { data } = useFCD<{ next: number; txs: TxResponse[] }>(url);
 
+  const network = useNetwork();
+
   useEffect(() => {
     if (data) {
       const { next, txs } = data;
@@ -55,6 +58,10 @@ const Txs = (props: RouteComponentProps<{ height: string }>) => {
       setNext(next);
     }
   }, [data]);
+
+  useEffect(() => {
+    setTxList([]);
+  }, [network]);
 
   const head = [`TxHash`, `Type`, `Fee`, `Height`, `Time`];
 

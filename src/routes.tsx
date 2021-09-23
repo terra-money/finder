@@ -20,6 +20,14 @@ export default (
     <Route path="/:network/address/:address" component={Address} />
     <Route path="/:network/account/:address" component={Address} />
     <Route path="/:network/contract/:address" component={Contract} />
+
+    <Route path="/blocks/:height" component={Block} />
+    <Route path="/txs/:height" component={Txs} />
+    <Route path="/tx/:hash" component={Tx} />
+    <Route path="/validator/:address" component={Validator} />
+    <Route path="/address/:address" component={Address} />
+    <Route path="/account/:address" component={Address} />
+    <Route path="/contract/:address" component={Contract} />
     <Route path="*" component={NotFound} />
   </Switch>
 );
