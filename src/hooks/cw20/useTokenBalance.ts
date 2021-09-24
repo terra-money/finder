@@ -19,14 +19,19 @@ export interface TokenBalance extends Token {
 
 export type Tokens = Dictionary<Token>;
 
-const parseResult = (data: Dictionary<{ Result: string }>) =>
-  Object.entries(data).reduce(
+const parseResult = (data: Dictionary<{ Result: string }>) => {
+  const removeEmptyObject = Object.fromEntries(
+    Object.entries(data).filter(([key, value]) => value != null)
+  );
+
+  return Object.entries(removeEmptyObject).reduce(
     (acc, [token, { Result }]) => ({
       ...acc,
       [token]: JSON.parse(Result).balance
     }),
     {}
   );
+};
 
 const useTokenBalance = (
   address: string
@@ -52,7 +57,11 @@ const useTokenBalance = (
             }))
           );
 
-          const { data } = await client.query({ query: queries });
+          const { data } = await client.query({
+            query: queries,
+            errorPolicy: "ignore"
+          });
+
           setResult(parseResult(data));
         } catch (error) {
           setResult({});
