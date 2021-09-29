@@ -69,13 +69,18 @@ export const MsgBox = ({ msg, log }: { msg: Msg; log?: Log }) => (
   <div className={s.msgBox}>
     <div className={s.type}>{sliceMsgType(msg.type)}</div>
     {Object.keys(msg.value).map((key: string, index: number) => {
-      const content = getContent(msg, key);
-      return (
-        <section className={s.msgWrapper} key={index}>
-          <span className={s.key}>{key}</span>
-          {content}
-        </section>
-      );
+      if (key === "wasm_byte_code") {
+        //ignore wasm_byte_code in MsgStoreCode
+        return <></>;
+      } else {
+        const content = getContent(msg, key);
+        return (
+          <section className={s.msgWrapper} key={index}>
+            <span className={s.key}>{key}</span>
+            {content}
+          </section>
+        );
+      }
     })}
     {log?.events && renderEventlog(log.events)}
   </div>
