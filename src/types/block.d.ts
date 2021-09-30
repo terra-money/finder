@@ -8,7 +8,7 @@ interface BlockHeader {
   };
 }
 
-interface Block {
+interface OldBlock {
   // Before Columbus-3 there was block_meta
   block_meta?: {
     block_id: {
@@ -26,4 +26,15 @@ interface Block {
       txs: string[];
     };
   };
+}
+
+interface Block {
+  chainId: string;
+  height: number;
+  timestamp: string;
+  proposer: {
+    moniker: string;
+    operatorAddress: string;
+  };
+  txs: TxResponse[];
 }
