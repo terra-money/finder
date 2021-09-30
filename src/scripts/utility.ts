@@ -11,7 +11,7 @@ import { isInteger } from "./math";
 export const DEFAULT_NETWORK =
   process.env.REACT_APP_DEFAULT_NETWORK ||
   networksConfig[0].key ||
-  "columbus-4";
+  "columbus-5";
 export const DEFAULT_CURRENCY = `uusd`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
 export const DEFAULT_MANTLE = "https://mantle.terra.dev";
