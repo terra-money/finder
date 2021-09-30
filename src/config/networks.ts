@@ -1,6 +1,6 @@
 const networks = [
   {
-    key: "columbus-4",
+    key: "columbus-5",
     fcd: "https://fcd.terra.dev",
     mantle: "https://mantle.terra.dev"
   },
@@ -21,11 +21,6 @@ const networks = [
   },
   {
     // separator
-  },
-  {
-    key: "tequila-0004",
-    fcd: "https://tequila-fcd.terra.dev",
-    mantle: "https://tequila-mantle.terra.dev"
   },
   {
     key: "bombay-12",
