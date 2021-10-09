@@ -3,12 +3,9 @@
   font-style: normal;
   font-weight: 400;
   src: local("Material Icons"), local("MaterialIcons-Regular"),
-    url("https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/MaterialIcons-Regular.woff2")
-      format("woff2"),
-    url("https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/MaterialIcons-Regular.woff")
-      format("woff"),
-    url("https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/MaterialIcons-Regular.ttf")
-      format("truetype");
+    url("../fonts/MaterialIcons-Regular.woff2") format("woff2"),
+    url("../fonts/MaterialIcons-Regular.woff") format("woff"),
+    url("../fonts/MaterialIcons-Regular.ttf") format("truetype");
 }
 
 .material-icons {
