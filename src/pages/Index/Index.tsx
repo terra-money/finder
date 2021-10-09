@@ -3,16 +3,16 @@ import s from "./Index.module.scss";
 import Search from "../../components/Search";
 import SelectNetworks from "../../components/SelectNetworks";
 import SelectCurrency from "../../components/SelectCurrency";
+import logo from "../../images/logo.svg";
+import terrafinder from "../../images/terrafinder.jpg";
+import backgroundVideo from "../../videos/terrafinder.mp4";
 
 const Index = () => {
   return (
     <div className={s.container}>
       <div className={s.content}>
         <div className={s.logo}>
-          <img
-            src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/logo.svg"
-            alt=""
-          />
+          <img src={logo} alt="logo" />
         </div>
         <Search className={s.search} />
       </div>
@@ -25,12 +25,9 @@ const Index = () => {
         muted
         loop
         className={s.background}
-        poster="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/terrafinder.jpg"
+        poster={terrafinder}
       >
-        <source
-          src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/terrafinder.mp4"
-          type="video/mp4"
-        />
+        <source src={backgroundVideo} type="video/mp4" />
       </video>
     </div>
   );

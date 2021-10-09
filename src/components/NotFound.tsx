@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import s from "./NotFound.module.scss";
+import earth from "../images/earth.svg";
 
 type Props = {
   keyword?: string;
@@ -29,10 +30,7 @@ const NotFound = ({ keyword }: Props) => {
           </>
         )}
 
-        <img
-          src="https://s3.ap-northeast-2.amazonaws.com/terra.money.home/static/finder/earth.svg"
-          alt=""
-        />
+        <img src={earth} alt="earth" />
         <Link to="/">
           <span>Back to Home</span>
         </Link>
