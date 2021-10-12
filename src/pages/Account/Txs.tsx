@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isEmpty } from "lodash";
+import {
+  LogFinderAmountResult,
+  getTxAmounts,
+  createLogMatcherForAmounts
+} from "@terra-money/log-finder-ruleset";
 import Pagination from "../../components/Pagination";
 import FlexTable from "../../components/FlexTable";
 import Card from "../../components/Card";
@@ -16,11 +21,6 @@ import {
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
-import {
-  LogFinderAmountResult,
-  getTxAmounts,
-  createLogMatcherForAmounts
-} from "../../logfinder";
 import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
 import { useNetwork } from "../../HOCs/WithFetch";
