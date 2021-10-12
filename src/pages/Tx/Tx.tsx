@@ -3,16 +3,16 @@ import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get, last, isArray, isObject, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
+import {
+  getTxCanonicalMsgs,
+  createLogMatcherForActions
+} from "@terra-money/log-finder-ruleset";
 import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import { useNetwork } from "../../HOCs/WithFetch";
 import format from "../../scripts/format";
-import {
-  getTxCanonicalMsgs,
-  createLogMatcherForActions
-} from "../../logfinder";
 import { fcdUrl } from "../../scripts/utility";
 import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";

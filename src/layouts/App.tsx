@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { Dictionary } from "ramda";
+import {
+  createActionRuleSet,
+  createAmountRuleSet
+} from "@terra-money/log-finder-ruleset";
 import routes from "../routes";
 import ErrorBoundary from "../components/ErrorBoundary";
-import { createActionRuleSet, createAmountRuleSet } from "../logfinder";
 import { useNetwork, useRequest } from "../HOCs/WithFetch";
 import { Denoms } from "../store/DenomStore";
 import {
