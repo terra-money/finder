@@ -1,6 +1,18 @@
 @import "../../styles/mixins";
 @import "../../styles/variables";
 
+.meta {
+  @media (max-width: $breakpoint - 1) {
+    display: none;
+  }
+
+  font-size: 12px;
+  font-weight: normal;
+  opacity: 0.5;
+  margin-left: 10px;
+  line-height: 36px;
+}
+
 .card {
   display: flex;
 
