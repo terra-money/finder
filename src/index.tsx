@@ -26,7 +26,7 @@ if (
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { refetchOnMount: false, refetchOnWindowFocus: false }
+    queries: { refetchOnWindowFocus: false }
   }
 });
 

@@ -37,7 +37,7 @@ const TxTax = ({ log }: { log: Log }) => {
       {keys.map((denom, key) => (
         <TxAmount
           index={key}
-          amount={result[denom].toString()}
+          amount={result[denom]?.toString()}
           denom={denom}
           key={key}
         />

@@ -203,7 +203,7 @@ const getRow = (
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg);
   const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
-  const [amount, denom] = fee.split(" ");
+  const feeData = fee?.split(" ");
 
   return [
     <span>
@@ -248,6 +248,8 @@ const getRow = (
         : "-"}
     </span>,
     <span>{fromISOTime(timestamp.toString())}</span>,
-    <span>{<TxAmount amount={amount} denom={denom} isFormatAmount />}</span>
+    <span>
+      {<TxAmount amount={feeData?.[0]} denom={feeData?.[1]} isFormatAmount />}
+    </span>
   ];
 };

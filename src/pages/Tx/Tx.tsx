@@ -141,7 +141,7 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
                 <div className={s.body}>
-                  {logs.length ? (
+                  {logs?.length ? (
                     logs.map((log, key) => <TxTax log={log} key={key} />)
                   ) : (
                     <>0 Luna</>
