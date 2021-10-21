@@ -5,10 +5,13 @@ import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
 import { fromNow, sliceMsgType } from "../../scripts/utility";
-import format from "../../scripts/format";
+import TxAmount from "../Tx/TxAmount";
 
 const getRow = (response: TxResponse) => {
   const { txhash, tx, height, timestamp } = response;
+
+  const fee = get(tx, `value.fee.amount[0]`);
+
   return [
     <span>
       <Finder q="tx" v={txhash}>
@@ -17,12 +20,11 @@ const getRow = (response: TxResponse) => {
     </span>,
     <span className="type">{sliceMsgType(tx.value.msg[0].type)}</span>,
     <span>
-      {isEmpty(tx.value.fee.amount)
-        ? "0 Luna"
-        : format.coin({
-            amount: get(tx, `value.fee.amount[0].amount`),
-            denom: get(tx, `value.fee.amount[0].denom`)
-          })}
+      {isEmpty(tx.value.fee.amount) ? (
+        "0 Luna"
+      ) : (
+        <TxAmount amount={fee.amount} denom={fee.denom} />
+      )}
     </span>,
     <span>
       <Finder q="blocks" v={height}>
