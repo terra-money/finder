@@ -10,3 +10,9 @@ interface Contracts {
   name: string;
   icon: string;
 }
+
+interface Chains {
+  name: string;
+  chainID: string;
+  lcd: string;
+}

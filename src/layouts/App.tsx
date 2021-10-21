@@ -19,6 +19,7 @@ import { Whitelist } from "../store/WhitelistStore";
 import { Contracts } from "../store/ContractStore";
 import { transformChainId } from "../scripts/utility";
 import s from "./App.module.scss";
+import { Chains } from "../store/ChainsStore";
 
 type TokenList = Dictionary<Whitelist>;
 type ContractList = Dictionary<Contracts>;
@@ -32,6 +33,8 @@ const App = () => {
   const { data: contracts } = useTerraAssets<Dictionary<ContractList>>(
     "cw20/contracts.json"
   );
+  const { data: chains } = useTerraAssets<Dictionary<Chains>>("chains.json");
+
   const response: ActiveDenom = useRequest({ url: `/oracle/denoms/actives` });
 
   const setWhitelist = useSetRecoilState(Whitelist);
@@ -39,6 +42,7 @@ const App = () => {
   const setActionRules = useSetRecoilState(LogfinderActionRuleSet);
   const setAmountRules = useSetRecoilState(LogfinderAmountRuleSet);
   const setDenoms = useSetRecoilState(Denoms);
+  const setChains = useSetRecoilState(Chains);
 
   useEffect(() => {
     const actionRules = createActionRuleSet(network);
@@ -46,10 +50,11 @@ const App = () => {
     setActionRules(actionRules);
     setAmountRules(amountRules);
 
-    if (whitelist && contracts && response.data?.result) {
+    if (whitelist && contracts && chains && response.data?.result) {
       setWhitelist(whitelist[network]);
       setContracts(contracts[network]);
       setDenoms(response.data.result);
+      setChains(chains);
     }
   }, [
     response,
@@ -57,11 +62,13 @@ const App = () => {
     whitelist,
     contracts,
     chainId,
+    chains,
     setDenoms,
     setActionRules,
     setAmountRules,
     setWhitelist,
-    setContracts
+    setContracts,
+    setChains
   ]);
 
   return (
