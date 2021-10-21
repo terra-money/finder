@@ -6,32 +6,31 @@ import format from "../../scripts/format";
 import Card from "../../components/Card";
 import Amount from "../../components/Amount";
 import { ReactComponent as Terra } from "../../images/Terra.svg";
+import { ReactComponent as IBC } from "../../images/IBC.svg";
 import s from "./AmountCard.module.scss";
 
 type Props = {
   denom: string;
   amount: string;
+  path?: string;
+  hash?: string;
   icon?: string;
   button?: ReactNode;
   children?: ReactNode;
   currency?: Currency;
 };
 
-const AmountCard = ({
-  denom,
-  icon,
-  amount,
-  button,
-  children,
-  currency
-}: Props) => {
+const AmountCard = (props: Props) => {
+  const { denom, icon, amount, path, hash, button, children, currency } = props;
   const size = { width: 30, height: 30 };
   const iconLink = `https://assets.terra.money/icon/60/${denom}.png`;
   const [iconError, setIconError] = useState(false);
 
   const iconRender = (
     <div className={s.icon}>
-      {icon ? (
+      {hash && path ? (
+        <IBC {...size} />
+      ) : icon ? (
         <img src={icon} alt={denom} {...size} />
       ) : !iconError ? (
         <img
@@ -53,6 +52,12 @@ const AmountCard = ({
           <div className={s.token_wrapper}>
             {iconRender}
             <h1 className={s.denom}>{denom}</h1>
+            {hash && path && (
+              <span className={s.meta}>
+                {format.truncate(hash, [6, 6])} ({path.replace("transfer/", "")}
+                )
+              </span>
+            )}
           </div>
           <section className={s.action}>
             <Amount className={s.amount}>

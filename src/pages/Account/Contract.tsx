@@ -1,9 +1,7 @@
 import React, { ReactNode } from "react";
 import format from "../../scripts/format";
 import WithFetch from "../../HOCs/WithFetch";
-import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import Flex from "../../components/Flex";
-import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
 import ExtLink from "../../components/ExtLink";
@@ -13,11 +11,10 @@ import ModalWithButton from "../../components/ModalWithButton";
 import Txs from "./Txs";
 import Query from "./Query";
 import Unbondings from "./Unbondings";
-import AmountCard from "./AmountCard";
 import CopyAddress from "./CopyAddress";
 import Delegations from "./Delegations";
-import AvailableList from "./AvailableList";
 import ContractInfo from "./ContractInfo";
+import TokenBalance from "./TokenBalance";
 import s from "./Contract.module.scss";
 
 const Contract = ({ address, admin, code, info, ...data }: Contract) => {
@@ -26,7 +23,6 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
     <ExtLink href={code?.info.url}>{code?.info.url}</ExtLink>
   );
 
-  const tokens = useTokenBalance(address);
   const migratableValue = migratable !== undefined && String(migratable);
 
   return (
@@ -68,39 +64,10 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
       </Card>
 
       <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
-        {({ balance }: Account) => (
-          <Card title="Available" bordered headerClassName={s.cardTitle}>
-            {balance.length ? (
-              <div className={s.cardBodyContainer}>
-                <AvailableList list={balance} />
-              </div>
-            ) : (
-              <Card>
-                <Info icon="info_outline" title="">
-                  This account doesn't hold any coins yet.
-                </Info>
-              </Card>
-            )}
-          </Card>
+        {({ balance, vesting }: Account) => (
+          <TokenBalance address={address} balance={balance} vesting={vesting} />
         )}
       </WithFetch>
-
-      {tokens?.list?.filter(t => t.balance !== "0").length ? (
-        <Card title="Tokens" bordered headerClassName={s.cardTitle}>
-          <div className={s.cardBodyContainer}>
-            {tokens.list
-              .filter(t => t.balance !== "0")
-              .map((t, i) => (
-                <AmountCard
-                  key={i}
-                  denom={t.symbol}
-                  amount={t.balance}
-                  icon={t.icon}
-                />
-              ))}
-          </div>
-        </Card>
-      ) : undefined}
 
       <WithFetch url={`/v1/staking/${address}`}>
         {(staking: Staking) => (

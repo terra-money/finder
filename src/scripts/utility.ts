@@ -160,3 +160,5 @@ export const splitCoinData = (coin: string) => {
     }
   }
 };
+
+export const isIbcDenom = (string = "") => string.startsWith("ibc/");

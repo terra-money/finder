@@ -1,0 +1,19 @@
+@import "../../styles/list";
+
+.cardTitle {
+  background: $table-head;
+}
+
+.cardBodyContainer {
+  overflow-x: auto;
+}
+
+/* contract */
+.h3 {
+  font-size: 14px;
+  font-weight: 500;
+
+  &:not(:first-child) {
+    margin-top: 25px;
+  }
+}
