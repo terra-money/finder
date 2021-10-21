@@ -4,7 +4,7 @@ import TxAmount from "./TxAmount";
 const TxTax = ({ log }: { log: Log }) => {
   const result: { [key: string]: number } = {};
 
-  if (!isObject(log)) {
+  if (!isObject(log) || !log) {
     return <>0 Luna</>;
   }
 

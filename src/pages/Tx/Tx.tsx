@@ -120,14 +120,19 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             </>
           )}
         </div>
-        <div className={s.row}>
-          <div className={s.head}>Transaction fee</div>
-          <div className={s.body}>
-            {fee.map((fee, key) => (
-              <TxAmount index={key} {...fee} key={key} />
-            ))}
+        {fee?.length ? (
+          <div className={s.row}>
+            <div className={s.head}>Transaction fee</div>
+            <div className={s.body}>
+              {fee.map((fee, key) => (
+                <TxAmount index={key} {...fee} key={key} />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
+
         {isPending ? (
           <></>
         ) : (
@@ -153,7 +158,6 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             </div>
           </>
         )}
-
         {!isEmpty(matchedMsg?.flat()) && (
           <div className={s.row}>
             <div className={s.head}>Action</div>
