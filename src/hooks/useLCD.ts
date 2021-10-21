@@ -1,19 +1,17 @@
 import { useMemo } from "react";
 import { LCDClient } from "@terra-money/terra.js";
 import { useNetwork } from "../HOCs/WithFetch";
-import { transformChainId } from "../scripts/utility";
-
-const MAINNET_URL = "https://lcd.terra.dev";
-const TESTNET_URL = "https://bombay-lcd.terra.dev";
+import { DEFAULT_LCD } from "../scripts/utility";
+import useNetworkConfig from "./useNetworkConfig";
 
 const useLCD = () => {
+  const config = useNetworkConfig();
   const chainID = useNetwork();
-  const networkName = transformChainId(chainID);
-  const url = networkName === "mainnet" ? MAINNET_URL : TESTNET_URL;
+  const url = config?.lcd || DEFAULT_LCD;
 
   const lcd = useMemo(
-    () => new LCDClient({ chainID, URL: url }),
-    [chainID, url]
+    () => new LCDClient({ URL: url, chainID }),
+    [url, chainID]
   );
   return lcd;
 };

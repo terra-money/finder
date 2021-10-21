@@ -24,7 +24,11 @@ if (
   Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { refetchOnMount: false, refetchOnWindowFocus: false }
+  }
+});
 
 const Root = () => {
   const { push } = useHistory();

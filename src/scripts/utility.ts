@@ -14,6 +14,7 @@ export const DEFAULT_NETWORK =
   "columbus-5";
 export const DEFAULT_CURRENCY = `uusd`;
 export const DEFAULT_FCD = `https://fcd.terra.dev`;
+export const DEFAULT_LCD = "https://lcd.terra.dev";
 export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
 export const TERRA_ADDRESS_REGEX = /(terra[0-9][a-z0-9]{38})/g;
