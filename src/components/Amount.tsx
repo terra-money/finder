@@ -5,6 +5,7 @@ import { Whitelist } from "../store/WhitelistStore";
 import { Contracts } from "../store/ContractStore";
 import { isTerraAddress } from "../scripts/utility";
 import format from "../scripts/format";
+import useDenomTrace from "../hooks/useDenomTrace";
 
 type Props = {
   estimated?: boolean;
@@ -22,7 +23,7 @@ const renderDenom = (str: string, whitelist: Tokens, contracts: Contract) => {
   if (isTerraAddress(str) && (list || contract)) {
     return list?.symbol ? list?.symbol : contract?.name;
   } else if (format.denom(str).length >= 40) {
-    return "cw20Token";
+    return "Token";
   } else {
     return format.denom(str);
   }
@@ -35,13 +36,17 @@ const Amount = (props: Props) => {
   const whitelist: Tokens = useRecoilValue(Whitelist);
   const contracts: Contract = useRecoilValue(Contracts);
 
+  const { data: ibcDenom } = useDenomTrace(denom);
+
   return (
     <span className={className} style={{ fontSize }}>
       {estimated && "≈ "}
       {integer}
       <small>
         .{decimal}
-        {denom && ` ${renderDenom(denom, whitelist, contracts)}`}
+        {ibcDenom
+          ? ` ${format.denom(ibcDenom.base_denom)}`
+          : denom && ` ${renderDenom(denom, whitelist, contracts)}`}
       </small>
     </span>
   );

@@ -25,6 +25,7 @@ import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
 import { useNetwork } from "../../HOCs/WithFetch";
 import s from "./Txs.module.scss";
+import TxAmount from "../Tx/TxAmount";
 
 type Fee = {
   denom: string;
@@ -201,6 +202,8 @@ const getRow = (
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg);
+  const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
+  const feeData = fee?.split(" ");
 
   return [
     <span>
@@ -245,6 +248,8 @@ const getRow = (
         : "-"}
     </span>,
     <span>{fromISOTime(timestamp.toString())}</span>,
-    <span>{getTxFee(txBody?.value?.fee?.amount?.[0])}</span>
+    <span>
+      {<TxAmount amount={feeData?.[0]} denom={feeData?.[1]} isFormatAmount />}
+    </span>
   ];
 };

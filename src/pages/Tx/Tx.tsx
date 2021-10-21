@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
-import { get, last, isArray, isObject, isEmpty } from "lodash";
+import { get, last, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
 import {
   getTxCanonicalMsgs,
@@ -12,7 +12,6 @@ import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import { useNetwork } from "../../HOCs/WithFetch";
-import format from "../../scripts/format";
 import { fcdUrl } from "../../scripts/utility";
 import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
@@ -20,111 +19,18 @@ import Action from "./Action";
 import Pending from "./Pending";
 import s from "./Tx.module.scss";
 import Searching from "./Searching";
+import TxAmount from "./TxAmount";
+import TxTax from "./TxTax";
 
-function isSendTx(response: TxResponse) {
+const isSendTx = (response: TxResponse) => {
   const type = get(response, "tx.value.msg[0].type");
   return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
-}
+};
 
-function getAmountAndDenom(tax: string) {
-  const result = /-?\d*\.?\d+/g.exec(tax);
-
-  if (!result) {
-    return {
-      amount: 0,
-      denom: ""
-    };
-  }
-
-  return {
-    amount: +result[0],
-    denom: tax.slice(result[0].length)
-  };
-}
-
-function getTotalTax(txResponse: TxResponse) {
-  const logs = get(txResponse, "logs");
-
-  if (!isArray(logs)) {
-    return `0 Luna`;
-  }
-
-  const result: { [key: string]: number } = {};
-
-  logs.forEach(log => {
-    if (!isObject(log)) {
-      return;
-    }
-
-    try {
-      const tax = get(log, "log.tax");
-
-      if (typeof tax !== "string" || tax.length === 0) {
-        return;
-      }
-
-      tax.split(",").forEach(tax => {
-        const { amount, denom } = getAmountAndDenom(tax);
-
-        if (denom && amount) {
-          result[denom] = amount + (result[denom] || 0);
-        }
-      });
-    } catch (err) {
-      // ignore JSON.parse error
-    }
-  });
-
-  const keys = Object.keys(result);
-
-  if (!keys.length) {
-    return `0 Luna`;
-  }
-
-  return keys
-    .map(
-      denom =>
-        `${format.coin({
-          amount: result[denom].toString(),
-          denom
-        })}`
-    )
-    .join(", ");
-}
-
-function getTotalFee(txResponse: TxResponse) {
-  const amount = get(txResponse, "tx.value.fee.amount");
-
-  if (!amount) {
-    return `0 Luna`;
-  }
-
-  const result: { [key: string]: string } = {};
-
-  amount.forEach((a: CoinData) => {
-    if (!isObject(a)) {
-      return;
-    }
-
-    result[a.denom] = a.amount;
-  });
-
-  const keys = Object.keys(result);
-
-  if (!keys.length) {
-    return `0 Luna`;
-  }
-
-  return keys
-    .map(
-      denom =>
-        `${format.coin({
-          amount: result[denom],
-          denom
-        })}`
-    )
-    .join(", ");
-}
+type Coin = {
+  amount: string;
+  denom: string;
+};
 
 const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const { hash } = match.params;
@@ -140,8 +46,10 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   }
 
   const isPending = !response?.height;
-  const matchedMsg =
-    response && getTxCanonicalMsgs(JSON.stringify(response), logMatcher);
+  const matchedMsg = getTxCanonicalMsgs(JSON.stringify(response), logMatcher);
+
+  const fee: Coin[] = get(response, "tx.value.fee.amount");
+  const logs = get(response, "logs");
 
   return (
     <>
@@ -212,10 +120,19 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             </>
           )}
         </div>
-        <div className={s.row}>
-          <div className={s.head}>Transaction fee</div>
-          <div className={s.body}>{getTotalFee(response)}</div>
-        </div>
+        {fee?.length ? (
+          <div className={s.row}>
+            <div className={s.head}>Transaction fee</div>
+            <div className={s.body}>
+              {fee.map((fee, key) => (
+                <TxAmount index={key} {...fee} key={key} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
         {isPending ? (
           <></>
         ) : (
@@ -223,7 +140,13 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             {isSendTx(response) && (
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
-                <div className={s.body}>{getTotalTax(response)}</div>
+                <div className={s.body}>
+                  {logs?.length ? (
+                    logs.map((log, key) => <TxTax log={log} key={key} />)
+                  ) : (
+                    <>0 Luna</>
+                  )}
+                </div>
               </div>
             )}
             <div className={s.row}>
@@ -235,7 +158,6 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
             </div>
           </>
         )}
-
         {!isEmpty(matchedMsg?.flat()) && (
           <div className={s.row}>
             <div className={s.head}>Action</div>
