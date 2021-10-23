@@ -1,7 +1,7 @@
 import React from "react";
 import { AccAddress } from "@terra-money/terra.js";
 import { isNativeDenom, readAmount, readDenom } from "terra-utils";
-import { splitTokenText } from "./helpers/utility";
+import { formatDenom, splitTokenText } from "./helpers/utility";
 import { DEFAULT_DECIMALS } from "./helpers/constants";
 import useTokenContractQuery from "./helpers/useTokenContractQuery";
 import TokenAddress from "./TokenAddress";
@@ -20,7 +20,7 @@ const Coin = ({ children: coin }: { children: string }) => {
   ) : isNativeDenom(token) ? (
     readDenom(token)
   ) : data ? (
-    <>{readDenom(data.base_denom)}</>
+    <>{formatDenom(data?.base_denom)}</>
   ) : (
     <>{token}</>
   );

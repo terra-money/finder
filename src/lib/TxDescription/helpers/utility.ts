@@ -1,3 +1,5 @@
+import { readDenom } from "terra-utils";
+
 export const REGEXP = {
   ADDRESS: /(terra1[a-z0-9]{38})|(terravaloper[a-z0-9]{39})/g,
   COIN: /^\d+((terra1[a-z0-9]{38})|(u[a-z]{1,4}))/g,
@@ -12,3 +14,15 @@ export const splitTokenText = (string = "") => {
 
 export const isCoins = (word: string) =>
   word.match(REGEXP.COIN) || word.match(REGEXP.IBC);
+
+export const formatDenom = (denom: string) => {
+  if (denom.startsWith("u")) {
+    try {
+      return readDenom(denom);
+    } catch {
+      return denom.replace("u", "").toUpperCase();
+    }
+  } else {
+    return denom;
+  }
+};
