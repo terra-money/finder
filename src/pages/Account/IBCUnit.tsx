@@ -9,7 +9,7 @@ type Props = {
 
 const IBCUnit = ({ denom, available }: Props) => {
   const hash = denom.replace("ibc/", "");
-  const { data } = useDenomTrace(denom);
+  const data = useDenomTrace(denom);
 
   if (!data) {
     return <>{format.truncate(hash, [6, 6])}</>;

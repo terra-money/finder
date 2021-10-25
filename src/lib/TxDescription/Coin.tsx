@@ -1,4 +1,3 @@
-import React from "react";
 import { AccAddress } from "@terra-money/terra.js";
 import { isNativeDenom, readAmount, readDenom } from "terra-utils";
 import { formatDenom, splitTokenText } from "./helpers/utility";
@@ -11,7 +10,7 @@ import useDenomTrace from "../../hooks/useDenomTrace";
 const Coin = ({ children: coin }: { children: string }) => {
   const { amount, token } = splitTokenText(coin);
   const { data: tokenInfo } = useTokenContractQuery(token);
-  const { data } = useDenomTrace(coin.replace(amount, ""));
+  const data = useDenomTrace(coin.replace(amount, ""));
 
   const unit = AccAddress.validate(token) ? (
     <FinderLink address={token}>
@@ -20,7 +19,7 @@ const Coin = ({ children: coin }: { children: string }) => {
   ) : isNativeDenom(token) ? (
     readDenom(token)
   ) : data ? (
-    <>{formatDenom(data?.base_denom)}</>
+    <>{formatDenom(data.base_denom)}</>
   ) : (
     <>{token}</>
   );

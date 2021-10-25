@@ -36,7 +36,7 @@ const Amount = (props: Props) => {
   const whitelist: Tokens = useRecoilValue(Whitelist);
   const contracts: Contract = useRecoilValue(Contracts);
 
-  const { data: ibcDenom } = useDenomTrace(denom);
+  const data = useDenomTrace(denom);
 
   return (
     <span className={className} style={{ fontSize }}>
@@ -44,8 +44,8 @@ const Amount = (props: Props) => {
       {integer}
       <small>
         .{decimal}
-        {ibcDenom
-          ? ` ${format.denom(ibcDenom.base_denom)}`
+        {data
+          ? ` ${format.denom(data.base_denom)}`
           : denom && ` ${renderDenom(denom, whitelist, contracts)}`}
       </small>
     </span>
