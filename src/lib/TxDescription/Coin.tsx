@@ -3,9 +3,9 @@ import { isNativeDenom, readAmount, readDenom } from "terra-utils";
 import { formatDenom, splitTokenText } from "./helpers/utility";
 import { DEFAULT_DECIMALS } from "./helpers/constants";
 import useTokenContractQuery from "./helpers/useTokenContractQuery";
+import useDenomTrace from "../../hooks/useDenomTrace";
 import TokenAddress from "./TokenAddress";
 import FinderLink from "./FinderLink";
-import useDenomTrace from "../../hooks/useDenomTrace";
 
 const Coin = ({ children: coin }: { children: string }) => {
   const { amount, token } = splitTokenText(coin);
