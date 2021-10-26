@@ -17,7 +17,12 @@ const formatDenom = (denom: string): string => {
 
   if (denom[0] === "u") {
     const f = denom.slice(1);
-    return f === "luna" ? "Luna" : f.slice(0, 2).toUpperCase() + "T";
+
+    if (f.length > 3) {
+      return f === "luna" ? "Luna" : f.toUpperCase();
+    }
+
+    return f.slice(0, 2).toUpperCase() + "T";
   }
 
   return denom;

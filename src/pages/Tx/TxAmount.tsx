@@ -9,19 +9,17 @@ interface Props {
 }
 
 const TxAmount = ({ index, amount, denom, isFormatAmount }: Props) => {
-  const { data: ibcToken } = useDenomTrace(denom);
+  const data = useDenomTrace(denom);
 
   if (!amount || !denom) {
     return <>0 Luna</>;
   }
 
   const renderAmount = isFormatAmount ? amount : format.amount(amount);
-  if (ibcToken) {
-    const { base_denom } = ibcToken;
-
+  if (data) {
     return (
       <>
-        {renderAmount} {format.denom(base_denom)}
+        {renderAmount} {format.denom(data.base_denom)}
       </>
     );
   }
