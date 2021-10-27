@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get, last, isEmpty } from "lodash";
@@ -13,7 +13,7 @@ import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import { useNetwork } from "../../HOCs/WithFetch";
 import { fcdUrl } from "../../scripts/utility";
-import { fromISOTime, fromNow, sliceMsgType } from "../../scripts/utility";
+import { fromISOTime, fromNow } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
 import Pending from "./Pending";
@@ -21,11 +21,6 @@ import s from "./Tx.module.scss";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
-
-const isSendTx = (response: TxResponse) => {
-  const type = get(response, "tx.value.msg[0].type");
-  return [`MsgMultiSend`, `MsgSend`].includes(sliceMsgType(type));
-};
 
 type Coin = {
   amount: string;
@@ -49,7 +44,9 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const matchedMsg = getTxCanonicalMsgs(JSON.stringify(response), logMatcher);
 
   const fee: Coin[] = get(response, "tx.value.fee.amount");
-  const logs = get(response, "logs");
+  const tax: string[] = response.logs
+    ?.map(log => get(log, "log.tax"))
+    .filter(str => str !== "");
 
   return (
     <>
@@ -137,15 +134,16 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
           <></>
         ) : (
           <>
-            {isSendTx(response) && (
+            {!isEmpty(tax) && (
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
                 <div className={s.body}>
-                  {logs?.length ? (
-                    logs.map((log, key) => <TxTax log={log} key={key} />)
-                  ) : (
-                    <>0 Luna</>
-                  )}
+                  {tax.map((tax, key) => (
+                    <Fragment key={key}>
+                      {!!key && ", "}
+                      <TxTax tax={tax} />
+                    </Fragment>
+                  ))}
                 </div>
               </div>
             )}
