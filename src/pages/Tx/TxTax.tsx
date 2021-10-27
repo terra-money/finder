@@ -1,51 +1,22 @@
-import { get, isObject } from "lodash";
 import TxAmount from "./TxAmount";
 
-const TxTax = ({ log }: { log: Log }) => {
-  const result: { [key: string]: number } = {};
-
-  if (!isObject(log) || !log) {
-    return <>0 Luna</>;
-  }
-
-  try {
-    const tax = get(log, "log.tax");
-
-    if (typeof tax !== "string" || tax.length === 0) {
-      return <>0 Luna</>;
-    }
-
-    tax.split(",").forEach(tax => {
-      const { amount, denom } = getAmountAndDenom(tax);
-
-      if (denom && amount) {
-        result[denom] = amount + (result[denom] || 0);
-      }
-    });
-  } catch (err) {
-    // ignore JSON.parse error
-  }
-
-  const keys = Object.keys(result);
-
-  if (!keys.length) {
-    return <>0 Luna</>;
-  }
-
-  return (
-    <>
-      {keys.map((denom, key) => (
-        <TxAmount
-          index={key}
-          amount={result[denom]?.toString()}
-          denom={denom}
-          key={key}
-        />
-      ))}
-    </>
-  );
-};
-
+const TxTax = ({ tax }: { tax: string[] }) => (
+  <>
+    {tax.map((coins, index) =>
+      coins.split(",").map((coin: string, key: number) => {
+        const { amount, denom } = getAmountAndDenom(coin);
+        return (
+          <TxAmount
+            index={index}
+            amount={amount.toString()}
+            denom={denom}
+            key={key}
+          />
+        );
+      })
+    )}
+  </>
+);
 export default TxTax;
 
 const getAmountAndDenom = (tax: string) => {
