@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get, last, isEmpty } from "lodash";
@@ -46,7 +46,8 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   const fee: Coin[] = get(response, "tx.value.fee.amount");
   const tax: string[] = response.logs
     ?.map(log => get(log, "log.tax"))
-    .filter(str => str !== "");
+    .filter(data => typeof data === "string" && data !== "")
+    .flat();
 
   return (
     <>
@@ -138,12 +139,7 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
               <div className={s.row}>
                 <div className={s.head}>Tax</div>
                 <div className={s.body}>
-                  {tax.map((tax, key) => (
-                    <Fragment key={key}>
-                      {!!key && ", "}
-                      <TxTax tax={tax} />
-                    </Fragment>
-                  ))}
+                  <TxTax tax={tax} />
                 </div>
               </div>
             )}

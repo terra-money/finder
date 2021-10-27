@@ -1,11 +1,22 @@
 import TxAmount from "./TxAmount";
 
-const TxTax = ({ tax }: { tax: string }) => {
-  const { amount, denom } = getAmountAndDenom(tax);
-
-  return <TxAmount amount={amount.toString()} denom={denom} />;
-};
-
+const TxTax = ({ tax }: { tax: string[] }) => (
+  <>
+    {tax.map((coins, index) =>
+      coins.split(",").map((coin: string, key: number) => {
+        const { amount, denom } = getAmountAndDenom(coin);
+        return (
+          <TxAmount
+            index={index}
+            amount={amount.toString()}
+            denom={denom}
+            key={key}
+          />
+        );
+      })
+    )}
+  </>
+);
 export default TxTax;
 
 const getAmountAndDenom = (tax: string) => {
