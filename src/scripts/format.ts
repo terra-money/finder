@@ -4,9 +4,9 @@ import { format as formatTZ } from "date-fns-tz";
 const formatDecimal = (number: BigNumber.Value): string =>
   new BigNumber(number).decimalPlaces(6, BigNumber.ROUND_DOWN).toFixed(6);
 
-const formatAmount = (amount: BigNumber.Value): string =>
+const formatAmount = (amount: BigNumber.Value, decimals = 6): string =>
   new BigNumber(amount)
-    .div(1e6)
+    .div(new BigNumber(10).pow(decimals))
     .decimalPlaces(6, BigNumber.ROUND_DOWN)
     .toFormat(6);
 

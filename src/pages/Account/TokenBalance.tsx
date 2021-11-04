@@ -66,6 +66,7 @@ const TokenBalance = ({ balance, vesting, address }: Props) => {
                   denom={t.symbol}
                   amount={t.balance}
                   icon={t.icon}
+                  decimals={t.decimals}
                 />
               ))}
           </div>
