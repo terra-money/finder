@@ -13,6 +13,7 @@ type Props = {
   className?: string;
   denom?: string;
   children?: string;
+  decimals?: number;
 };
 
 type Contract = Dictionary<Contracts>;
@@ -30,11 +31,15 @@ const renderDenom = (str: string, whitelist: Tokens, contracts: Contract) => {
 };
 
 const Amount = (props: Props) => {
-  const { estimated, fontSize, className, denom, children } = props;
-  const [integer, decimal] = format.amount(children || "0").split(".");
-
+  const { estimated, fontSize, className, denom, children, decimals } = props;
   const whitelist: Tokens = useRecoilValue(Whitelist);
   const contracts: Contract = useRecoilValue(Contracts);
+
+  const tokenDecimals = denom ? whitelist[denom]?.decimals : decimals;
+
+  const [integer, decimal] = format
+    .amount(children || "0", tokenDecimals)
+    .split(".");
 
   const data = useDenomTrace(denom);
 

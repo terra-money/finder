@@ -11,6 +11,7 @@ export interface Token {
   icon?: string;
   symbol: string;
   protocol: string;
+  decimals?: number;
 }
 
 export interface TokenBalance extends Token {
@@ -21,7 +22,7 @@ export type Tokens = Dictionary<Token>;
 
 const parseResult = (data: Dictionary<{ Result: string }>) => {
   const removeEmptyObject = Object.fromEntries(
-    Object.entries(data).filter(([key, value]) => value != null)
+    Object.entries(data).filter(([_, value]) => value !== null)
   );
 
   return Object.entries(removeEmptyObject).reduce(

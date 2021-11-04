@@ -18,10 +18,21 @@ type Props = {
   button?: ReactNode;
   children?: ReactNode;
   currency?: Currency;
+  decimals?: number;
 };
 
 const AmountCard = (props: Props) => {
-  const { denom, icon, amount, path, hash, button, children, currency } = props;
+  const {
+    denom,
+    icon,
+    amount,
+    path,
+    hash,
+    button,
+    children,
+    currency,
+    decimals
+  } = props;
   const size = { width: 30, height: 30 };
   const iconLink = `https://assets.terra.money/icon/60/${denom}.png`;
   const [iconError, setIconError] = useState(false);
@@ -60,7 +71,7 @@ const AmountCard = (props: Props) => {
             )}
           </div>
           <section className={s.action}>
-            <Amount className={s.amount}>
+            <Amount className={s.amount} decimals={decimals}>
               {lte(amount, 0) ? "0" : amount}
             </Amount>
             <span className={s.currency}>
