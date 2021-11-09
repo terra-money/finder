@@ -1,7 +1,7 @@
-import { TxDescription } from "../../lib/TxDescription";
+import { TxDescription } from "@terra-money/react-widget";
+import useNetworkConfig from "../../hooks/useNetworkConfig";
 import useLCD from "../../hooks/useLCD";
 import s from "./Action.module.scss";
-import useNetworkConfig from "../../hooks/useNetworkConfig";
 
 const Action = ({ action }: { action: string }) => {
   const { config } = useLCD();
