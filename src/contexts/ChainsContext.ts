@@ -1,32 +1,28 @@
-import { WalletControllerChainOptions } from "@terra-money/wallet-provider";
-import { useLocation } from "react-router";
+import { useParams } from "react-router-dom";
 import { createContext } from "./createContext";
 
-export const [useChainsOptions, ChainsOptionsProvider] =
-  createContext<WalletControllerChainOptions>("Chains");
+export const getChains = () =>
+  fetch("https://assets.terra.money/chains.json")
+    .then(res => res.json())
+    .then((data: Record<string, ChainOption>) => Object.values(data));
 
-export const useChains = () => {
-  const { walletConnectChainIds } = useChainsOptions();
-  return Object.values(walletConnectChainIds) as ChainOption[];
-};
+export const [useChains, ChainsProvider] =
+  createContext<ChainOption[]>("Chains");
 
-export const useDefaultChain = () => {
-  const { defaultNetwork } = useChainsOptions();
-  return defaultNetwork;
-};
-
-export const useCurrentChainPath = () => {
+const useNetworkFromRouteMatch = () => {
   // mainnet | testnet | localterra
-  const { pathname } = useLocation();
-  return pathname.split("/")[1]; /* TODO: 더 간단하게 가져올 방법 확인 */
+  // columbus-* | bombay-*
+  const { network } = useParams();
+  return network;
 };
 
 export const useCurrentChain = () => {
-  const currentChainPath = useCurrentChainPath();
   const chains = useChains();
-  const chain = chains.find(chain => chain.name === currentChainPath);
+  const network = useNetworkFromRouteMatch();
 
-  /* TODO: columbus-5 -> mainnet 컨버트하는 동작 필요 */
+  const chain =
+    chains.find(chain => chain.name === network || chain.chainID === network) ??
+    chains.find(chain => chain.name === "mainnet"); // return mainnet for default chain
 
   if (!chain) throw new Error("Chain is not defined");
 
@@ -35,6 +31,5 @@ export const useCurrentChain = () => {
 
 export const useFCDURL = () => {
   const { lcd } = useCurrentChain();
-  /* TODO: 로컬테라는 lcd 주소 안에 lcd라는 단어가 없음 */
   return lcd.replace("lcd", "fcd");
 };

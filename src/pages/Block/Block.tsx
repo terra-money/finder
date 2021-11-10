@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import TxList from "../Txs";
 import c from "classnames";
 import s from "./Block.module.scss";
@@ -32,12 +32,8 @@ const txsCount = (txCount: number) => (
   </span>
 );
 
-const Block = (
-  props: RouteComponentProps<{ height: string; network: string }>
-) => {
-  const { match } = props;
-  const { height } = match.params;
-
+const Block = () => {
+  const { height } = useParams();
   const { chainID } = useCurrentChain();
 
   return (

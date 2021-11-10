@@ -69,7 +69,7 @@
     "react-dom": "^17.0.2",
     "react-modal": "^3.12.1",
     "react-query": "^3.21.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^6.0.2",
     "react-scripts": "^4",
     "recoil": "^0.3.1",
     "sass": "^1.32.8"

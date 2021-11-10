@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { DenomTrace } from "@terra-money/terra.js/dist/core/ibc-transfer/DenomTrace";
 import { isIbcDenom } from "../scripts/utility";
-import useLCD from "./useLCD";
+import useLCDClient from "./useLCD";
 
 const useDenomTrace = (denom = "") => {
-  const lcd = useLCD();
+  const lcd = useLCDClient();
   const hash = denom.replace("ibc/", "");
   const [ibcData, setIBCData] = useState<DenomTrace>();
   const { data } = useQuery(

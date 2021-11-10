@@ -8,7 +8,7 @@ import Loading from "../../components/Loading";
 import TokenBalance from "./TokenBalance";
 
 const Account = () => {
-  const { address = "" } = useParams<{ address: string }>();
+  const { address = "" } = useParams();
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>

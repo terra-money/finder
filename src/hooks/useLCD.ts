@@ -1,19 +1,18 @@
 import { useMemo } from "react";
 import { LCDClient } from "@terra-money/terra.js";
-import { DEFAULT_LCD } from "../scripts/utility";
-import useNetworkConfig from "./useNetworkConfig";
 import { useCurrentChain } from "../contexts/ChainsContext";
 
-const useLCD = () => {
-  const config = useNetworkConfig();
+const useLCDClient = () => {
+  const { lcd } = useCurrentChain();
   const { chainID } = useCurrentChain();
-  const url = config?.lcd || DEFAULT_LCD;
+  const url = lcd;
 
-  const lcd = useMemo(
+  const lcdClient = useMemo(
     () => new LCDClient({ URL: url, chainID }),
     [url, chainID]
   );
-  return lcd;
+
+  return lcdClient;
 };
 
-export default useLCD;
+export default useLCDClient;

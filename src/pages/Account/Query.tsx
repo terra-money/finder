@@ -27,7 +27,7 @@ const ACE_PROPS = {
 };
 
 const Query = () => {
-  const { address = "" } = useParams<{ address: string }>();
+  const { address = "" } = useParams();
   const [query, setQuery] = useState<string>();
   const [data, setData] = useState<string>();
   const [error, setError] = useState<Error>();

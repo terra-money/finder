@@ -3,14 +3,14 @@ import "core-js";
 import React from "react";
 import ReactDOM from "react-dom";
 import { RecoilRoot } from "recoil";
-import { BrowserRouter, Switch } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { getChainOptions } from "@terra-money/wallet-provider";
+
 import "./index.scss";
 import App from "./layouts/App";
 import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
-import { ChainsOptionsProvider } from "./contexts/ChainsContext";
+import { getChains, ChainsProvider } from "./contexts/ChainsContext";
 
 if (
   process.env.REACT_APP_SENTRY_DSN &&
@@ -25,25 +25,20 @@ const queryClient = new QueryClient({
   }
 });
 
-const Root = () => {
-  return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <Switch>
-          <App />
-        </Switch>
-      </QueryClientProvider>
-    </RecoilRoot>
-  );
-};
-
-getChainOptions().then(chainOptions => {
+getChains().then(chains => {
   ReactDOM.render(
-    <ChainsOptionsProvider value={chainOptions}>
-      <BrowserRouter>
-        <Root />
-      </BrowserRouter>
-    </ChainsOptionsProvider>,
+    <BrowserRouter>
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <ChainsProvider value={chains}>
+            <Routes>
+              <Route path="/*" element={<App />} />
+              <Route path=":network/*" element={<App />} />
+            </Routes>
+          </ChainsProvider>
+        </QueryClientProvider>
+      </RecoilRoot>
+    </BrowserRouter>,
     document.getElementById("root")
   );
 });

@@ -6,7 +6,7 @@ import Account from "./Account";
 import Contract from "./Contract";
 
 const Address = () => {
-  const { address = "" } = useParams<{ address: string }>();
+  const { address = "" } = useParams();
 
   return (
     <WithFetch

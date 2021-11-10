@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { get, last, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
 import {
@@ -26,13 +26,16 @@ type Coin = {
   denom: string;
 };
 
-const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
-  const { hash } = match.params;
+const Tx = () => {
+  const { hash } = useParams();
   const ruleArray = useRecoilValue(LogfinderActionRuleSet);
   const logMatcher = useMemo(
     () => createLogMatcherForActions(ruleArray),
     [ruleArray]
   );
+
+  if (!hash) throw new Error("Tx hash is not defined");
+
   const { data: response, progressState } = usePollTxHash(hash);
 
   if (!response) {
@@ -186,7 +189,7 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   );
 };
 
-export default Txs;
+export default Tx;
 
 /* hooks */
 const INTERVAL = 1000;

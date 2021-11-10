@@ -1,23 +1,21 @@
 import React, { useState } from "react";
-import { withRouter, RouteComponentProps } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useCurrentChain } from "../contexts/ChainsContext";
 import { getEndpointByKeyword } from "../scripts/utility";
 import s from "./Search.module.scss";
 
 type Props = {
   className?: string;
-} & RouteComponentProps;
+};
 
-const Search = ({ className, history }: Props) => {
+const Search = ({ className }: Props) => {
   const [value, setValue] = useState(``);
   const { name } = useCurrentChain();
+  const navigate = useNavigate();
 
   const handleSubmit: Submit = async e => {
     e.preventDefault();
-
-    if (value) {
-      history.push(`/${name}${getEndpointByKeyword(value.trim())}`);
-    }
+    if (value) navigate(`/${name}${getEndpointByKeyword(value.trim())}`);
   };
 
   return (
@@ -38,4 +36,4 @@ const Search = ({ className, history }: Props) => {
   );
 };
 
-export default withRouter(Search);
+export default Search;
