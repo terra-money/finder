@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import c from "classnames";
-import NetworkContext from "../contexts/NetworkContext";
+import { useCurrentChain } from "../contexts/ChainsContext";
 
 type Props = {
   q: string;
@@ -13,11 +13,11 @@ type Props = {
 };
 
 const Finder = ({ q, v, children, className, brand, network }: Props) => {
-  const { network: contextNetwork } = useContext(NetworkContext);
+  const { name } = useCurrentChain();
 
   return (
     <Link
-      to={`/${network || contextNetwork}/${q}/${v || children}`}
+      to={`/${name}/${q}/${v || children}`}
       className={c(className, brand && "text-primary")}
       rel="noopener noreferrer"
     >

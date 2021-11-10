@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import c from "classnames";
 import { intervalToDuration } from "date-fns";
 import s from "./Searching.module.scss";
-import { useNetwork } from "../../HOCs/WithFetch";
+import { useCurrentChain } from "../../contexts/ChainsContext";
 
 const Searching = ({ state, hash }: { state: number; hash: string }) => {
   const progressState = (state / 1) * 100;
   const isSearch = progressState < 100;
   const searching = "#2043b5";
   const failed = "#ff5561";
-  const network = useNetwork();
+  const { chainID } = useCurrentChain();
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     setNow(new Date());
-  }, [network, hash]);
+  }, [chainID, hash]);
 
   const { minutes, seconds } = intervalToDuration({
     start: new Date(),

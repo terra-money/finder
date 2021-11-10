@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { RouteComponentProps, Link } from "react-router-dom";
 import TxList from "../Txs";
 import c from "classnames";
@@ -7,8 +7,8 @@ import s from "./Block.module.scss";
 import Loading from "../../components/Loading";
 import WithFetch from "../../HOCs/WithFetch";
 import { fromISOTime } from "../../scripts/utility";
-import networkContext from "../../contexts/NetworkContext";
 import Finder from "../../components/Finder";
+import { useCurrentChain } from "../../contexts/ChainsContext";
 
 const heightButton = (height: number) => (
   <span className={s.height}>
@@ -37,11 +37,12 @@ const Block = (
 ) => {
   const { match } = props;
   const { height } = match.params;
-  const { network } = useContext(networkContext);
+
+  const { chainID } = useCurrentChain();
 
   return (
     <WithFetch
-      url={`/v1/blocks/${height}?chainId=${network}`}
+      url={`/v1/blocks/${height}?chainId=${chainID}`}
       loading={<Loading />}
     >
       {(blockData: Block) => (

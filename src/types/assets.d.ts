@@ -11,8 +11,9 @@ interface Contracts {
   icon: string;
 }
 
-interface Chains {
+interface ChainOption {
   name: string;
   chainID: string;
   lcd: string;
+  mantle: string;
 }

@@ -11,8 +11,6 @@ import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
-import { useNetwork } from "../../HOCs/WithFetch";
-import { fcdUrl } from "../../scripts/utility";
 import { fromISOTime, fromNow } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
@@ -21,6 +19,7 @@ import s from "./Tx.module.scss";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
+import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
 
 type Coin = {
   amount: string;
@@ -193,8 +192,8 @@ export default Txs;
 const INTERVAL = 1000;
 
 const usePollTxHash = (txhash: string) => {
-  const network = useNetwork();
-  const fcd = fcdUrl(network);
+  const { chainID } = useCurrentChain();
+  const fcdURL = useFCDURL();
 
   const [stored, setStored] = useState<TxResponse>();
   const [progress, setProgress] = useState<number>(0);
@@ -207,8 +206,8 @@ const usePollTxHash = (txhash: string) => {
 
   /* query: tx */
   const { refetch, ...txQuery } = useQuery(
-    [network, txhash, "tx"],
-    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`),
+    [chainID, txhash, "tx"],
+    () => apiClient.get<TxResponse>(fcdURL + `/v1/tx/${txhash}`),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
@@ -219,8 +218,8 @@ const usePollTxHash = (txhash: string) => {
 
   /* query: mempool tx */
   const mempoolQuery = useQuery(
-    [network, txhash, "mempool"],
-    () => apiClient.get<TxResponse>(fcd + `/v1/mempool/${txhash}`),
+    [chainID, txhash, "mempool"],
+    () => apiClient.get<TxResponse>(fcdURL + `/v1/mempool/${txhash}`),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
@@ -243,13 +242,7 @@ const usePollTxHash = (txhash: string) => {
     setProgress(state => (state + 0.0333) % 1);
   }, [mempoolQuery.data, txQuery.data]);
 
-  useEffect(() => {
-    // Reset store, progress and refetch tx when hash, network changed
-    setProgress(0);
-    setStored(undefined);
-    setRefetchTx(true);
-    setRefetchMempool(true);
-  }, [txhash, network]);
+  // TODO: Reset store, progress and refetch tx when hash, network changed
 
   return {
     data: stored,

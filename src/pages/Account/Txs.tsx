@@ -23,9 +23,9 @@ import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
 import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
-import { useNetwork } from "../../HOCs/WithFetch";
 import s from "./Txs.module.scss";
 import TxAmount from "../Tx/TxAmount";
+import { useCurrentChain } from "../../contexts/ChainsContext";
 
 type Fee = {
   denom: string;
@@ -118,7 +118,7 @@ const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
 };
 
 const Txs = ({ address }: { address: string }) => {
-  const network = useNetwork();
+  const { chainID } = useCurrentChain();
   const [offset, setOffset] = useState<number>(0);
 
   const { data, isLoading } = useFCD<{ next: number; txs: TxResponse[] }>(
@@ -143,12 +143,12 @@ const Txs = ({ address }: { address: string }) => {
           logMatcher,
           address
         );
-        return getRow(tx, network, address, matchedLogs);
+        return getRow(tx, chainID, address, matchedLogs);
       });
       setTxsRow(stack => [...stack, ...txRow]);
     }
     // eslint-disable-next-line
-  }, [data, network, address]);
+  }, [data, chainID, address]);
 
   const head = [
     `Tx hash`,

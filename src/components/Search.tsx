@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
+import { useCurrentChain } from "../contexts/ChainsContext";
 import { getEndpointByKeyword } from "../scripts/utility";
 import s from "./Search.module.scss";
-import networkContext from "../contexts/NetworkContext";
 
 type Props = {
   className?: string;
@@ -10,13 +10,13 @@ type Props = {
 
 const Search = ({ className, history }: Props) => {
   const [value, setValue] = useState(``);
-  const { network } = useContext(networkContext);
+  const { name } = useCurrentChain();
 
   const handleSubmit: Submit = async e => {
     e.preventDefault();
 
     if (value) {
-      history.push(getEndpointByKeyword(value.trim(), network));
+      history.push(`/${name}${getEndpointByKeyword(value.trim())}`);
     }
   };
 

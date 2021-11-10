@@ -1,11 +1,10 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Dictionary } from "ramda";
 import { useRecoilValue } from "recoil";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import NetworkContext from "../../contexts/NetworkContext";
 import alias from "./alias";
-import { mantleUri } from "../../scripts/utility";
 import { Whitelist } from "../../store/WhitelistStore";
+import { useCurrentChain } from "../../contexts/ChainsContext";
 
 export interface Token {
   icon?: string;
@@ -38,9 +37,9 @@ const useTokenBalance = (
   address: string
 ): { loading: boolean; whitelist?: Tokens; list?: TokenBalance[] } => {
   const [result, setResult] = useState<Dictionary<string>>();
-  const { network: currentChain } = useContext(NetworkContext);
+
   const whitelist: Tokens = useRecoilValue(Whitelist);
-  const mantle = mantleUri(currentChain);
+  const { mantle } = useCurrentChain();
 
   useEffect(() => {
     if (address && whitelist) {

@@ -1,10 +1,10 @@
 import { useRecoilValue } from "recoil";
-import { useNetwork } from "../HOCs/WithFetch";
+import { useCurrentChain } from "../contexts/ChainsContext";
 import { Chains } from "../store/ChainsStore";
 
 const useNetworkConfig = () => {
   const lcdChains = useRecoilValue(Chains);
-  const chainID = useNetwork();
+  const { chainID } = useCurrentChain();
   const chains = Object.values(lcdChains);
   const config = chains.find(chain => chain.chainID === chainID);
 

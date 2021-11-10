@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import apiClient from "../apiClient";
-import { fcdUrl } from "../scripts/utility";
+import { useFCDURL } from "../contexts/ChainsContext";
 
 const useFetch = ({
   url,
@@ -11,7 +11,7 @@ const useFetch = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState();
 
-  const fcd = fcdUrl(network);
+  const fcdURL = useFCDURL();
 
   const init = (): void => {
     setError(undefined);
@@ -22,7 +22,7 @@ const useFetch = ({
       init();
 
       try {
-        const result = await apiClient.get(fcd + url, { params });
+        const result = await apiClient.get(fcdURL + url, { params });
 
         if (result.data === null) {
           throw new Error("Data is null");
@@ -35,7 +35,7 @@ const useFetch = ({
       setIsLoading(false);
     };
     fetchData();
-  }, [params, url, network, fcd]);
+  }, [params, url, network, fcdURL]);
 
   return { data, isLoading, error };
 };
