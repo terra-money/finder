@@ -7,18 +7,18 @@ import {
 } from "@terra-money/log-finder-ruleset";
 import routes from "../routes";
 import ErrorBoundary from "../components/ErrorBoundary";
+import { useCurrentChain } from "../contexts/ChainsContext";
 import { useRequest } from "../HOCs/WithFetch";
 import { Denoms } from "../store/DenomStore";
 import {
   LogfinderActionRuleSet,
   LogfinderAmountRuleSet
 } from "../store/LogfinderRuleSetStore";
-import useTerraAssets from "../hooks/useTerraAssets";
-import Header from "./Header";
 import { Whitelist } from "../store/WhitelistStore";
 import { Contracts } from "../store/ContractStore";
+import useTerraAssets from "../hooks/useTerraAssets";
+import Header from "./Header";
 import s from "./App.module.scss";
-import { useCurrentChain } from "../contexts/ChainsContext";
 
 type TokenList = Dictionary<Whitelist>;
 type ContractList = Dictionary<Contracts>;
@@ -65,7 +65,7 @@ const App = () => {
   ]);
 
   return (
-    <section className={s.main}>
+    <section className={s.main} key={chainID}>
       <Header />
       <section className={s.content}>
         <ErrorBoundary>{routes}</ErrorBoundary>

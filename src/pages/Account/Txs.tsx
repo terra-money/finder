@@ -14,6 +14,7 @@ import Icon from "../../components/Icon";
 import Finder from "../../components/Finder";
 import Loading from "../../components/Loading";
 import Coin from "../../components/Coin";
+import { useCurrentChain } from "../../contexts/ChainsContext";
 import {
   fromISOTime,
   sliceMsgType,
@@ -23,9 +24,8 @@ import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
 import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
-import s from "./Txs.module.scss";
 import TxAmount from "../Tx/TxAmount";
-import { useCurrentChain } from "../../contexts/ChainsContext";
+import s from "./Txs.module.scss";
 
 type Fee = {
   denom: string;

@@ -11,6 +11,7 @@ import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
+import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
 import { fromISOTime, fromNow } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
@@ -19,23 +20,18 @@ import s from "./Tx.module.scss";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
-import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
 
 type Coin = {
   amount: string;
   denom: string;
 };
 
-const Tx = () => {
-  const { hash } = useParams();
+const TxComponent = ({ hash }: { hash: string }) => {
   const ruleArray = useRecoilValue(LogfinderActionRuleSet);
   const logMatcher = useMemo(
     () => createLogMatcherForActions(ruleArray),
     [ruleArray]
   );
-
-  if (!hash) throw new Error("Tx hash is not defined");
-
   const { data: response, progressState } = usePollTxHash(hash);
 
   if (!response) {
@@ -189,6 +185,15 @@ const Tx = () => {
   );
 };
 
+const Tx = () => {
+  const { hash } = useParams();
+  if (!hash) {
+    throw new Error("Tx hash is not defined");
+  }
+
+  return hash ? <TxComponent hash={hash} key={hash} /> : null;
+};
+
 export default Tx;
 
 /* hooks */
@@ -243,9 +248,7 @@ const usePollTxHash = (txhash: string) => {
     }
 
     setProgress(state => (state + 0.0333) % 1);
-  }, [mempoolQuery.data, txQuery.data]);
-
-  // TODO: Reset store, progress and refetch tx when hash, network changed
+  }, [mempoolQuery.data, txQuery.data, txhash]);
 
   return {
     data: stored,

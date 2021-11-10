@@ -1,22 +1,20 @@
-import React from "react";
 import { Link, useParams } from "react-router-dom";
-import TxList from "../Txs";
 import c from "classnames";
-import s from "./Block.module.scss";
-
+import TxList from "../Txs";
 import Loading from "../../components/Loading";
-import WithFetch from "../../HOCs/WithFetch";
-import { fromISOTime } from "../../scripts/utility";
 import Finder from "../../components/Finder";
 import { useCurrentChain } from "../../contexts/ChainsContext";
+import { fromISOTime } from "../../scripts/utility";
+import WithFetch from "../../HOCs/WithFetch";
+import s from "./Block.module.scss";
 
 const heightButton = (height: number) => (
   <span className={s.height}>
     <span>{height}</span>
-    <Link to={`${height - 1}`}>
+    <Link to={`../blocks/${height - 1}`}>
       <i className="material-icons">chevron_left</i>
     </Link>
-    <Link to={`${height + 1}`}>
+    <Link to={`../blocks/${height + 1}`}>
       <i className="material-icons">chevron_right</i>
     </Link>
   </span>

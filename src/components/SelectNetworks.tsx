@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useChains, useCurrentChain } from "../contexts/ChainsContext";
 
 import s from "./SelectNetworks.module.scss";
@@ -10,11 +10,15 @@ type Props = {
 const SelectNetworks = (props: Props) => {
   const chains = useChains();
   const currentChain = useCurrentChain();
+  const params = useParams();
   const navigate = useNavigate();
 
-  const changeChain = (name = "") =>
-    // TODO: 기존값 유지하면서 URL 변경하기
-    navigate(`/${name === "mainnet" ? "" : name}`, { replace: true });
+  const changeChain = (value = "") => {
+    const prev = params["*"];
+    const isIndex = !prev;
+    const name = isIndex && value === "mainnet" ? "" : "/" + value;
+    navigate(`${name}/${params["*"]}`);
+  };
 
   return (
     <div className={props.className}>

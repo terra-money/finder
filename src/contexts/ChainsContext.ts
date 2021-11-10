@@ -10,8 +10,6 @@ export const [useChains, ChainsProvider] =
   createContext<ChainOption[]>("Chains");
 
 const useNetworkFromRouteMatch = () => {
-  // mainnet | testnet | localterra
-  // columbus-* | bombay-*
   const { network } = useParams();
   return network;
 };
@@ -24,7 +22,9 @@ export const useCurrentChain = () => {
     chains.find(chain => chain.name === network || chain.chainID === network) ??
     chains.find(chain => chain.name === "mainnet"); // return mainnet for default chain
 
-  if (!chain) throw new Error("Chain is not defined");
+  if (!chain) {
+    throw new Error("Chain is not defined");
+  }
 
   return chain;
 };

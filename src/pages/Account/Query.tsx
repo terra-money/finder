@@ -8,10 +8,10 @@ import AceEditor from "react-ace";
 import c from "classnames";
 import apiClient from "../../apiClient";
 import { isJson } from "../../scripts/utility";
+import { useFCDURL } from "../../contexts/ChainsContext";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
 import s from "./Query.module.scss";
-import { useFCDURL } from "../../contexts/ChainsContext";
 
 const ACE_PROPS = {
   mode: "json",

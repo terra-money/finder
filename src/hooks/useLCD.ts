@@ -3,8 +3,7 @@ import { LCDClient } from "@terra-money/terra.js";
 import { useCurrentChain } from "../contexts/ChainsContext";
 
 const useLCDClient = () => {
-  const { lcd } = useCurrentChain();
-  const { chainID } = useCurrentChain();
+  const { lcd, chainID } = useCurrentChain();
   const url = lcd;
 
   const lcdClient = useMemo(

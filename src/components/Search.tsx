@@ -15,7 +15,10 @@ const Search = ({ className }: Props) => {
 
   const handleSubmit: Submit = async e => {
     e.preventDefault();
-    if (value) navigate(`/${name}${getEndpointByKeyword(value.trim())}`);
+
+    if (value) {
+      navigate(`/${name}${getEndpointByKeyword(value.trim())}`);
+    }
   };
 
   return (

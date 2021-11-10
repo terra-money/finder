@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import c from "classnames";
 import { intervalToDuration } from "date-fns";
-import s from "./Searching.module.scss";
 import { useCurrentChain } from "../../contexts/ChainsContext";
+import s from "./Searching.module.scss";
 
 const Searching = ({ state, hash }: { state: number; hash: string }) => {
   const progressState = (state / 1) * 100;
