@@ -35,7 +35,7 @@ const Amount = (props: Props) => {
   const whitelist: Tokens = useRecoilValue(Whitelist);
   const contracts: Contract = useRecoilValue(Contracts);
 
-  const tokenDecimals = denom ? whitelist[denom]?.decimals : decimals;
+  const tokenDecimals = denom ? whitelist?.[denom]?.decimals : decimals;
 
   const [integer, decimal] = format
     .amount(children || "0", tokenDecimals)
