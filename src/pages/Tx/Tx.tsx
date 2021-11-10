@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { get, last, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
 import {
@@ -11,8 +11,7 @@ import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
-import { useNetwork } from "../../HOCs/WithFetch";
-import { fcdUrl } from "../../scripts/utility";
+import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
 import { fromISOTime, fromNow } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
 import Action from "./Action";
@@ -27,8 +26,7 @@ type Coin = {
   denom: string;
 };
 
-const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
-  const { hash } = match.params;
+const TxComponent = ({ hash }: { hash: string }) => {
   const ruleArray = useRecoilValue(LogfinderActionRuleSet);
   const logMatcher = useMemo(
     () => createLogMatcherForActions(ruleArray),
@@ -187,14 +185,23 @@ const Txs = ({ match }: RouteComponentProps<{ hash: string }>) => {
   );
 };
 
-export default Txs;
+const Tx = () => {
+  const { hash } = useParams();
+  if (!hash) {
+    throw new Error("Tx hash is not defined");
+  }
+
+  return hash ? <TxComponent hash={hash} key={hash} /> : null;
+};
+
+export default Tx;
 
 /* hooks */
 const INTERVAL = 1000;
 
 const usePollTxHash = (txhash: string) => {
-  const network = useNetwork();
-  const fcd = fcdUrl(network);
+  const { chainID } = useCurrentChain();
+  const fcdURL = useFCDURL();
 
   const [stored, setStored] = useState<TxResponse>();
   const [progress, setProgress] = useState<number>(0);
@@ -207,8 +214,8 @@ const usePollTxHash = (txhash: string) => {
 
   /* query: tx */
   const { refetch, ...txQuery } = useQuery(
-    [network, txhash, "tx"],
-    () => apiClient.get<TxResponse>(fcd + `/v1/tx/${txhash}`),
+    [chainID, txhash, "tx"],
+    () => apiClient.get<TxResponse>(fcdURL + `/v1/tx/${txhash}`),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
@@ -219,8 +226,8 @@ const usePollTxHash = (txhash: string) => {
 
   /* query: mempool tx */
   const mempoolQuery = useQuery(
-    [network, txhash, "mempool"],
-    () => apiClient.get<TxResponse>(fcd + `/v1/mempool/${txhash}`),
+    [chainID, txhash, "mempool"],
+    () => apiClient.get<TxResponse>(fcdURL + `/v1/mempool/${txhash}`),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
@@ -241,15 +248,7 @@ const usePollTxHash = (txhash: string) => {
     }
 
     setProgress(state => (state + 0.0333) % 1);
-  }, [mempoolQuery.data, txQuery.data]);
-
-  useEffect(() => {
-    // Reset store, progress and refetch tx when hash, network changed
-    setProgress(0);
-    setStored(undefined);
-    setRefetchTx(true);
-    setRefetchMempool(true);
-  }, [txhash, network]);
+  }, [mempoolQuery.data, txQuery.data, txhash]);
 
   return {
     data: stored,

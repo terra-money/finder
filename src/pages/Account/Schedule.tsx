@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import c from "classnames";
 import { percent } from "../../scripts/math";
 import format from "../../scripts/format";
 import Amount from "../../components/Amount";
 import Icon from "../../components/Icon";
 import s from "./Schedule.module.scss";
-import NetworkContext from "../../contexts/NetworkContext";
 
 const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
   const { amount, startTime, endTime, ratio, freedRate } = schedule;
@@ -17,7 +16,6 @@ const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
     "0": "Releasing",
     "1": "Release on"
   };
-  const { network } = useContext(NetworkContext);
 
   return (
     <article className={s.component}>
@@ -44,15 +42,13 @@ const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
           {[startTime, endTime].map(t => `${toISO(t)}`).join("\n ~ ")}
         </p>
 
-        {network !== "columbus-1" && (
-          <div className={s.track}>
-            <div
-              className={c(s.progress, status === 0 && s.active)}
-              style={{ width }}
-              title={width}
-            />
-          </div>
-        )}
+        <div className={s.track}>
+          <div
+            className={c(s.progress, status === 0 && s.active)}
+            style={{ width }}
+            title={width}
+          />
+        </div>
       </header>
     </article>
   );

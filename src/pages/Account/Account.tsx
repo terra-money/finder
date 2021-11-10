@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
 import WithFetch from "../../HOCs/WithFetch";
+import Loading from "../../components/Loading";
 import Delegations from "./Delegations";
 import Unbondings from "./Unbondings";
 import CopyAddress from "./CopyAddress";
-import Txs from "./Txs";
-import Loading from "../../components/Loading";
 import TokenBalance from "./TokenBalance";
+import Txs from "./Txs";
 
 const Account = () => {
-  const { address = "" } = useParams<{ address: string }>();
+  const { address = "" } = useParams();
 
   return (
     <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>

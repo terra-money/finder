@@ -1,7 +1,7 @@
-import React, { ReactNode, useContext } from "react";
+import React, { ReactNode } from "react";
 import FetchError from "../components/FetchError";
+import { useCurrentChain } from "../contexts/ChainsContext";
 import useFetch from "../hooks/useFetch";
-import NetworkContext from "../contexts/NetworkContext";
 
 type Props = FetchProps & {
   loading?: ReactNode;
@@ -31,13 +31,8 @@ const WithFetch = (props: Props) => {
 export default WithFetch;
 
 /* hook */
-export const useNetwork = () => {
-  const { network } = useContext(NetworkContext);
-  return network;
-};
-
 export const useRequest = ({ url, params }: FetchProps) => {
-  const network = useNetwork();
-  const result = useFetch({ url, params, network });
+  const { chainID } = useCurrentChain();
+  const result = useFetch({ url, params, network: chainID });
   return result;
 };

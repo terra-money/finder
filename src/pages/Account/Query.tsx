@@ -7,11 +7,11 @@ import "ace-builds/src-noconflict/theme-github";
 import AceEditor from "react-ace";
 import c from "classnames";
 import apiClient from "../../apiClient";
-import { fcdUrl, isJson } from "../../scripts/utility";
+import { isJson } from "../../scripts/utility";
+import { useFCDURL } from "../../contexts/ChainsContext";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
 import s from "./Query.module.scss";
-import { useNetwork } from "../../HOCs/WithFetch";
 
 const ACE_PROPS = {
   mode: "json",
@@ -27,12 +27,12 @@ const ACE_PROPS = {
 };
 
 const Query = () => {
-  const { address = "" } = useParams<{ address: string }>();
+  const { address = "" } = useParams();
   const [query, setQuery] = useState<string>();
   const [data, setData] = useState<string>();
   const [error, setError] = useState<Error>();
-  const network = useNetwork();
-  const fcd = fcdUrl(network);
+
+  const fcdURL = useFCDURL();
 
   const reset = () => {
     setError(undefined);
@@ -44,7 +44,7 @@ const Query = () => {
     e.preventDefault();
 
     try {
-      const url = `${fcd}/wasm/contracts/${address}/store`;
+      const url = `${fcdURL}/wasm/contracts/${address}/store`;
       const params = query && { query_msg: JSON.parse(query) };
       const { data } = await apiClient.get<{ result: any }>(url, { params });
       const result = JSON.stringify(data.result, null, 2);

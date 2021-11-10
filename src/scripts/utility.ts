@@ -5,29 +5,21 @@ import { Dictionary } from "ramda";
 import { countries, Country } from "countries-list";
 import { filter } from "lodash";
 import { Coin } from "@terra-money/terra.js";
-import networksConfig from "../config/networks";
 import { isInteger } from "./math";
 
-export const DEFAULT_NETWORK =
-  process.env.REACT_APP_DEFAULT_NETWORK ||
-  networksConfig[0].key ||
-  "columbus-5";
 export const DEFAULT_CURRENCY = `uusd`;
-export const DEFAULT_FCD = `https://fcd.terra.dev`;
-export const DEFAULT_LCD = "https://lcd.terra.dev";
-export const DEFAULT_MANTLE = "https://mantle.terra.dev";
 export const BASE_DENOM = `uluna`;
 export const TERRA_ADDRESS_REGEX = /(terra[0-9][a-z0-9]{38})/g;
 
-export function getEndpointByKeyword(keyword: string, network: string) {
+export function getEndpointByKeyword(keyword: string) {
   if (isInteger(keyword)) {
-    return `/${network}/blocks/${keyword}`;
+    return `/blocks/${keyword}`;
   } else if (keyword.indexOf("terravaloper") === 0) {
-    return `/${network}/validator/${keyword}`;
+    return `/validator/${keyword}`;
   } else if (keyword.indexOf("terra") === 0) {
-    return `/${network}/address/${keyword}`;
+    return `/address/${keyword}`;
   } else {
-    return `/${network}/tx/${keyword}`;
+    return `/tx/${keyword}`;
   }
 }
 
@@ -44,14 +36,6 @@ export function sliceMsgType(msg: string) {
   const msgResult = String(msg);
   const slashIndex = msgResult.indexOf("/");
   return slashIndex > -1 ? msgResult.slice(slashIndex + 1) : msgResult;
-}
-
-export function fcdUrl(key: string) {
-  return networksConfig.find(n => n.key === key)?.fcd || DEFAULT_FCD;
-}
-
-export function mantleUri(key: string) {
-  return networksConfig.find(n => n.key === key)?.mantle || DEFAULT_MANTLE;
 }
 
 export function isTerraAddress(keyword: string) {
@@ -139,12 +123,6 @@ export function getDefaultCurrency(denoms: string[]) {
   }
 
   return DEFAULT_CURRENCY;
-}
-
-export function transformChainId(chainId: string) {
-  //for Terra assets
-  const chain = chainId.split("-")[0];
-  return chain === "columbus" ? "mainnet" : "testnet";
 }
 
 export const splitCoinData = (coin: string) => {

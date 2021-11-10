@@ -1,29 +1,35 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useChains, useCurrentChain } from "../contexts/ChainsContext";
 
 import s from "./SelectNetworks.module.scss";
-import networksConfig from "../config/networks";
-import NetworkContext from "../contexts/NetworkContext";
 
 type Props = {
   className?: string;
 };
 const SelectNetworks = (props: Props) => {
-  const { network, selectNetwork } = useContext(NetworkContext);
+  const chains = useChains();
+  const currentChain = useCurrentChain();
+  const params = useParams();
+  const navigate = useNavigate();
+
+  const changeChain = (value = "") => {
+    const prev = params["*"];
+    const isIndex = !prev;
+    const name = isIndex && value === "mainnet" ? "" : "/" + value;
+    navigate(`${name}/${params["*"]}`);
+  };
 
   return (
     <div className={props.className}>
       <select
         className={s.select}
-        value={network}
-        onChange={e => selectNetwork(e.target.value)}
+        value={currentChain.name}
+        onChange={e => changeChain(e.target.value)}
       >
-        {networksConfig.map(({ key, selectable }, index) => {
-          if (selectable === false || !key) {
-            return null;
-          }
-
-          return <option key={index}>{key}</option>;
-        })}
+        {chains.map(({ name }) => (
+          <option key={name}>{name}</option>
+        ))}
       </select>
       <div className={s.addon}>
         <i className="material-icons">arrow_drop_down</i>

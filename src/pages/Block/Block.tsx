@@ -1,22 +1,20 @@
-import React, { useContext } from "react";
-import { RouteComponentProps, Link } from "react-router-dom";
-import TxList from "../Txs";
+import { Link, useParams } from "react-router-dom";
 import c from "classnames";
-import s from "./Block.module.scss";
-
+import TxList from "../Txs";
 import Loading from "../../components/Loading";
-import WithFetch from "../../HOCs/WithFetch";
-import { fromISOTime } from "../../scripts/utility";
-import networkContext from "../../contexts/NetworkContext";
 import Finder from "../../components/Finder";
+import { useCurrentChain } from "../../contexts/ChainsContext";
+import { fromISOTime } from "../../scripts/utility";
+import WithFetch from "../../HOCs/WithFetch";
+import s from "./Block.module.scss";
 
 const heightButton = (height: number) => (
   <span className={s.height}>
     <span>{height}</span>
-    <Link to={`${height - 1}`}>
+    <Link to={`../blocks/${height - 1}`}>
       <i className="material-icons">chevron_left</i>
     </Link>
-    <Link to={`${height + 1}`}>
+    <Link to={`../blocks/${height + 1}`}>
       <i className="material-icons">chevron_right</i>
     </Link>
   </span>
@@ -32,16 +30,13 @@ const txsCount = (txCount: number) => (
   </span>
 );
 
-const Block = (
-  props: RouteComponentProps<{ height: string; network: string }>
-) => {
-  const { match } = props;
-  const { height } = match.params;
-  const { network } = useContext(networkContext);
+const Block = () => {
+  const { height } = useParams();
+  const { chainID } = useCurrentChain();
 
   return (
     <WithFetch
-      url={`/v1/blocks/${height}?chainId=${network}`}
+      url={`/v1/blocks/${height}?chainId=${chainID}`}
       loading={<Loading />}
     >
       {(blockData: Block) => (

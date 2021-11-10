@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import WithFetch from "../../HOCs/WithFetch";
 import Card from "../../components/Card";
 import Page from "../../components/Page";
@@ -10,9 +10,11 @@ import Claims from "./Claims";
 import Delegations from "./Delegations";
 import Delegators from "./Delegators";
 
-const Validator = ({ match }: RouteComponentProps<{ address: string }>) => {
+const Validator = () => {
+  const { address = "" } = useParams();
+
   return (
-    <WithFetch url={`/v1/staking/validators/${match.params.address}`}>
+    <WithFetch url={`/v1/staking/validators/${address}`}>
       {(v: Validator) => (
         <Page title="Validator Details">
           <Header {...v} />
