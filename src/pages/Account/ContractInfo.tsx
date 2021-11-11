@@ -6,8 +6,8 @@ import Loading from "../../components/Loading";
 import s from "./ContractInfo.module.scss";
 
 const ContractInfo = ({ address }: { address: string }) => {
-  const token = useRecoilValue(Whitelist)[address];
-  const contract = useRecoilValue(Contracts)[address];
+  const token = useRecoilValue(Whitelist)?.[address];
+  const contract = useRecoilValue(Contracts)?.[address];
 
   return token || contract ? (
     <section className={s.wrapper}>
