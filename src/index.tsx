@@ -5,19 +5,10 @@ import ReactDOM from "react-dom";
 import { RecoilRoot } from "recoil";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-
 import "./index.scss";
 import App from "./layouts/App";
-import * as Sentry from "@sentry/browser";
 import * as serviceWorker from "./serviceWorker";
 import { getChains, ChainsProvider } from "./contexts/ChainsContext";
-
-if (
-  process.env.REACT_APP_SENTRY_DSN &&
-  /^http/.test(process.env.REACT_APP_SENTRY_DSN)
-) {
-  Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
-}
 
 const queryClient = new QueryClient({
   defaultOptions: {
