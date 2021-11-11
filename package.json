@@ -44,7 +44,6 @@
   "dependencies": {
     "@apollo/client": "^3.3.6",
     "@material-ui/core": "^4.12.3",
-    "@sentry/browser": "^6.1.0",
     "@terra-money/log-finder": "^1.1.4",
     "@terra-money/log-finder-ruleset": "^1.0.2",
     "@terra-money/react-widget": "^1.0.6",
