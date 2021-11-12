@@ -1,47 +1,47 @@
 @import "../styles/variables.scss";
 
 .msgBox {
-  height: auto;
   display: block;
   border-radius: 5px;
   border: 1px solid $line;
-  background-color: #fbfdff !important;
   margin: 25px 0;
-  padding: 0 20px;
   overflow: auto;
-  font-size: 15px;
+  cursor: pointer;
   width: 100%;
-  .type {
-    padding: 20px;
-    line-height: 1;
+}
+
+.msgWrapper {
+  line-height: 1.5;
+  margin: 20px 0;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  @media (max-width: $breakpoint) {
+    display: flex;
+    flex-direction: column;
+  }
+  .key {
+    display: table-cell;
+  }
+  .key:first-child {
+    width: 200px;
     font-weight: 500;
-    font-size: 16px;
-    border-bottom: 1px solid $line;
-    margin-left: -20px;
-    margin-right: -20px;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
+    font-size: 14px;
+    padding-right: 20px;
   }
-  .msgWrapper {
-    line-height: 1.5;
-    margin: 20px 0;
-    display: table;
-    table-layout: fixed;
-    width: 100%;
-    @media (max-width: $breakpoint) {
-      display: flex;
-      flex-direction: column;
-    }
-    .key {
-      display: table-cell;
-    }
-    .key:first-child {
-      width: 200px;
-      font-weight: 500;
-      font-size: 14px;
-      padding-right: 20px;
-    }
-  }
+}
+
+.type {
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
+  font-size: 18px;
+  justify-content: space-between;
+  -webkit-box-sizing: content-box;
+  padding: 25px 30px;
+  line-height: 1;
+  background-color: rgba(84, 147, 247, 0.05);
+  border-bottom: 1px solid $line;
 }
 
 .events {
@@ -74,4 +74,18 @@
 
 .attrValue {
   white-space: pre-line;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+}
+
+.details {
+  padding: 20px 30px 0 30px;
+}
+
+.msgType {
+  font-size: 16px;
+  font-weight: 500;
 }

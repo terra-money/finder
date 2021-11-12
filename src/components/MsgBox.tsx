@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { LogFinderActionResult } from "@terra-money/log-finder-ruleset";
 import CoinComponent from "../components/Coin";
 import {
-  sliceMsgType,
   isTerraAddress,
-  isValidatorAddress
+  isValidatorAddress,
+  sliceMsgType
 } from "../scripts/utility";
 import format from "../scripts/format";
-import s from "./Msg.module.scss";
+import Action from "../pages/Tx/Action";
 import Address from "./Address";
 import WasmMsg from "./WasmMsg";
+import Icon from "./Icon";
+import s from "./Msg.module.scss";
 
 const getContent = (msg: Msg, key: string) => {
   if (isTerraAddress(msg.value[key]) || isValidatorAddress(msg.value[key])) {
@@ -65,25 +68,53 @@ const renderEventlog = (events: Events[]) => (
   </div>
 );
 
-export const MsgBox = ({ msg, log }: { msg: Msg; log?: Log }) => (
-  <div className={s.msgBox}>
-    <div className={s.type}>{sliceMsgType(msg.type)}</div>
-    {Object.keys(msg.value).map((key: string, index: number) => {
-      if (key === "wasm_byte_code") {
-        //ignore wasm_byte_code in MsgStoreCode
-        return <></>;
-      } else {
-        const content = getContent(msg, key);
-        return (
-          <section className={s.msgWrapper} key={index}>
-            <span className={s.key}>{key}</span>
-            {content}
-          </section>
-        );
-      }
-    })}
-    {log?.events && renderEventlog(log.events)}
-  </div>
-);
+interface Props {
+  msg: Msg;
+  log?: Log;
+  info?: LogFinderActionResult[];
+}
+
+export const MsgBox = ({ msg, log, info }: Props) => {
+  const [show, setShow] = useState(false);
+
+  const msgType = sliceMsgType(msg.type);
+
+  return (
+    <div className={s.msgBox} onClick={() => setShow(!show)}>
+      <div className={s.type}>
+        <div className={s.action}>
+          {info?.map(msg =>
+            msg.transformed?.canonicalMsg.map((str, key) => (
+              <Action action={str} key={key} />
+            ))
+          )}
+        </div>
+        <Icon name={show ? "expand_less" : "expand_more"} size={24} />
+      </div>
+
+      {show && (
+        <div className={s.details}>
+          <span className={s.msgType}>{msgType}</span>
+          <hr />
+          {Object.keys(msg.value).map((key: string, index: number) => {
+            if (key === "wasm_byte_code") {
+              //ignore wasm_byte_code in MsgStoreCode
+              return <></>;
+            } else {
+              const content = getContent(msg, key);
+              return (
+                <section className={s.msgWrapper} key={index}>
+                  <span className={s.key}>{key}</span>
+                  {content}
+                </section>
+              );
+            }
+          })}
+          {log?.events && renderEventlog(log.events)}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default MsgBox;

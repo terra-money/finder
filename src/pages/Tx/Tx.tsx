@@ -3,23 +3,25 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { get, last, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
+import c from "classnames";
 import {
-  getTxCanonicalMsgs,
+  getTxAllCanonicalMsgs,
   createLogMatcherForActions
 } from "@terra-money/log-finder-ruleset";
+import { formatDistanceToNowStrict } from "date-fns";
 import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
+import Icon from "../../components/Icon";
 import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
-import { fromISOTime, fromNow } from "../../scripts/utility";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
-import Action from "./Action";
+import { fromISOTime } from "../../scripts/utility";
 import Pending from "./Pending";
-import s from "./Tx.module.scss";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
+import s from "./Tx.module.scss";
 
 type Coin = {
   amount: string;
@@ -33,13 +35,17 @@ const TxComponent = ({ hash }: { hash: string }) => {
     [ruleArray]
   );
   const { data: response, progressState } = usePollTxHash(hash);
+  const [more, setMore] = useState(false);
 
   if (!response) {
     return <Searching state={progressState} hash={hash} />;
   }
 
   const isPending = !response?.height;
-  const matchedMsg = getTxCanonicalMsgs(JSON.stringify(response), logMatcher);
+  const matchedMsg = getTxAllCanonicalMsgs(
+    JSON.stringify(response),
+    logMatcher
+  );
 
   const fee: Coin[] = get(response, "tx.value.fee.amount");
   const tax: string[] = response.logs
@@ -47,14 +53,53 @@ const TxComponent = ({ hash }: { hash: string }) => {
     .filter(data => typeof data === "string" && data !== "")
     .flat();
 
+  const status = isPending ? (
+    <span className={c(s.status, s.pending)}>Pending</span>
+  ) : !response.code ? (
+    <span className={c(s.status, s.success)}>Success</span>
+  ) : (
+    <span className={c(s.status, s.fail)}>Failed</span>
+  );
+
   return (
     <>
       <h2 className="title">Transaction Details</h2>
+      <div className={s.header}>
+        {status}
+        <span className={s.date}>
+          {formatDistanceToNowStrict(new Date(response.timestamp.toString()))}
+        </span>
+        <span>{fromISOTime(response.timestamp.toString())}</span>
+      </div>
+
       {isPending && <Pending timestamp={response.timestamp} />}
+      {response.code && (
+        <div className={s.failedMsg}>
+          <p>
+            {get(last(response.logs), "log.message") ||
+              get(response, "raw_log")}
+          </p>
+        </div>
+      )}
+
+      <div className={s.message}>
+        {response.tx.value.msg.map((msg, index) => {
+          const msgInfo = matchedMsg[index];
+
+          return (
+            <MsgBox
+              msg={msg}
+              log={response.logs?.[index]}
+              info={msgInfo}
+              key={index}
+            />
+          );
+        })}
+      </div>
 
       <div className={s.list}>
         <div className={s.row}>
-          <div className={s.head}>Transaction hash</div>
+          <div className={s.head}>Tx Hash</div>
           <div className={s.body}>
             <div>
               {response.txhash}
@@ -65,57 +110,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
             </div>
           </div>
         </div>
-        <div className={s.row}>
-          <div className={s.head}>Status</div>
-          <div className={s.body}>
-            {isPending ? (
-              <span className={s.pending}>Pending</span>
-            ) : !response.code ? (
-              <span className={s.success}>Success</span>
-            ) : (
-              <>
-                <p className={s.fail}>Failed</p>
-                <p className={s.failedMsg}>
-                  {get(last(response.logs), "log.message") ||
-                    get(response, "raw_log")}
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-        <div className={s.row}>
-          <div className={s.head}>Network</div>
-          <div className={s.body}>{response.chainId}</div>
-        </div>
-        {isPending ? (
-          <></>
-        ) : (
-          <div className={s.row}>
-            <div className={s.head}>Block</div>
-            <div className={s.body}>
-              <Finder q="blocks" v={response.height}>
-                {response.height}
-              </Finder>
-            </div>
-          </div>
-        )}
-        <div className={s.row}>
-          {isPending ? (
-            <>
-              <div className={s.head}>Last Seen</div>
-              <div className={s.body}>
-                {fromNow(response.timestamp.toString())}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className={s.head}>Timestamp</div>
-              <div className={s.body}>
-                {fromISOTime(response.timestamp.toString())}
-              </div>
-            </>
-          )}
-        </div>
+
         {fee?.length ? (
           <div className={s.row}>
             <div className={s.head}>Transaction fee</div>
@@ -129,15 +124,41 @@ const TxComponent = ({ hash }: { hash: string }) => {
           <></>
         )}
 
-        {isPending ? (
-          <></>
-        ) : (
+        {!isEmpty(tax) && (
+          <div className={s.row}>
+            <div className={s.head}>Tax</div>
+            <div className={s.body}>
+              <TxTax tax={tax} />
+            </div>
+          </div>
+        )}
+        <div className={s.row}>
+          <div className={s.head}>Memo</div>
+          <div className={s.body}>
+            {response.tx.value.memo ? response.tx.value.memo : "-"}
+          </div>
+        </div>
+
+        <button className={s.more} onClick={() => setMore(!more)}>
+          {more ? "See less" : "See more"}
+          <Icon name={more ? "expand_less" : "expand_more"} size={15} />
+        </button>
+
+        {more && (
           <>
-            {!isEmpty(tax) && (
+            <div className={s.row}>
+              <div className={s.head}>Network</div>
+              <div className={s.body}>{response.chainId}</div>
+            </div>
+            {isPending ? (
+              <></>
+            ) : (
               <div className={s.row}>
-                <div className={s.head}>Tax</div>
+                <div className={s.head}>Block</div>
                 <div className={s.body}>
-                  <TxTax tax={tax} />
+                  <Finder q="blocks" v={response.height}>
+                    {response.height}
+                  </Finder>
                 </div>
               </div>
             )}
@@ -150,36 +171,6 @@ const TxComponent = ({ hash }: { hash: string }) => {
             </div>
           </>
         )}
-        {!isEmpty(matchedMsg?.flat()) && (
-          <div className={s.row}>
-            <div className={s.head}>Action</div>
-            <div className={s.action}>
-              {matchedMsg?.map(matchedLog =>
-                matchedLog.map(log =>
-                  log.transformed?.canonicalMsg.map((msg, key) =>
-                    !msg.includes("undefined") ? (
-                      <Action action={msg} key={key} />
-                    ) : undefined
-                  )
-                )
-              )}
-            </div>
-          </div>
-        )}
-        <div className={s.row}>
-          <div className={s.head}>Memo</div>
-          <div className={s.body}>
-            {response.tx.value.memo ? response.tx.value.memo : "-"}
-          </div>
-        </div>
-        <div className={s.row}>
-          <div className={s.head}>Message</div>
-          <div className={s.body}>
-            {response.tx.value.msg.map((msg, index) => (
-              <MsgBox msg={msg} log={response.logs?.[index]} key={index} />
-            ))}
-          </div>
-        </div>
       </div>
     </>
   );
