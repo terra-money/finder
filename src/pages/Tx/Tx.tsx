@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { get, last, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
-import c from "classnames/bind";
+import c from "classnames";
 import {
   getTxAllCanonicalMsgs,
   createLogMatcherForActions
@@ -16,14 +16,12 @@ import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
 import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
 import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
-import { fromISOTime } from "../../scripts/utility";
 import Pending from "./Pending";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
 import s from "./Tx.module.scss";
-
-const cx = c.bind(s);
+import format from "../../scripts/format";
 
 type Coin = {
   amount: string;
@@ -37,7 +35,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
     [ruleArray]
   );
   const { data: response, progressState } = usePollTxHash(hash);
-  const [more, setMore] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!response) {
     return <Searching state={progressState} hash={hash} />;
@@ -73,12 +71,13 @@ const TxComponent = ({ hash }: { hash: string }) => {
             addSuffix: true
           })}
         </span>
-        <span>{fromISOTime(response.timestamp.toString())}</span>
+        <span>{format.date(response.timestamp.toString())}</span>
       </div>
 
       {isPending && <Pending timestamp={response.timestamp} />}
       {response.code && (
         <div className={s.failedMsg}>
+          <Icon name="error" size={18} className={s.icon} />
           <p>
             {get(last(response.logs), "log.message") ||
               get(response, "raw_log")}
@@ -143,20 +142,13 @@ const TxComponent = ({ hash }: { hash: string }) => {
           </div>
         </div>
 
-        <button
-          className={cx(s.moreBtn, { more })}
-          onClick={() => setMore(!more)}
-        >
-          {more ? "See less" : "See more"}
-          <Icon name={more ? "expand_less" : "expand_more"} size={15} />
-        </button>
-
-        {more && (
+        {isOpen && (
           <>
             <div className={s.row}>
               <div className={s.head}>Network</div>
               <div className={s.body}>{response.chainId}</div>
             </div>
+
             {isPending ? (
               <></>
             ) : (
@@ -169,6 +161,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
                 </div>
               </div>
             )}
+
             <div className={s.row}>
               <div className={s.head}>Gas (Used/Requested)</div>
               <div className={s.body}>
@@ -179,6 +172,11 @@ const TxComponent = ({ hash }: { hash: string }) => {
           </>
         )}
       </div>
+
+      <button className={s.moreBtn} onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? "See less" : "See more"}
+        <Icon name={isOpen ? "expand_less" : "expand_more"} size={15} />
+      </button>
     </>
   );
 };

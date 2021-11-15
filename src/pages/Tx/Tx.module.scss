@@ -56,6 +56,7 @@
   border-radius: 5px;
   color: $red;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .message {
@@ -102,6 +103,6 @@
   padding: 20px 0;
 }
 
-.more {
-  border-bottom: 1px solid $line;
+.icon {
+  margin-right: 5px;
 }

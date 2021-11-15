@@ -78,12 +78,12 @@ interface Props {
 const cx = c.bind(s);
 
 export const MsgBox = ({ msg, log, info }: Props) => {
-  const [show, setShow] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const msgType = sliceMsgType(msg.type);
 
   return (
-    <div className={s.msgBox} onClick={() => setShow(!show)}>
-      <div className={cx(s.type, { show })}>
+    <div className={s.msgBox} onClick={() => setIsOpen(!isOpen)}>
+      <div className={cx(s.type, { show: isOpen })}>
         <div className={s.action}>
           {info?.map(msg =>
             msg.transformed?.canonicalMsg.map((str, key) => (
@@ -91,10 +91,10 @@ export const MsgBox = ({ msg, log, info }: Props) => {
             ))
           )}
         </div>
-        <Icon name={show ? "expand_less" : "expand_more"} size={24} />
+        <Icon name={isOpen ? "expand_less" : "expand_more"} size={24} />
       </div>
 
-      {show && (
+      {isOpen && (
         <div className={s.details}>
           <span className={s.msgType}>{msgType}</span>
           <hr />

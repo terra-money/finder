@@ -33,11 +33,9 @@
 
 .type {
   display: flex;
-  align-items: center;
-  box-sizing: content-box;
-  font-size: 18px;
   justify-content: space-between;
-  -webkit-box-sizing: content-box;
+  align-items: center;
+  font-size: 18px;
   padding: 25px 30px;
   line-height: 1;
   background-color: rgba(84, 147, 247, 0.05);
