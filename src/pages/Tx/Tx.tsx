@@ -66,12 +66,14 @@ const TxComponent = ({ hash }: { hash: string }) => {
       <h2 className="title">Transaction Details</h2>
       <div className={s.header}>
         {status}
-        <span className={s.date}>
+        <span className={c(s.date, s.sideLine)}>
           {formatDistanceToNowStrict(new Date(response.timestamp.toString()), {
             addSuffix: true
           })}
         </span>
-        <span>{format.date(response.timestamp.toString())}</span>
+        <span className={s.date}>
+          {format.date(response.timestamp.toString())}
+        </span>
       </div>
 
       {isPending && <Pending timestamp={response.timestamp} />}

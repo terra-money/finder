@@ -18,9 +18,11 @@
 }
 
 .date {
-  border-right: 1px solid #d8ddf0;
   margin-right: 5px;
   padding-right: 5px;
+  @media (max-width: $breakpoint) {
+    font-size: 12px;
+  }
 }
 
 .status {
@@ -32,6 +34,7 @@
   font-size: 11px;
   color: white;
   text-align: center;
+  white-space: nowrap;
 }
 
 .success {
@@ -105,4 +108,8 @@
 
 .icon {
   margin-right: 5px;
+}
+
+.sideLine {
+  border-right: 1px solid #d8ddf0;
 }
