@@ -53,6 +53,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
     .filter(data => typeof data === "string" && data !== "")
     .flat();
 
+  // status settings
   const status = isPending ? (
     <span className={c(s.status, s.pending)}>Pending</span>
   ) : !response.code ? (
