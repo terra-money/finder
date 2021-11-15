@@ -41,7 +41,7 @@ const App = () => {
   const setDenoms = useSetRecoilState(Denoms);
 
   useEffect(() => {
-    const actionRules = createActionRuleSet(chainID);
+    const actionRules = createActionRuleSet(name);
     const amountRules = createAmountRuleSet();
     setActionRules(actionRules);
     setAmountRules(amountRules);
@@ -56,7 +56,6 @@ const App = () => {
     name,
     whitelist,
     contracts,
-    chainID,
     setDenoms,
     setActionRules,
     setAmountRules,
