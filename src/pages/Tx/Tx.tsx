@@ -87,7 +87,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
 
       <div className={s.message}>
         {response.tx.value.msg.map((msg, index) => {
-          const msgInfo = matchedMsg[index];
+          const msgInfo = matchedMsg?.[index];
 
           return (
             <MsgBox

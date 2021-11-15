@@ -9,10 +9,7 @@ const Action = ({ action }: { action: string }) => {
 
   return (
     <span className={s.wrapper}>
-      <TxDescription
-        network={{ ...config, name }}
-        config={{ showAllCoins: true }}
-      >
+      <TxDescription network={{ ...config, name }} config={{ printCoins: 3 }}>
         {action}
       </TxDescription>
     </span>
