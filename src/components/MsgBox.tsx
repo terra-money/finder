@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import c from "classnames/bind";
 import { LogFinderActionResult } from "@terra-money/log-finder-ruleset";
 import CoinComponent from "../components/Coin";
 import {
@@ -74,14 +75,15 @@ interface Props {
   info?: LogFinderActionResult[];
 }
 
+const cx = c.bind(s);
+
 export const MsgBox = ({ msg, log, info }: Props) => {
   const [show, setShow] = useState(false);
-
   const msgType = sliceMsgType(msg.type);
 
   return (
     <div className={s.msgBox} onClick={() => setShow(!show)}>
-      <div className={s.type}>
+      <div className={cx(s.type, { show })}>
         <div className={s.action}>
           {info?.map(msg =>
             msg.transformed?.canonicalMsg.map((str, key) => (

@@ -41,7 +41,6 @@
   padding: 25px 30px;
   line-height: 1;
   background-color: rgba(84, 147, 247, 0.05);
-  border-bottom: 1px solid $line;
 }
 
 .events {
@@ -88,4 +87,8 @@
 .msgType {
   font-size: 16px;
   font-weight: 500;
+}
+
+.show {
+  border-bottom: 1px solid $line;
 }

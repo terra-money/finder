@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { get, last, isEmpty } from "lodash";
 import { useRecoilValue } from "recoil";
-import c from "classnames";
+import c from "classnames/bind";
 import {
   getTxAllCanonicalMsgs,
   createLogMatcherForActions
@@ -22,6 +22,8 @@ import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
 import s from "./Tx.module.scss";
+
+const cx = c.bind(s);
 
 type Coin = {
   amount: string;
@@ -67,7 +69,9 @@ const TxComponent = ({ hash }: { hash: string }) => {
       <div className={s.header}>
         {status}
         <span className={s.date}>
-          {formatDistanceToNowStrict(new Date(response.timestamp.toString()))}
+          {formatDistanceToNowStrict(new Date(response.timestamp.toString()), {
+            addSuffix: true
+          })}
         </span>
         <span>{fromISOTime(response.timestamp.toString())}</span>
       </div>
@@ -139,7 +143,10 @@ const TxComponent = ({ hash }: { hash: string }) => {
           </div>
         </div>
 
-        <button className={s.more} onClick={() => setMore(!more)}>
+        <button
+          className={cx(s.moreBtn, { more })}
+          onClick={() => setMore(!more)}
+        >
           {more ? "See less" : "See more"}
           <Icon name={more ? "expand_less" : "expand_more"} size={15} />
         </button>

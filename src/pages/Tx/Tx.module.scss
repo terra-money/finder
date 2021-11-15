@@ -93,11 +93,15 @@
   }
 }
 
-.more {
+.moreBtn {
   display: flex;
   align-items: center;
   font-size: 14px;
   font-weight: 500;
   color: #5493f7;
-  margin-top: 11px;
+  padding: 20px 0;
+}
+
+.more {
+  border-bottom: 1px solid $line;
 }
