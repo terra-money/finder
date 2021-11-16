@@ -3,7 +3,6 @@
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
 }
 
 .type {
@@ -62,14 +61,10 @@
   align-items: center;
 }
 
-.message {
-  margin-bottom: 40px;
-}
-
 .list {
   display: flex;
   flex-direction: column;
-  margin-top: 40px;
+  margin: 20px 0px 50px 0px;
   .row {
     display: flex;
     border-bottom: 1px solid $line;
@@ -95,15 +90,6 @@
       }
     }
   }
-}
-
-.moreBtn {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #5493f7;
-  padding: 20px 0;
 }
 
 .icon {

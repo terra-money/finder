@@ -83,10 +83,7 @@ export const MsgBox = ({ msg, log, info }: Props) => {
 
   return (
     <div className={s.msgBox}>
-      <div
-        className={cx(s.type, { show: isOpen })}
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <div className={cx(s.type, { show: isOpen })}>
         <div className={s.action}>
           {info?.map(msg =>
             msg.transformed?.canonicalMsg.map((str, key) => (
@@ -94,30 +91,31 @@ export const MsgBox = ({ msg, log, info }: Props) => {
             ))
           )}
         </div>
-        <Icon name={isOpen ? "expand_less" : "expand_more"} size={24} />
       </div>
 
-      {isOpen && (
-        <div className={s.details}>
-          <span className={s.msgType}>{msgType}</span>
-          <hr />
-          {Object.keys(msg.value).map((key: string, index: number) => {
-            if (key === "wasm_byte_code") {
-              //ignore wasm_byte_code in MsgStoreCode
-              return <></>;
-            } else {
-              const content = getContent(msg, key);
-              return (
-                <section className={s.msgWrapper} key={index}>
-                  <span className={s.key}>{key}</span>
-                  {content}
-                </section>
-              );
-            }
-          })}
-          {log?.events && renderEventlog(log.events)}
-        </div>
-      )}
+      <div className={s.details}>
+        <span className={s.msgType}>{msgType}</span>
+        <hr />
+        {Object.keys(msg.value).map((key: string, index: number) => {
+          if (key === "wasm_byte_code") {
+            //ignore wasm_byte_code in MsgStoreCode
+            return <></>;
+          } else {
+            const content = getContent(msg, key);
+            return (
+              <section className={s.msgWrapper} key={index}>
+                <span className={s.key}>{key}</span>
+                {content}
+              </section>
+            );
+          }
+        })}
+        {isOpen && log?.events && renderEventlog(log.events)}
+        <button className={s.button} onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? "Hide Logs" : "Show Logs"}
+          <Icon name={isOpen ? "expand_less" : "expand_more"} size={15} />
+        </button>
+      </div>
     </div>
   );
 };
