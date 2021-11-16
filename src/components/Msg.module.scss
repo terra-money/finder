@@ -6,7 +6,6 @@
   border: 1px solid $line;
   margin: 25px 0;
   overflow: auto;
-  cursor: pointer;
   width: 100%;
 }
 
@@ -38,6 +37,7 @@
   font-size: 18px;
   padding: 25px 30px;
   line-height: 1;
+  cursor: pointer;
   background-color: rgba(84, 147, 247, 0.05);
 }
 

@@ -82,8 +82,11 @@ export const MsgBox = ({ msg, log, info }: Props) => {
   const msgType = sliceMsgType(msg.type);
 
   return (
-    <div className={s.msgBox} onClick={() => setIsOpen(!isOpen)}>
-      <div className={cx(s.type, { show: isOpen })}>
+    <div className={s.msgBox}>
+      <div
+        className={cx(s.type, { show: isOpen })}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         <div className={s.action}>
           {info?.map(msg =>
             msg.transformed?.canonicalMsg.map((str, key) => (
