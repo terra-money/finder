@@ -3,7 +3,6 @@
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
 }
 
 .type {
@@ -58,18 +57,14 @@
   border: 1px solid #ffe6e7;
   border-radius: 5px;
   color: $red;
-  margin-bottom: 20px;
+  margin: 20px 0;
   align-items: center;
-}
-
-.message {
-  margin-bottom: 40px;
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  margin-top: 40px;
+  margin: 20px 0px 50px 0px;
   .row {
     display: flex;
     border-bottom: 1px solid $line;
@@ -95,15 +90,6 @@
       }
     }
   }
-}
-
-.moreBtn {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #5493f7;
-  padding: 20px 0;
 }
 
 .icon {

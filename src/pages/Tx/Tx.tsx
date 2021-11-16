@@ -35,7 +35,6 @@ const TxComponent = ({ hash }: { hash: string }) => {
     [ruleArray]
   );
   const { data: response, progressState } = usePollTxHash(hash);
-  const [isOpen, setIsOpen] = useState(false);
 
   if (!response) {
     return <Searching state={progressState} hash={hash} />;
@@ -88,21 +87,6 @@ const TxComponent = ({ hash }: { hash: string }) => {
         </div>
       )}
 
-      <div className={s.message}>
-        {response.tx.value.msg.map((msg, index) => {
-          const msgInfo = matchedMsg?.[index];
-
-          return (
-            <MsgBox
-              msg={msg}
-              log={response.logs?.[index]}
-              info={msgInfo}
-              key={index}
-            />
-          );
-        })}
-      </div>
-
       <div className={s.list}>
         <div className={s.row}>
           <div className={s.head}>Tx Hash</div>
@@ -116,6 +100,24 @@ const TxComponent = ({ hash }: { hash: string }) => {
             </div>
           </div>
         </div>
+
+        <div className={s.row}>
+          <div className={s.head}>Network</div>
+          <div className={s.body}>{response.chainId}</div>
+        </div>
+
+        {isPending ? (
+          <></>
+        ) : (
+          <div className={s.row}>
+            <div className={s.head}>Block</div>
+            <div className={s.body}>
+              <Finder q="blocks" v={response.height}>
+                {response.height}
+              </Finder>
+            </div>
+          </div>
+        )}
 
         {fee?.length ? (
           <div className={s.row}>
@@ -138,48 +140,35 @@ const TxComponent = ({ hash }: { hash: string }) => {
             </div>
           </div>
         )}
+
+        <div className={s.row}>
+          <div className={s.head}>Gas (Used/Requested)</div>
+          <div className={s.body}>
+            {parseInt(response.gas_used).toLocaleString()}/
+            {parseInt(response.gas_wanted).toLocaleString()}
+          </div>
+        </div>
+
         <div className={s.row}>
           <div className={s.head}>Memo</div>
           <div className={s.body}>
             {response.tx.value.memo ? response.tx.value.memo : "-"}
           </div>
         </div>
-
-        {isOpen && (
-          <>
-            <div className={s.row}>
-              <div className={s.head}>Network</div>
-              <div className={s.body}>{response.chainId}</div>
-            </div>
-
-            {isPending ? (
-              <></>
-            ) : (
-              <div className={s.row}>
-                <div className={s.head}>Block</div>
-                <div className={s.body}>
-                  <Finder q="blocks" v={response.height}>
-                    {response.height}
-                  </Finder>
-                </div>
-              </div>
-            )}
-
-            <div className={s.row}>
-              <div className={s.head}>Gas (Used/Requested)</div>
-              <div className={s.body}>
-                {parseInt(response.gas_used).toLocaleString()}/
-                {parseInt(response.gas_wanted).toLocaleString()}
-              </div>
-            </div>
-          </>
-        )}
       </div>
 
-      <button className={s.moreBtn} onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? "See less" : "See more"}
-        <Icon name={isOpen ? "expand_less" : "expand_more"} size={15} />
-      </button>
+      {response.tx.value.msg.map((msg, index) => {
+        const msgInfo = matchedMsg?.[index];
+
+        return (
+          <MsgBox
+            msg={msg}
+            log={response.logs?.[index]}
+            info={msgInfo}
+            key={index}
+          />
+        );
+      })}
     </>
   );
 };
