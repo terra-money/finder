@@ -63,7 +63,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
 
   return (
     <>
-      <h2 className="title">Transaction Details</h2>
+      <h2 className={s.title}>Transaction Details</h2>
       <div className={s.header}>
         {status}
         <span className={c(s.date, s.sideLine)}>
@@ -71,7 +71,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
             addSuffix: true
           })}
         </span>
-        <span className={s.date}>
+        <span className={c(s.date, s.txTime)}>
           {format.date(response.timestamp.toString())}
         </span>
       </div>
@@ -141,13 +141,15 @@ const TxComponent = ({ hash }: { hash: string }) => {
           </div>
         )}
 
-        <div className={s.row}>
-          <div className={s.head}>Gas (Used/Requested)</div>
-          <div className={s.body}>
-            {parseInt(response.gas_used).toLocaleString()}/
-            {parseInt(response.gas_wanted).toLocaleString()}
+        {!isPending && (
+          <div className={s.row}>
+            <div className={s.head}>Gas (Used/Requested)</div>
+            <div className={s.body}>
+              {parseInt(response.gas_used).toLocaleString()}/
+              {parseInt(response.gas_wanted).toLocaleString()}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className={s.row}>
           <div className={s.head}>Memo</div>
