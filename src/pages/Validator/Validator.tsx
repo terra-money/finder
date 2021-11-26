@@ -7,8 +7,6 @@ import Header from "./Header";
 import Informations from "./Informations";
 import Rewards from "./Rewards";
 import Claims from "./Claims";
-import Delegations from "./Delegations";
-import Delegators from "./Delegators";
 
 const Validator = () => {
   const { address = "" } = useParams();
@@ -21,15 +19,6 @@ const Validator = () => {
 
           <Card>
             <Informations {...v} />
-          </Card>
-
-          <h2>Delegations</h2>
-          <Card title="Power events" bordered>
-            <Delegations address={v.operatorAddress} />
-          </Card>
-
-          <Card title="Delegators" bordered>
-            <Delegators address={v.operatorAddress} />
           </Card>
 
           <h2>Rewards and commissions</h2>
