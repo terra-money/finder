@@ -80,6 +80,7 @@ const cx = c.bind(s);
 export const MsgBox = ({ msg, log, info }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const msgType = sliceMsgType(msg.type);
+  const eventLogs = log?.events && renderEventlog(log.events);
 
   return (
     <div className={s.msgBox}>
@@ -110,11 +111,13 @@ export const MsgBox = ({ msg, log, info }: Props) => {
             );
           }
         })}
-        {isOpen && log?.events && renderEventlog(log.events)}
-        <button className={s.button} onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? "Hide Logs" : "Show Logs"}
-          <Icon name={isOpen ? "expand_less" : "expand_more"} size={15} />
-        </button>
+        {isOpen && eventLogs}
+        {eventLogs && (
+          <button className={s.button} onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? "Hide Logs" : "Show Logs"}
+            <Icon name={isOpen ? "expand_less" : "expand_more"} size={15} />
+          </button>
+        )}
       </div>
     </div>
   );
