@@ -17,6 +17,7 @@ export default (
     <Route path="validator/:address" element={<Validator />} />
     <Route path="address/:address" element={<Address />} />
     <Route path="account/:address" element={<Address />} />
+    <Route path="notfound/:keyword" element={<NotFound />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );

@@ -12,14 +12,18 @@ export const BASE_DENOM = `uluna`;
 export const TERRA_ADDRESS_REGEX = /(terra[0-9][a-z0-9]{38})/g;
 
 export function getEndpointByKeyword(keyword: string) {
-  if (isInteger(keyword)) {
-    return `/blocks/${keyword}`;
-  } else if (keyword.indexOf("terravaloper") === 0) {
-    return `/validator/${keyword}`;
-  } else if (keyword.indexOf("terra") === 0) {
-    return `/address/${keyword}`;
+  const key = keyword.toLowerCase();
+
+  if (isInteger(key)) {
+    return `/blocks/${key}`;
+  } else if (key.indexOf("terravaloper") === 0) {
+    return `/validator/${key}`;
+  } else if (key.indexOf("terra") === 0) {
+    return `/address/${key}`;
+  } else if (key.length === 64) {
+    return `/tx/${key}`;
   } else {
-    return `/tx/${keyword}`;
+    return `/notfound/${keyword}`;
   }
 }
 
