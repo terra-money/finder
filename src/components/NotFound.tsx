@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import s from "./NotFound.module.scss";
 import earth from "../images/earth.svg";
@@ -9,18 +9,21 @@ type Props = {
 };
 
 const NotFound = ({ keyword }: Props) => {
+  const { keyword: param } = useParams();
+  const word = keyword || param;
+
   return (
     <div className={s.container}>
       <div>
-        {keyword ? (
+        {word ? (
           <>
             <h1>Search not found</h1>
             <p>
-              Sorry, we couldn't find any results for <span>{keyword}</span>
+              Sorry, we couldn't find any results for <span>{word}</span>
             </p>
             <p>
-              Please input the correct block number or transaction hash or
-              account address.
+              Please input the correct block number, transaction hash or account
+              address.
             </p>
           </>
         ) : (
