@@ -11,6 +11,12 @@ interface Contracts {
   icon: string;
 }
 
+interface NFTContracts {
+  name: string;
+  icon: string;
+  contract: string;
+}
+
 interface ChainOption {
   name: string;
   chainID: string;
