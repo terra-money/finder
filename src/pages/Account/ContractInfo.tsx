@@ -1,21 +1,21 @@
 import { useRecoilValue } from "recoil";
 import { Whitelist } from "../../store/WhitelistStore";
 import { Contracts } from "../../store/ContractStore";
+import { NFTContracts } from "../../store/NFTContractStore";
 import WithFetch from "../../HOCs/WithFetch";
 import Loading from "../../components/Loading";
 import s from "./ContractInfo.module.scss";
 
 const ContractInfo = ({ address }: { address: string }) => {
   const token = useRecoilValue(Whitelist)?.[address];
+  const nft = useRecoilValue(NFTContracts)?.[address];
   const contract = useRecoilValue(Contracts)?.[address];
 
-  return token || contract ? (
+  const whitelist = token || contract || nft;
+
+  return whitelist ? (
     <section className={s.wrapper}>
-      <img
-        src={token?.icon || contract?.icon}
-        alt={token?.symbol || contract?.name}
-        className={s.icon}
-      />
+      <img src={whitelist?.icon} alt="icon" className={s.icon} />
       {token ? (
         <span className={s.name}>
           {`${token.protocol} ${token.symbol} Token `}
@@ -24,7 +24,7 @@ const ContractInfo = ({ address }: { address: string }) => {
         </span>
       ) : (
         <span className={s.name}>
-          {contract.protocol} {contract.name}
+          {nft?.name || `${contract?.protocol} ${contract?.name}`}
         </span>
       )}
     </section>
