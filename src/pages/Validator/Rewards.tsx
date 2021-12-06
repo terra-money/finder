@@ -1,11 +1,11 @@
 import React from "react";
 import { isEmpty } from "lodash";
 
-import format from "../../scripts/format";
 import Table from "../../components/Table";
 import Amount from "../../components/Amount";
 import Card from "../../components/Card";
 import NoMoreData from "../../components/NoMoreData";
+import Denom from "../../components/Denom";
 
 const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
   <Card title={title} bordered>
@@ -21,7 +21,9 @@ const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
         <tbody>
           {list.map(({ denom, amount }, index) => (
             <tr key={index}>
-              <td>{format.denom(denom)}</td>
+              <td>
+                <Denom denom={denom} />
+              </td>
               <td className="text-right">
                 <Amount>{amount}</Amount>
               </td>
