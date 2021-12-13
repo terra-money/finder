@@ -200,10 +200,10 @@ const usePollTxHash = (txhash: string) => {
   const [refetchTx, setRefetchTx] = useState<boolean>(true);
 
   /* polling mempool tx */
-  const [refetchMempool, setRefetchMempool] = useState<boolean>(true);
+  const [refetchMempool, setRefetchMempool] = useState<boolean>(false);
 
   /* query: tx */
-  const { refetch, ...txQuery } = useQuery(
+  const txQuery = useQuery(
     [chainID, txhash, "tx"],
     () => apiClient.get<TxResponse>(fcdURL + `/v1/tx/${txhash}`),
     {
@@ -233,12 +233,16 @@ const usePollTxHash = (txhash: string) => {
       setRefetchMempool(false);
     }
 
+    if (!txQuery.isFetching && !txQuery.data?.data) {
+      setRefetchMempool(true);
+    }
+
     if (mempoolQuery.data?.data) {
       setRefetchMempool(false);
     }
 
     setProgress(state => (state + 0.0333) % 1);
-  }, [mempoolQuery.data, txQuery.data, txhash]);
+  }, [mempoolQuery.data, txQuery.data, txQuery.isFetching, txhash]);
 
   return {
     data: stored,
