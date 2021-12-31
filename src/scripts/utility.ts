@@ -6,6 +6,7 @@ import { countries, Country } from "countries-list";
 import { filter } from "lodash";
 import { Coin } from "@terra-money/terra.js";
 import { isInteger } from "./math";
+import { isTnsName } from "../libs/tns";
 
 export const DEFAULT_CURRENCY = `uusd`;
 export const BASE_DENOM = `uluna`;
@@ -16,6 +17,8 @@ export function getEndpointByKeyword(keyword: string) {
 
   if (isInteger(key)) {
     return `/blocks/${key}`;
+  } else if (isTnsName(key)) {
+    return `/address/${key}`;
   } else if (key.indexOf("terravaloper") === 0) {
     return `/validator/${key}`;
   } else if (key.indexOf("terra") === 0) {
