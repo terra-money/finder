@@ -8,6 +8,7 @@ import Amount from "../../components/Amount";
 import { ReactComponent as Terra } from "../../images/Terra.svg";
 import { ReactComponent as IBC } from "../../images/IBC.svg";
 import s from "./AmountCard.module.scss";
+import { ASSET_URL } from "../../scripts/utility";
 
 type Props = {
   denom: string;
@@ -34,12 +35,12 @@ const AmountCard = (props: Props) => {
     decimals
   } = props;
   const size = { width: 30, height: 30 };
-  const iconLink = `https://assets.terra.money/icon/60/${denom}.png`;
+  const iconLink = `${ASSET_URL}/icon/60/${denom}.png`;
   const [iconError, setIconError] = useState(false);
 
   const iconRender = (
     <div className={s.icon}>
-      {hash && path ? (
+      {hash && path && !icon ? (
         <IBC {...size} />
       ) : icon ? (
         <img src={icon} alt={denom} {...size} />
@@ -65,8 +66,7 @@ const AmountCard = (props: Props) => {
             <h1 className={s.denom}>{denom}</h1>
             {hash && path && (
               <span className={s.meta}>
-                {format.truncate(hash, [6, 6])} ({path.replace("transfer/", "")}
-                )
+                {format.truncate(hash, [6, 6])} ({path})
               </span>
             )}
           </div>

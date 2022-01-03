@@ -1,5 +1,7 @@
-import format from "../../scripts/format";
-import useDenomTrace from "../../hooks/useDenomTrace";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { useCurrentChain } from "../../contexts/ChainsContext";
+import { ASSET_URL } from "../../scripts/utility";
 import AmountCard from "./AmountCard";
 
 type Props = {
@@ -9,22 +11,30 @@ type Props = {
 
 const IBCUnit = ({ denom, available }: Props) => {
   const hash = denom.replace("ibc/", "");
-  const data = useDenomTrace(denom);
+  const data = useIBCWhitelist();
+  const tokenInfo = data?.[hash];
 
-  if (!data) {
-    return <>{format.truncate(hash, [6, 6])}</>;
-  }
-
-  const { base_denom, path } = data;
-
-  return (
+  return tokenInfo ? (
     <AmountCard
       amount={available}
       hash={hash}
-      path={path}
-      denom={format.denom(base_denom)}
+      path={tokenInfo.path}
+      icon={tokenInfo.icon}
+      denom={tokenInfo.symbol}
     />
+  ) : (
+    <></>
   );
 };
 
 export default IBCUnit;
+
+/* hook */
+const useIBCWhitelist = () => {
+  const chainID = useCurrentChain();
+  const { data } = useQuery(["IBCWhitelist"], () =>
+    axios.get(`${ASSET_URL}/ibc/tokens.json`)
+  );
+
+  return data?.data[chainID.name];
+};

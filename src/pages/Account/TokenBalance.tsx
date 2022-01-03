@@ -27,7 +27,7 @@ const TokenBalance = ({ balance, vesting, address }: Props) => {
 
   return (
     <>
-      <Card title="Terra Native" bordered headerClassName={s.cardTitle}>
+      <Card title="Coins" bordered headerClassName={s.cardTitle}>
         {nativeBlanace.length ? (
           <div className={s.cardBodyContainer}>
             <AvailableList list={nativeBlanace} />
@@ -41,8 +41,9 @@ const TokenBalance = ({ balance, vesting, address }: Props) => {
         )}
       </Card>
 
-      {ibcBalance.length ? (
-        <Card title="IBC Tokens" bordered headerClassName={s.cardTitle}>
+      {tokens?.list?.filter(t => t.balance !== "0").length ||
+      ibcBalance.length ? (
+        <Card title="Tokens" bordered headerClassName={s.cardTitle}>
           <div className={s.cardBodyContainer}>
             {ibcBalance.map((balance, key) => (
               <Available
@@ -51,15 +52,8 @@ const TokenBalance = ({ balance, vesting, address }: Props) => {
                 key={key}
               />
             ))}
-          </div>
-        </Card>
-      ) : undefined}
-
-      {tokens?.list?.filter(t => t.balance !== "0").length ? (
-        <Card title="CW20 Tokens" bordered headerClassName={s.cardTitle}>
-          <div className={s.cardBodyContainer}>
-            {tokens.list
-              .filter(t => t.balance !== "0")
+            {tokens?.list
+              ?.filter(t => t.balance !== "0")
               .map((t, i) => (
                 <AmountCard
                   key={i}

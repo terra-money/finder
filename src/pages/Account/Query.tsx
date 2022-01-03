@@ -18,7 +18,7 @@ const ACE_PROPS = {
   theme: "github",
   name: "JSON",
   width: "100%",
-  height: "80px",
+  height: "160px",
   autoComplete: "off",
   className: "form-control",
   showGutter: false,
