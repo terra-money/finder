@@ -36,6 +36,7 @@ const formatAccAddress = (
 
   const names = token?.symbol || contractName;
   const showProtocolName = !token?.symbol && !isLPtoken && contractName;
+  const icon = !hideIcon && (token?.icon || contract?.icon);
 
   return (
     <div className={c(s.wrapper, className)}>
@@ -45,7 +46,7 @@ const formatAccAddress = (
             <span className={s.protocol}>{contract.protocol}</span>
           )}
           <Finder q="address" v={address} children={names} />
-          {hideIcon ? undefined : (
+          {icon && (
             <img
               src={token?.icon || contract?.icon}
               alt={token?.symbol || contract?.name}
