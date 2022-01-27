@@ -46,13 +46,7 @@ const formatAccAddress = (
             <span className={s.protocol}>{contract.protocol}</span>
           )}
           <Finder q="address" v={address} children={names} />
-          {icon && (
-            <img
-              src={token?.icon || contract?.icon}
-              alt={token?.symbol || contract?.name}
-              className={s.icon}
-            />
-          )}
+          {icon && <img src={icon} alt={icon} className={s.icon} />}
         </>
       ) : (
         <Finder q="address" v={address} children={renderAddress} />
