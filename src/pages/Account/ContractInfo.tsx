@@ -13,9 +13,11 @@ const ContractInfo = ({ address }: { address: string }) => {
 
   const whitelist = token || contract || nft;
 
+  const icon = whitelist?.icon;
+
   return whitelist ? (
     <section className={s.wrapper}>
-      <img src={whitelist?.icon} alt="icon" className={s.icon} />
+      {icon && <img src={icon} alt="icon" className={s.icon} />}
       {token ? (
         <span className={s.name}>
           {`${token.protocol} ${token.symbol} Token `}
