@@ -4,6 +4,7 @@ import { Contracts } from "../../store/ContractStore";
 import { NFTContracts } from "../../store/NFTContractStore";
 import WithFetch from "../../HOCs/WithFetch";
 import Loading from "../../components/Loading";
+import Image from "../../components/Image";
 import s from "./ContractInfo.module.scss";
 
 const ContractInfo = ({ address }: { address: string }) => {
@@ -17,7 +18,7 @@ const ContractInfo = ({ address }: { address: string }) => {
 
   return whitelist ? (
     <section className={s.wrapper}>
-      {icon && <img src={icon} alt="icon" className={s.icon} />}
+      <Image url={icon} className={s.icon} />
       {token ? (
         <span className={s.name}>
           {`${token.protocol} ${token.symbol} Token `}

@@ -6,6 +6,7 @@ import format from "../scripts/format";
 import { Whitelist } from "../store/WhitelistStore";
 import { Contracts } from "../store/ContractStore";
 import Finder from "./Finder";
+import Image from "./Image";
 import s from "./Address.module.scss";
 
 type Prop = {
@@ -36,7 +37,7 @@ const formatAccAddress = (
 
   const names = token?.symbol || contractName;
   const showProtocolName = !token?.symbol && !isLPtoken && contractName;
-  const icon = !hideIcon && (token?.icon || contract?.icon);
+  const icon = !hideIcon ? token?.icon || contract?.icon : undefined;
 
   return (
     <div className={c(s.wrapper, className)}>
@@ -46,7 +47,7 @@ const formatAccAddress = (
             <span className={s.protocol}>{contract.protocol}</span>
           )}
           <Finder q="address" v={address} children={names} />
-          {icon && <img src={icon} alt={icon} className={s.icon} />}
+          <Image url={icon} className={s.icon} />
         </>
       ) : (
         <Finder q="address" v={address} children={renderAddress} />
