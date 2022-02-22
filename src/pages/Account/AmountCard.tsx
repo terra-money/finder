@@ -1,14 +1,13 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import BigNumber from "bignumber.js";
 import { find, map } from "lodash";
 import { lte } from "../../scripts/math";
 import format from "../../scripts/format";
+import { ASSET_URL } from "../../scripts/utility";
+import Image from "../../components/Image";
 import Card from "../../components/Card";
 import Amount from "../../components/Amount";
-import { ReactComponent as Terra } from "../../images/Terra.svg";
-import { ReactComponent as IBC } from "../../images/IBC.svg";
 import s from "./AmountCard.module.scss";
-import { ASSET_URL } from "../../scripts/utility";
 
 type Props = {
   denom: string;
@@ -34,26 +33,11 @@ const AmountCard = (props: Props) => {
     currency,
     decimals
   } = props;
-  const size = { width: 30, height: 30 };
   const iconLink = `${ASSET_URL}/icon/60/${denom}.png`;
-  const [iconError, setIconError] = useState(false);
 
   const iconRender = (
     <div className={s.icon}>
-      {hash && path && !icon ? (
-        <IBC {...size} />
-      ) : icon ? (
-        <img src={icon} alt={denom} {...size} />
-      ) : !iconError ? (
-        <img
-          src={iconLink}
-          onError={() => setIconError(true)}
-          alt={denom}
-          {...size}
-        />
-      ) : (
-        <Terra {...size} />
-      )}
+      <Image url={icon || iconLink} size={30} />
     </div>
   );
 
