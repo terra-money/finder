@@ -16,9 +16,13 @@ type Props = {
   decimals?: number;
 };
 
-type Contract = Dictionary<Contracts>;
+export type Contract = Dictionary<Contracts>;
 
-const renderDenom = (str: string, whitelist: Tokens, contracts: Contract) => {
+export const renderDenom = (
+  str: string,
+  whitelist: Tokens,
+  contracts: Contract
+) => {
   const list = whitelist?.[str];
   const contract = contracts?.[str];
   if (isTerraAddress(str) && (list || contract)) {
