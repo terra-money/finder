@@ -26,6 +26,7 @@ import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
 import useFCD from "../../hooks/useFCD";
 import TxAmount from "../Tx/TxAmount";
 import s from "./Txs.module.scss";
+import CsvExport from "./CSVExport";
 
 type Fee = {
   denom: string;
@@ -90,7 +91,11 @@ const getMultiSendAmount = (
   );
 };
 
-const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
+export const getAmount = (
+  address: string,
+  matchedMsg?: LogFinderAmountResult[][],
+  rowLimit?: number
+) => {
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
   matchedMsg?.forEach(matchedLog => {
@@ -114,7 +119,8 @@ const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
   });
 
   //amount row limit
-  return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
+  if (rowLimit) return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
+  return [amountIn, amountOut];
 };
 
 const Txs = ({ address }: { address: string }) => {
@@ -162,6 +168,10 @@ const Txs = ({ address }: { address: string }) => {
 
   return (
     <Card title="Transactions" bordered headerClassName={s.cardTitle}>
+      <div className={s.exportCsvWrapper}>
+        <CsvExport address={address} />
+      </div>
+
       <Pagination
         next={data?.next}
         title="transaction"
@@ -201,7 +211,7 @@ const getRow = (
 ) => {
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;
-  const [amountIn, amountOut] = getAmount(address, matchedMsg);
+  const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
   const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
   const feeData = fee?.split(" ");
 
