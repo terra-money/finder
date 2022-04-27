@@ -91,7 +91,7 @@ const getMultiSendAmount = (
   );
 };
 
-export const getAmount = (
+const getAmount = (
   address: string,
   matchedMsg?: LogFinderAmountResult[][],
   rowLimit?: number
