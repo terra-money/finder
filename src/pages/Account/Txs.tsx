@@ -33,7 +33,7 @@ type Fee = {
   amount: string;
 };
 
-const getTxFee = (prop: Fee) =>
+export const getTxFee = (prop: Fee) =>
   prop && `${format.amount(prop.amount)} ${format.denom(prop.denom)}`;
 
 const getRenderAmount = (
@@ -91,7 +91,7 @@ const getMultiSendAmount = (
   );
 };
 
-export const getAmount = (
+const getAmount = (
   address: string,
   matchedMsg?: LogFinderAmountResult[][],
   rowLimit?: number

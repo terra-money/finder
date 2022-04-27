@@ -15,14 +15,25 @@ import { Contracts } from "../../store/ContractStore";
 import { Contract, renderDenom } from "../../components/Amount";
 import { useFCDURL } from "../../contexts/ChainsContext";
 import apiClient from "../../apiClient";
-import { getAmount } from "./Txs";
+import { getTxFee } from "./Txs";
+import {
+  splitCoinData,
+  sliceMsgType,
+  fromISOTime
+} from "../../scripts/utility";
+import { plus } from "../../scripts/math";
 
 interface CSV {
   timestamp: string;
-  address: string;
   txHash: string;
+  trackedAddress: string;
+  txType: string;
+  sender: string;
+  recipient: string;
+  amount: string;
   currency: string;
-  amount: number;
+  feeAmount: string;
+  feeCurrency: string;
 }
 
 interface Params {
@@ -31,12 +42,23 @@ interface Params {
   account: string | undefined;
 }
 
+interface Amount {
+  amount: string;
+  denom: string;
+}
+
+// Defines the order of columns in CSV
 const csvHeaders = [
   { label: "Timestamp", key: "timestamp" },
-  { label: "Address", key: "address" },
   { label: "Transaction Hash", key: "txHash" },
-  { label: "Currency Symbol", key: "currency" },
-  { label: "Amount", key: "amount" }
+  { label: "Tracked Address", key: "trackedAddress" },
+  { label: "Transaction Type", key: "txType" },
+  { label: "Sender", key: "sender" },
+  { label: "Recipient", key: "recipient" },
+  { label: "Amount", key: "amount" },
+  { label: "Currency", key: "currency" },
+  { label: "Fee Amount", key: "feeAmount" },
+  { label: "Fee Currency", key: "feeCurrency" }
 ];
 
 const getCSVFilename = (address: string) => {
@@ -44,6 +66,146 @@ const getCSVFilename = (address: string) => {
   return `report-${address}-${
     timestamp.getMonth() + 1
   }-${timestamp.getDate()}-${timestamp.getFullYear()}.csv`;
+};
+
+const concatAmounts = (
+  amountList: string[] | undefined,
+  amountArray: Amount[]
+) => {
+  amountList?.forEach(amount => {
+    const coin = splitCoinData(amount.trim());
+    if (coin) {
+      const { amount, denom } = coin;
+      amountArray.push({
+        amount,
+        denom
+      });
+    }
+  });
+};
+
+const processMultiSend = (
+  matchedLogs: LogFinderAmountResult[],
+  address: string,
+  amountIn: Amount[],
+  amountOut: Amount[],
+  txTypesIn: string[],
+  txTypesOut: string[],
+  sendersIn: string[],
+  sendersOut: string[],
+  recipientsIn: string[],
+  recipientsOut: string[]
+) => {
+  const amountInMap = new Map<string, string>();
+  const amountOutMap = new Map<string, string>();
+
+  matchedLogs.forEach(log => {
+    const recipient = log.match[0].value;
+    const coin = log.match[1].value.split(",").map(splitCoinData);
+
+    coin.forEach(data => {
+      if (data) {
+        const { amount, denom } = data;
+        const amountInStack = amountInMap.get(denom);
+        const amountOutStack = amountOutMap.get(denom);
+
+        const inStack = amountInStack ? plus(amountInStack, amount) : amount;
+        const outStack = amountOutStack ? plus(amountOutStack, amount) : amount;
+
+        if (recipient === address) {
+          amountInMap.set(denom, inStack);
+        } else {
+          amountOutMap.set(denom, outStack);
+        }
+      }
+    });
+  });
+
+  amountInMap.forEach((amount, denom) => {
+    amountIn.push({
+      amount,
+      denom
+    });
+    txTypesIn.push("multiSend");
+    // just push empty values as not sure how to process this correctly
+    sendersIn.push("");
+    recipientsIn.push("");
+  });
+
+  amountOutMap.forEach((amount, denom) => {
+    amountOut.push({
+      amount,
+      denom
+    });
+    txTypesOut.push("multiSend");
+    sendersOut.push("");
+    recipientsOut.push("");
+  });
+};
+
+const getTxInfo = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
+  const amountsIn: Amount[] = [];
+  const amountsOut: Amount[] = [];
+  let txTypesIn: string[] = [];
+  let txTypesOut: string[] = [];
+  let sendersIn: string[] = [];
+  let sendersOut: string[] = [];
+  let recipientsIn: string[] = [];
+  let recipientsOut: string[] = [];
+
+  matchedMsg?.forEach(matchedLog => {
+    if (matchedLog && matchedLog[0]?.transformed?.type === "multiSend") {
+      processMultiSend(
+        matchedLog,
+        address,
+        amountsIn,
+        amountsOut,
+        txTypesIn,
+        txTypesOut,
+        sendersIn,
+        sendersOut,
+        recipientsIn,
+        recipientsOut
+      );
+    } else {
+      matchedLog?.forEach(log => {
+        const txType = log.transformed?.type;
+        const amounts = log.transformed?.amount?.split(",");
+        const sender = log.transformed?.sender;
+        const recipient = log.transformed?.recipient;
+
+        if (address === sender) {
+          concatAmounts(amounts, amountsOut);
+          // We want the recipientsOut, sendersOut, etc. arrays to have the same length as amounts so it matches while rendering csv
+          recipientsOut = recipientsOut.concat(
+            Array(amountsOut.length).fill(recipient)
+          );
+          sendersOut = sendersOut.concat(Array(amountsOut.length).fill(sender));
+          txTypesOut = txTypesOut.concat(Array(amountsOut.length).fill(txType));
+        }
+
+        if (address === recipient) {
+          concatAmounts(amounts, amountsIn);
+          recipientsIn = recipientsIn.concat(
+            Array(amountsIn.length).fill(recipient)
+          );
+          sendersIn = sendersIn.concat(Array(amountsIn.length).fill(sender));
+          txTypesIn = txTypesIn.concat(Array(amountsIn.length).fill(txType));
+        }
+      });
+    }
+  });
+
+  return {
+    amountsIn,
+    amountsOut,
+    txTypesIn,
+    txTypesOut,
+    sendersIn,
+    sendersOut,
+    recipientsIn,
+    recipientsOut
+  };
 };
 
 const CsvExport = ({ address }: { address: string }) => {
@@ -106,38 +268,80 @@ const CsvExport = ({ address }: { address: string }) => {
     address: string,
     matchedMsg?: LogFinderAmountResult[][]
   ): CSV[] | null => {
-    const { txhash, timestamp } = response;
+    const { tx: txBody, txhash, timestamp } = response;
     const isSuccess = !response.code;
 
+    // Don't include unsuccessful transactions in CSV
     if (!isSuccess) return null;
 
-    // Do not include in CSV if not success
-    const [amountIn, amountOut] = getAmount(address, matchedMsg);
-    const rows = new Array(amountIn.length + amountOut.length);
+    const {
+      amountsIn,
+      amountsOut,
+      txTypesIn,
+      txTypesOut,
+      sendersIn,
+      sendersOut,
+      recipientsIn,
+      recipientsOut
+    } = getTxInfo(address, matchedMsg);
 
-    amountIn.forEach(amountData => {
-      const { denom, amount } = amountData.props;
+    // Fee
+    const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
+    const feeData = fee?.split(" ");
+
+    const feeAmount = feeData ? feeData[0] : "";
+    const feeCurrency = feeData ? feeData[1] : "";
+
+    // TX data that is the same for both amounts in and amounts out
+    const baseTxData = {
+      timestamp: fromISOTime(timestamp.toString()),
+      trackedAddress: address,
+      txHash: txhash,
+      feeAmount,
+      feeCurrency
+    };
+
+    const rows: CSV[] = [];
+
+    if (amountsIn.length === 0 && amountsOut.length === 0) {
+      // For example MsgVote does not transfer any value. Sometimes also MsgExecuteContract
+      const msg = sliceMsgType(txBody.value.msg[0].type);
+      rows.push({
+        ...baseTxData,
+        currency: "",
+        amount: "0",
+        txType: msg,
+        sender: "",
+        recipient: ""
+      });
+    }
+
+    // Loop over amountsOut and amountsIn and add a new row for every single currency amount
+    amountsIn.forEach((amountData, i) => {
+      const { denom, amount } = amountData;
       const tokenDecimals = whitelist?.[denom]?.decimals;
 
       rows.push({
-        timestamp: timestamp,
-        address: address,
-        txHash: txhash,
+        ...baseTxData,
         currency: renderDenom(denom, whitelist, contracts),
-        amount: format.amount(amount, tokenDecimals) // amount in is positive (received)
+        amount: format.amount(amount, tokenDecimals), // amount in is positive (received)
+        txType: txTypesIn[i],
+        sender: sendersIn[i],
+        recipient: recipientsIn[i]
       });
     });
 
-    amountOut.forEach(amountData => {
-      const { denom, amount } = amountData.props;
+    amountsOut.forEach((amountData, i) => {
+      const { denom, amount } = amountData;
       const tokenDecimals = whitelist?.[denom]?.decimals;
 
       rows.push({
-        timestamp: timestamp,
-        address: address,
-        txHash: txhash,
+        ...baseTxData,
         currency: renderDenom(denom, whitelist, contracts),
-        amount: `-${format.amount(amount, tokenDecimals)}` // amount in is negative (spent)
+        amount: `-${format.amount(amount, tokenDecimals)}`, // amount in is negative (spent)
+        txType: txTypesOut[i],
+        sender: sendersOut[i],
+        recipient: recipientsOut[i]
       });
     });
 
