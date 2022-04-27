@@ -16,6 +16,7 @@ import { Contract, renderDenom } from "../../components/Amount";
 import { useFCDURL } from "../../contexts/ChainsContext";
 import apiClient from "../../apiClient";
 import { getAmount, getTxFee } from "./Txs";
+import { sliceMsgType } from "../../scripts/utility";
 
 interface CSV {
   timestamp: string;
@@ -33,12 +34,13 @@ interface Params {
 
 const csvHeaders = [
   { label: "Timestamp", key: "timestamp" },
+  { label: "Transaction Hash", key: "txHash" },
+  { label: "Transaction Type", key: "txType" },
   { label: "Address", key: "address" },
-  { label: "Transaction Hash", key: "txhash" },
-  { label: "Fee Amount", key: "feeAmount" },
-  { label: "Fee Currency", key: "feeCurrency" },
   { label: "Currency Symbol", key: "currency" },
-  { label: "Amount", key: "amount" }
+  { label: "Amount", key: "amount" },
+  { label: "Fee Amount", key: "feeAmount" },
+  { label: "Fee Currency", key: "feeCurrency" }
 ];
 
 const getCSVFilename = (address: string) => {
@@ -128,9 +130,10 @@ const CsvExport = ({ address }: { address: string }) => {
     const baseTxData = {
       timestamp,
       address,
-      txhash,
       feeAmount,
-      feeCurrency
+      feeCurrency,
+      txHash: txhash,
+      txType: sliceMsgType(txBody.value.msg[0].type)
     };
 
     amountIn.forEach(amountData => {
