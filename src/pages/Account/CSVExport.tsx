@@ -15,7 +15,7 @@ import { Contracts } from "../../store/ContractStore";
 import { Contract, renderDenom } from "../../components/Amount";
 import { useFCDURL } from "../../contexts/ChainsContext";
 import apiClient from "../../apiClient";
-import { getAmount } from "./Txs";
+import { getAmount, getTxFee } from "./Txs";
 
 interface CSV {
   timestamp: string;
@@ -34,7 +34,9 @@ interface Params {
 const csvHeaders = [
   { label: "Timestamp", key: "timestamp" },
   { label: "Address", key: "address" },
-  { label: "Transaction Hash", key: "txHash" },
+  { label: "Transaction Hash", key: "txhash" },
+  { label: "Fee Amount", key: "feeAmount" },
+  { label: "Fee Currency", key: "feeCurrency" },
   { label: "Currency Symbol", key: "currency" },
   { label: "Amount", key: "amount" }
 ];
@@ -106,7 +108,7 @@ const CsvExport = ({ address }: { address: string }) => {
     address: string,
     matchedMsg?: LogFinderAmountResult[][]
   ): CSV[] | null => {
-    const { txhash, timestamp } = response;
+    const { tx: txBody, txhash, timestamp } = response;
     const isSuccess = !response.code;
 
     if (!isSuccess) return null;
@@ -115,14 +117,28 @@ const CsvExport = ({ address }: { address: string }) => {
     const [amountIn, amountOut] = getAmount(address, matchedMsg);
     const rows = new Array(amountIn.length + amountOut.length);
 
+    // Fee
+    const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
+    const feeData = fee?.split(" ");
+
+    const feeAmount = feeData ? feeData[0] : "";
+    const feeCurrency = feeData ? feeData[1] : "";
+
+    // TX data that is the same for both amounts in and amounts out
+    const baseTxData = {
+      timestamp,
+      address,
+      txhash,
+      feeAmount,
+      feeCurrency
+    };
+
     amountIn.forEach(amountData => {
       const { denom, amount } = amountData.props;
       const tokenDecimals = whitelist?.[denom]?.decimals;
 
       rows.push({
-        timestamp: timestamp,
-        address: address,
-        txHash: txhash,
+        ...baseTxData,
         currency: renderDenom(denom, whitelist, contracts),
         amount: format.amount(amount, tokenDecimals) // amount in is positive (received)
       });
@@ -133,9 +149,7 @@ const CsvExport = ({ address }: { address: string }) => {
       const tokenDecimals = whitelist?.[denom]?.decimals;
 
       rows.push({
-        timestamp: timestamp,
-        address: address,
-        txHash: txhash,
+        ...baseTxData,
         currency: renderDenom(denom, whitelist, contracts),
         amount: `-${format.amount(amount, tokenDecimals)}` // amount in is negative (spent)
       });
