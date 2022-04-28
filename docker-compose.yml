@@ -1,0 +1,9 @@
+version: "3.2"
+services:
+  frontend:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"

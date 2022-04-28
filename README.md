@@ -8,6 +8,12 @@ The Terra Finder is a tool to search through blocks, transactions, and accounts 
 
 The Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explorer).
 
+## Run with Docker
+1. Clone project: `git clone https://github.com/RBFLabs/finder.git`
+2. Enter directory: `cd finder`
+3. Run Docker: `docker-compose up --build`
+4. Open Browser at `http://localhost:3000`
+
 ## Project setup
 
 ```
