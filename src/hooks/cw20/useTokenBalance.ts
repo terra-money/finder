@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Dictionary } from "ramda";
-import { useRecoilValue } from "recoil";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import alias from "./alias";
-import { Whitelist } from "../../store/WhitelistStore";
 import { useCurrentChain } from "../../contexts/ChainsContext";
+import { useWhitelist } from "../useTerraAssets";
 
 export interface Token {
   icon?: string;
@@ -38,7 +37,7 @@ const useTokenBalance = (
 ): { loading: boolean; whitelist?: Tokens; list?: TokenBalance[] } => {
   const [result, setResult] = useState<Dictionary<string>>();
 
-  const whitelist: Tokens = useRecoilValue(Whitelist);
+  const whitelist = useWhitelist();
   const { mantle } = useCurrentChain();
 
   useEffect(() => {

@@ -7,10 +7,10 @@ import IBCUnit from "./IBCUnit";
 type Props = {
   denom: string;
   available: string;
-  currency?: Currency;
+  response?: Currency;
 };
 
-const Available = ({ denom, available, currency }: Props) => {
+const Available = ({ denom, available, response }: Props) => {
   if (isIbcDenom(denom)) {
     return <IBCUnit denom={denom} available={available} />;
   }
@@ -19,7 +19,7 @@ const Available = ({ denom, available, currency }: Props) => {
     <AmountCard
       denom={format.denom(denom)}
       amount={available}
-      currency={currency}
+      response={response}
     />
   );
 };

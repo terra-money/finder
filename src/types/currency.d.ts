@@ -1,8 +1,6 @@
 interface Currency {
-  response: {
-    data?: CurrencyData[];
-    isLoading: boolean;
-  };
+  data?: CurrencyData[];
+  isLoading: boolean;
   currency: string;
 }
 

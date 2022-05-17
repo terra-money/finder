@@ -1,8 +1,6 @@
-import { useRecoilValue } from "recoil";
 import { Dictionary } from "ramda";
 import { Tokens } from "../hooks/cw20/useTokenBalance";
-import { Whitelist } from "../store/WhitelistStore";
-import { Contracts } from "../store/ContractStore";
+import { useContracts, useWhitelist } from "../hooks/useTerraAssets";
 import { isTerraAddress } from "../scripts/utility";
 import format from "../scripts/format";
 import useDenomTrace from "../hooks/useDenomTrace";
@@ -32,8 +30,8 @@ const renderDenom = (str: string, whitelist: Tokens, contracts: Contract) => {
 
 const Amount = (props: Props) => {
   const { estimated, fontSize, className, denom, children, decimals } = props;
-  const whitelist: Tokens = useRecoilValue(Whitelist);
-  const contracts: Contract = useRecoilValue(Contracts);
+  const whitelist = useWhitelist();
+  const contracts = useContracts();
 
   const tokenDecimals = denom ? whitelist?.[denom]?.decimals : decimals;
 
@@ -51,7 +49,10 @@ const Amount = (props: Props) => {
         .{decimal}
         {data
           ? ` ${format.denom(data.base_denom)}`
-          : denom && ` ${renderDenom(denom, whitelist, contracts)}`}
+          : denom &&
+            whitelist &&
+            contracts &&
+            ` ${renderDenom(denom, whitelist, contracts)}`}
       </small>
     </span>
   );

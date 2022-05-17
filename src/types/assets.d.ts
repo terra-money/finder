@@ -3,6 +3,7 @@ interface Whitelist {
   symbol: string;
   token: string;
   icon?: string;
+  decimals?: number;
 }
 
 interface Contracts {
