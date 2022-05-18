@@ -48,6 +48,7 @@
     "@terra-money/log-finder-ruleset": "^1.0.5",
     "@terra-money/react-base-components": "^1.0.1",
     "@terra-money/terra.js": "^2.1.23",
+    "@terra.kitchen/utils": "^1.0.7",
     "@types/recoil": "^0.0.9",
     "ace-builds": "^1.4.12",
     "axios": "^0.21.1",
