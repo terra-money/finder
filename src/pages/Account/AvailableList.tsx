@@ -1,5 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { useDenoms } from "../../components/SelectCurrency";
+import { useFCDURL } from "../../contexts/ChainsContext";
 import useRequest from "../../hooks/useRequest";
 import { DEFAULT_CURRENCY } from "../../scripts/utility";
 import { Currency } from "../../store/CurrencyStore";
@@ -9,9 +10,9 @@ const AvailableList = ({ list }: { list: Balance[] }) => {
   const currency = useRecoilValue(Currency);
   const denoms = useDenoms();
   const denom = denoms?.includes(currency) ? currency : DEFAULT_CURRENCY;
-
+  const fcdURL = useFCDURL();
   const { data, isLoading } = useRequest<CurrencyData[]>({
-    url: `/v1/market/swaprate/${denom}`
+    url: `${fcdURL}/v1/market/swaprate/${denom}`
   });
 
   const props = { data, isLoading, currency };

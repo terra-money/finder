@@ -1,3 +1,4 @@
+import { useFCDURL } from "../contexts/ChainsContext";
 import useRequest from "./useRequest";
 
 const useFCD = <T>(
@@ -7,7 +8,8 @@ const useFCD = <T>(
   address?: string
 ) => {
   const params = { offset, limit: limit, account: address };
-  return useRequest<T>({ url, params: params });
+  const fcdURL = useFCDURL();
+  return useRequest<T>({ url: fcdURL + url, params });
 };
 
 export default useFCD;

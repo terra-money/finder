@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import FetchError from "../components/FetchError";
+import { useFCDURL } from "../contexts/ChainsContext";
 import useRequest from "../hooks/useRequest";
 
 type Props = FetchProps & {
@@ -10,7 +11,11 @@ type Props = FetchProps & {
 
 const WithFetch = (props: Props) => {
   const { url, params, loading, renderError, children } = props;
-  const { data, isLoading, isError } = useRequest({ url, params });
+  const fcdURL = useFCDURL();
+  const { data, isLoading, isError } = useRequest({
+    url: fcdURL + url,
+    params
+  });
   const render = () =>
     typeof children === "function" ? children(data) : children;
 

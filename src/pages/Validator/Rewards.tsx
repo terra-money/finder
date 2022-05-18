@@ -1,13 +1,13 @@
 import React from "react";
 import { isEmpty } from "lodash";
-
+import { Coin } from "@terra-money/terra.js";
 import Table from "../../components/Table";
 import Amount from "../../components/Amount";
 import Card from "../../components/Card";
 import NoMoreData from "../../components/NoMoreData";
 import Denom from "../../components/Denom";
 
-const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
+const Rewards = ({ title, list }: { title: string; list: Coin[] }) => (
   <Card title={title} bordered>
     {!isEmpty(list) ? (
       <Table>
@@ -25,7 +25,7 @@ const Rewards = ({ title, list }: { title: string; list: Reward[] }) => (
                 <Denom denom={denom} />
               </td>
               <td className="text-right">
-                <Amount>{amount}</Amount>
+                <Amount>{amount.toString()}</Amount>
               </td>
             </tr>
           ))}

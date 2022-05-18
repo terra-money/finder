@@ -10,7 +10,7 @@ import WasmMsg from "../../components/WasmMsg";
 import ModalWithButton from "../../components/ModalWithButton";
 import Txs from "./Txs";
 import Query from "./Query";
-import Unbondings from "./Unbondings";
+import Undelegations from "./Undelegations";
 import CopyAddress from "./CopyAddress";
 import Delegations from "./Delegations";
 import ContractInfo from "./ContractInfo";
@@ -69,15 +69,8 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
         )}
       </WithFetch>
 
-      <WithFetch url={`/v1/staking/${address}`}>
-        {(staking: Staking) => (
-          <>
-            <Delegations staking={staking} />
-            <Unbondings staking={staking} />
-          </>
-        )}
-      </WithFetch>
-
+      <Delegations address={address} />
+      <Undelegations address={address} />
       <Txs address={address} />
     </>
   );

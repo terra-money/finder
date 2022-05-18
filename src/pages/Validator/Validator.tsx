@@ -1,44 +1,42 @@
-import React from "react";
 import { useParams } from "react-router-dom";
-import WithFetch from "../../HOCs/WithFetch";
+import { useTerraValidator } from "../../queries/TerraAPI";
 import Card from "../../components/Card";
 import Page from "../../components/Page";
 import Header from "./Header";
 import Informations from "./Informations";
+import { useCommission, useRewards } from "../../queries/distribution";
 import Rewards from "./Rewards";
-import Claims from "./Claims";
 
 const Validator = () => {
   const { address = "" } = useParams();
+  const { data: validator } = useTerraValidator(address);
+  const rewards = useRewards(address);
+  const commissions = useCommission(address);
 
-  return (
-    <WithFetch url={`/v1/staking/validators/${address}`}>
-      {(v: Validator) => (
-        <Page title="Validator Details">
-          <Header {...v} />
+  return validator ? (
+    <Page title="Validator Details">
+      <Header {...validator} />
 
-          <Card>
-            <Informations {...v} />
-          </Card>
+      <Card>
+        <Informations {...validator} />
+      </Card>
 
+      {rewards && commissions ? (
+        <>
           <h2>Rewards and commissions</h2>
           <div className="row">
             <div className="col">
-              <Rewards title="Rewards pool" list={v.rewardsPool.denoms} />
+              <Rewards title="Rewards pool" list={rewards} />
             </div>
 
             <div className="col">
-              <Rewards title="Commissions" list={v.commissions} />
+              <Rewards title="Commissions" list={commissions.toArray()} />
             </div>
           </div>
-
-          <Card title="Claim history" bordered>
-            <Claims address={v.operatorAddress} />
-          </Card>
-        </Page>
-      )}
-    </WithFetch>
-  );
+        </>
+      ) : null}
+    </Page>
+  ) : null;
 };
 
 export default Validator;
