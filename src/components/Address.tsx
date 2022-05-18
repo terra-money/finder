@@ -1,10 +1,12 @@
 import c from "classnames";
-import { useRecoilValue } from "recoil";
-import { Dictionary } from "ramda";
 import { AccAddress } from "@terra-money/terra.js";
+import {
+  ContractList,
+  TokenList,
+  useContracts,
+  useWhitelist
+} from "../hooks/useTerraAssets";
 import format from "../scripts/format";
-import { Whitelist } from "../store/WhitelistStore";
-import { Contracts } from "../store/ContractStore";
 import Finder from "./Finder";
 import Image from "./Image";
 import s from "./Address.module.scss";
@@ -18,8 +20,8 @@ type Prop = {
 
 const formatAccAddress = (
   address: string,
-  whitelist: Dictionary<Whitelist>,
-  contracts: Dictionary<Contracts>,
+  whitelist?: TokenList,
+  contracts?: ContractList,
   hideIcon?: boolean,
   truncate?: boolean,
   className?: string
@@ -44,7 +46,7 @@ const formatAccAddress = (
       {names ? (
         <>
           {showProtocolName && (
-            <span className={s.protocol}>{contract.protocol}</span>
+            <span className={s.protocol}>{contract?.protocol}</span>
           )}
           <Finder q="address" v={address} children={names} />
           <Image url={icon} className={s.icon} />
@@ -71,8 +73,8 @@ const formatValidatorAddress = (
 };
 
 const Address = ({ address, hideIcon, truncate, className }: Prop) => {
-  const whitelist = useRecoilValue(Whitelist);
-  const contracts = useRecoilValue(Contracts);
+  const whitelist = useWhitelist();
+  const contracts = useContracts();
 
   if (AccAddress.validate(address)) {
     return formatAccAddress(

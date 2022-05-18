@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
+import useLCDClient from "../hooks/useLCD";
+import useRequest from "../hooks/useRequest";
 import { getCookie } from "../scripts/cookie";
 import { DEFAULT_CURRENCY, getDefaultCurrency } from "../scripts/utility";
 import { Currency } from "../store/CurrencyStore";
-import { Denoms } from "../store/DenomStore";
 import s from "./SelectCurrency.module.scss";
 
 type Props = {
@@ -12,12 +13,12 @@ type Props = {
 
 const SelectCurrency = (props: Props) => {
   const [currency, setCurrency] = useRecoilState(Currency);
-  const denoms = useRecoilValue(Denoms);
-  const denom = denoms.includes(currency) ? currency : DEFAULT_CURRENCY;
+  const denoms = useDenoms();
+  const denom = denoms?.includes(currency) ? currency : DEFAULT_CURRENCY;
 
   useEffect(() => {
     if (!getCookie("currency") && navigator.cookieEnabled) {
-      const currency = getDefaultCurrency(denoms);
+      const currency = getDefaultCurrency(denoms ?? []);
       setCurrency(currency);
     }
   }, [setCurrency, denoms]);
@@ -29,7 +30,7 @@ const SelectCurrency = (props: Props) => {
         value={denom.substr(1).toUpperCase()}
         onChange={e => setCurrency(`u${e.target.value}`.toLowerCase())}
       >
-        {denoms.map((currency, key) => {
+        {denoms?.map((currency, key) => {
           const activeDenom = currency.substr(1).toUpperCase();
           return <option key={key}>{activeDenom}</option>;
         })}
@@ -42,3 +43,12 @@ const SelectCurrency = (props: Props) => {
 };
 
 export default SelectCurrency;
+
+export const useDenoms = () => {
+  const lcd = useLCDClient();
+  const { data: response }: ActiveDenom = useRequest({
+    url: lcd.config.URL + `/oracle/denoms/actives`
+  });
+
+  return response?.result;
+};

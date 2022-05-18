@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { get, last, isEmpty } from "lodash";
-import { useRecoilValue } from "recoil";
 import c from "classnames";
 import {
   getTxAllCanonicalMsgs,
@@ -14,14 +13,14 @@ import Finder from "../../components/Finder";
 import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
+import { useLogfinderActionRuleSet } from "../../hooks/useLogfinder";
 import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
-import { LogfinderActionRuleSet } from "../../store/LogfinderRuleSetStore";
+import format from "../../scripts/format";
 import Pending from "./Pending";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
 import s from "./Tx.module.scss";
-import format from "../../scripts/format";
 
 type Coin = {
   amount: string;
@@ -29,10 +28,10 @@ type Coin = {
 };
 
 const TxComponent = ({ hash }: { hash: string }) => {
-  const ruleArray = useRecoilValue(LogfinderActionRuleSet);
+  const ruleSet = useLogfinderActionRuleSet();
   const logMatcher = useMemo(
-    () => createLogMatcherForActions(ruleArray),
-    [ruleArray]
+    () => createLogMatcherForActions(ruleSet),
+    [ruleSet]
   );
   const { data: response, progressState } = usePollTxHash(hash);
 

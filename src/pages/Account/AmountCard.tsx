@@ -17,7 +17,7 @@ type Props = {
   icon?: string;
   button?: ReactNode;
   children?: ReactNode;
-  currency?: Currency;
+  response?: Currency;
   decimals?: number;
 };
 
@@ -30,7 +30,7 @@ const AmountCard = (props: Props) => {
     hash,
     button,
     children,
-    currency,
+    response,
     decimals
   } = props;
   const iconLink = `${ASSET_URL}/icon/60/${denom}.png`;
@@ -59,7 +59,7 @@ const AmountCard = (props: Props) => {
               {lte(amount, 0) ? "0" : amount}
             </Amount>
             <span className={s.currency}>
-              {currency && renderCurreny(denom, amount, currency)}
+              {response && renderCurreny(denom, amount, response)}
             </span>
             <div className={s.button}>{button}</div>
           </section>
@@ -73,14 +73,8 @@ const AmountCard = (props: Props) => {
 
 export default AmountCard;
 
-const renderCurreny = (
-  denom: string,
-  amount: string,
-  currencyData: Currency
-) => {
-  const { response, currency } = currencyData;
-  const { data } = response;
-
+const renderCurreny = (denom: string, amount: string, response: Currency) => {
+  const { data, currency } = response;
   const denoms = map(data, "denom").map(str => format.denom(str));
 
   if (!denoms.includes(denom) || !data) return "";

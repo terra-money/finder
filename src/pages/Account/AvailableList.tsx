@@ -1,27 +1,25 @@
 import { useRecoilValue } from "recoil";
-import { useRequest } from "../../HOCs/WithFetch";
+import { useDenoms } from "../../components/SelectCurrency";
+import { useFCDURL } from "../../contexts/ChainsContext";
+import useRequest from "../../hooks/useRequest";
 import { DEFAULT_CURRENCY } from "../../scripts/utility";
 import { Currency } from "../../store/CurrencyStore";
-import { Denoms } from "../../store/DenomStore";
 import Available from "./Available";
 
 const AvailableList = ({ list }: { list: Balance[] }) => {
   const currency = useRecoilValue(Currency);
-  const denoms = useRecoilValue(Denoms);
-  const denom = denoms.includes(currency) ? currency : DEFAULT_CURRENCY;
-
-  const response = useRequest({
-    url: `/v1/market/swaprate/${denom}`
+  const denoms = useDenoms();
+  const denom = denoms?.includes(currency) ? currency : DEFAULT_CURRENCY;
+  const fcdURL = useFCDURL();
+  const { data, isLoading } = useRequest<CurrencyData[]>({
+    url: `${fcdURL}/v1/market/swaprate/${denom}`
   });
 
+  const props = { data, isLoading, currency };
   return (
     <>
       {list.map((a, i) => (
-        <Available
-          {...a}
-          key={i}
-          currency={{ response: response, currency: denom }}
-        />
+        <Available {...a} key={i} response={props} />
       ))}
     </>
   );

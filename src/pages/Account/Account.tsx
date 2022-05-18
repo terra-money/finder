@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import WithFetch from "../../HOCs/WithFetch";
 import Loading from "../../components/Loading";
 import Delegations from "./Delegations";
-import Unbondings from "./Unbondings";
+import Undelegations from "./Undelegations";
 import CopyAddress from "./CopyAddress";
 import TokenBalance from "./TokenBalance";
 import Txs from "./Txs";
@@ -19,15 +19,8 @@ const Account = () => {
           <CopyAddress>{address}</CopyAddress>
 
           <TokenBalance address={address} balance={balance} vesting={vesting} />
-
-          <WithFetch url={`/v1/staking/${address}`}>
-            {(staking: Staking) => (
-              <>
-                <Delegations staking={staking} />
-                <Unbondings staking={staking} />
-              </>
-            )}
-          </WithFetch>
+          <Delegations address={address} />
+          <Undelegations address={address} />
           <Txs address={address} />
         </>
       )}

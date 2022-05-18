@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue } from "recoil";
 import { isEmpty } from "lodash";
 import {
   LogFinderAmountResult,
@@ -22,7 +21,7 @@ import {
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { plus } from "../../scripts/math";
-import { LogfinderAmountRuleSet } from "../../store/LogfinderRuleSetStore";
+import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
 import useFCD from "../../hooks/useFCD";
 import TxAmount from "../Tx/TxAmount";
 import s from "./Txs.module.scss";
@@ -129,10 +128,10 @@ const Txs = ({ address }: { address: string }) => {
   );
   const [txsRow, setTxsRow] = useState<JSX.Element[][]>([]);
 
-  const ruleArray = useRecoilValue(LogfinderAmountRuleSet);
+  const ruleSet = useLogfinderAmountRuleSet();
   const logMatcher = useMemo(
-    () => createLogMatcherForAmounts(ruleArray),
-    [ruleArray]
+    () => createLogMatcherForAmounts(ruleSet),
+    [ruleSet]
   );
 
   useEffect(() => {
