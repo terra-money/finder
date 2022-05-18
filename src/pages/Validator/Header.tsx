@@ -1,7 +1,6 @@
 import React from "react";
 import c from "classnames";
 import { readPercent, readAmount } from "@terra.kitchen/utils";
-import { percent } from "../../scripts/math";
 import { prependProtocol } from "../../scripts/utility";
 import Amount from "../../components/Amount";
 import Card from "../../components/Card";
@@ -85,7 +84,7 @@ const Header = (validator: TerraValidator) => {
           <h1>
             Uptime <span className="desktop">(Last 10k blocks)</span>
           </h1>
-          <p>{percent(time_weighted_uptime ?? 0, 0)}</p>
+          <p>{readPercent(time_weighted_uptime ?? 0, { fixed: 2 })}</p>
         </article>
       </div>
     </Card>
