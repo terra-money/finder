@@ -1,41 +1,51 @@
-import React from "react";
+import { AccAddress } from "@terra-money/terra.js";
 import { percent } from "../../scripts/math";
 import Finder from "../../components/Finder";
-import { TerraValidator } from "../../types/validator";
 import format from "../../scripts/format";
 import s from "./Informations.module.scss";
-import { AccAddress } from "@terra-money/terra.js";
+import { useTerraValidator } from "../../queries/TerraAPI";
+import { useValidator } from "../../queries/staking";
 
-const Informations = (validator: TerraValidator) => {
-  const { commission, operator_address } = validator;
-  const { commission_rates, update_time } = commission;
-  const { max_change_rate, max_rate } = commission_rates;
+const Informations = ({ address }: { address: string }) => {
+  const { data: terraValidator } = useTerraValidator(address);
+  const { data: validator } = useValidator(address);
+
+  if (!validator) return null;
+
+  const validatorInfo = terraValidator
+    ? [
+        {
+          label: "Max commission rate",
+          value: percent(terraValidator.commission.commission_rates.max_rate)
+        },
+        {
+          label: "Max daily commission change",
+          value: percent(
+            terraValidator.commission.commission_rates.max_change_rate
+          )
+        },
+        {
+          label: "Last commission change",
+          value: `${format.date(terraValidator.commission.update_time)}`
+        }
+      ]
+    : [];
+
   /* render */
   const list = [
     {
       label: "Operator address",
-      value: operator_address
+      value: validator.operator_address
     },
     {
       label: "Account address",
       value: (
         <Finder q="account">
-          {AccAddress.fromValAddress(operator_address)}
+          {AccAddress.fromValAddress(validator.operator_address)}
         </Finder>
       )
     },
-    {
-      label: "Max commission rate",
-      value: percent(max_rate)
-    },
-    {
-      label: "Max daily commission change",
-      value: percent(max_change_rate)
-    },
-    {
-      label: "Last commission change",
-      value: `${format.date(update_time)}`
-    }
+    ...validatorInfo
   ];
 
   return (
