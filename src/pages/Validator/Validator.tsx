@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useTerraValidator } from "../../queries/TerraAPI";
 import Card from "../../components/Card";
 import Page from "../../components/Page";
+import NotFound from "../../components/NotFound";
 import Header from "./Header";
 import Informations from "./Informations";
 import { useCommission, useRewards } from "../../queries/distribution";
@@ -36,7 +37,9 @@ const Validator = () => {
         </>
       ) : null}
     </Page>
-  ) : null;
+  ) : (
+    <NotFound keyword={address} />
+  );
 };
 
 export default Validator;
