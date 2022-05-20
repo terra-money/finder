@@ -1,25 +1,28 @@
 import { useParams } from "react-router-dom";
-import { useTerraValidator } from "../../queries/TerraAPI";
 import Card from "../../components/Card";
 import Page from "../../components/Page";
+import Loading from "../../components/Loading";
 import NotFound from "../../components/NotFound";
-import Header from "./Header";
-import Informations from "./Informations";
 import { useCommission, useRewards } from "../../queries/distribution";
+import { useValidator } from "../../queries/staking";
+import Informations from "./Informations";
+import Header from "./Header";
 import Rewards from "./Rewards";
 
 const Validator = () => {
   const { address = "" } = useParams();
-  const { data: validator } = useTerraValidator(address);
+  const { data: validator, isLoading } = useValidator(address);
   const rewards = useRewards(address);
   const commissions = useCommission(address);
 
-  return validator ? (
+  return isLoading ? (
+    <Loading />
+  ) : validator ? (
     <Page title="Validator Details">
-      <Header {...validator} />
+      <Header address={address} />
 
       <Card>
-        <Informations {...validator} />
+        <Informations address={address} />
       </Card>
 
       {rewards && commissions ? (
