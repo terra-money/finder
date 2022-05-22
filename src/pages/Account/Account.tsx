@@ -1,6 +1,5 @@
-import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import useLCDClient from "../../hooks/useLCD";
+import { AccAddress } from "@terra-money/terra.js";
 import NotFound from "../../components/NotFound";
 import Delegations from "./Delegations";
 import Undelegations from "./Undelegations";
@@ -10,13 +9,7 @@ import Txs from "./Txs";
 
 const Account = () => {
   const { address = "" } = useParams();
-  const lcd = useLCDClient();
-  const { data: accountInfo } = useQuery(
-    [address, "accountInfo", lcd.config],
-    () => lcd.auth.accountInfo(address)
-  );
-
-  return accountInfo ? (
+  return AccAddress.validate(address) ? (
     <>
       <h2 className="title">Account Detail</h2>
 
