@@ -4,7 +4,8 @@ import isBase64 from "is-base64";
 import { Dictionary } from "ramda";
 import { countries, Country } from "countries-list";
 import { filter } from "lodash";
-import { Coin } from "@terra-money/terra.js";
+import { Coin, Coins } from "@terra-money/terra.js";
+import { isDenomIBC } from "@terra.kitchen/utils";
 import { isInteger } from "./math";
 import { isTnsName } from "../libs/tns";
 
@@ -149,3 +150,30 @@ export const splitCoinData = (coin: string) => {
 };
 
 export const isIbcDenom = (string = "") => string.startsWith("ibc/");
+
+export const sortCoins = (
+  coins: Coins,
+  currency?: string,
+  sorter?: (a: CoinData, b: CoinData) => number
+) => {
+  return sortByDenom(coins.toData(), currency, sorter);
+};
+export const sortByDenom = <T extends { denom: string }>(
+  coins: T[],
+  currency = "",
+  sorter?: (a: T, b: T) => number
+) =>
+  coins.sort(
+    (a, b) =>
+      compareIs("uluna")(a.denom, b.denom) ||
+      compareIs("uusd")(a.denom, b.denom) ||
+      compareIs(currency)(a.denom, b.denom) ||
+      compareIsDenomIBC(a.denom, b.denom) ||
+      (sorter?.(a, b) ?? 0)
+  );
+
+export const compareIs = (k: string) => (a: string, b: string) =>
+  Number(b === k) - Number(a === k);
+
+export const compareIsDenomIBC = (a: string, b: string) =>
+  Number(isDenomIBC(a)) - Number(isDenomIBC(b));

@@ -6,6 +6,7 @@ import Finder from "../../components/Finder";
 import { fromISOTime } from "../../scripts/utility";
 import { getFindMoniker } from "../../queries/validator";
 import { useUndelegations, useValidators } from "../../queries/staking";
+import s from "./Account.module.scss";
 
 const Undelegations = ({ address }: { address: string }) => {
   const { data: validators } = useValidators();
@@ -38,7 +39,12 @@ const Undelegations = ({ address }: { address: string }) => {
 
   const head = [`Validator`, `Status`, `Block`, `Amount`, `Release time`];
   return undelegations.length ? (
-    <Card title={"Undelegations"}>
+    <Card
+      title={"Undelegations"}
+      bordered
+      headerClassName={s.cardTitle}
+      bodyClassName={s.cardBodyContainer}
+    >
       <FlexTable
         head={head}
         body={data.map(undelegation => undelegation)}

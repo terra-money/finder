@@ -6,19 +6,19 @@ import IBCUnit from "./IBCUnit";
 
 type Props = {
   denom: string;
-  available: string;
+  amount: string;
   response?: Currency;
 };
 
-const Available = ({ denom, available, response }: Props) => {
+const Available = ({ denom, amount, response }: Props) => {
   if (isIbcDenom(denom)) {
-    return <IBCUnit denom={denom} available={available} />;
+    return <IBCUnit denom={denom} available={amount} />;
   }
 
   return (
     <AmountCard
       denom={format.denom(denom)}
-      amount={available}
+      amount={amount}
       response={response}
     />
   );

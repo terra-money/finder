@@ -1,11 +1,9 @@
 import React, { ReactNode } from "react";
 import format from "../../scripts/format";
-import WithFetch from "../../HOCs/WithFetch";
 import Flex from "../../components/Flex";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
 import ExtLink from "../../components/ExtLink";
-import Loading from "../../components/Loading";
 import WasmMsg from "../../components/WasmMsg";
 import ModalWithButton from "../../components/ModalWithButton";
 import Txs from "./Txs";
@@ -63,11 +61,7 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
         ])}
       </Card>
 
-      <WithFetch url={`/v1/bank/${address}`} loading={<Loading />}>
-        {({ balance, vesting }: Account) => (
-          <TokenBalance address={address} balance={balance} vesting={vesting} />
-        )}
-      </WithFetch>
+      <TokenBalance address={address} />
 
       <Delegations address={address} />
       <Undelegations address={address} />

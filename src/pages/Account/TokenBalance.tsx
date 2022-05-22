@@ -3,6 +3,9 @@ import Flex from "../../components/Flex";
 import Icon from "../../components/Icon";
 import Info from "../../components/Info";
 import Pop from "../../components/Pop";
+import Loading from "../../components/Loading";
+import WithFetch from "../../HOCs/WithFetch";
+import { useInitialBankBalance } from "../../queries/bank";
 import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import { isIbcDenom } from "../../scripts/utility";
 import AmountCard from "./AmountCard";
@@ -11,24 +14,19 @@ import AvailableList from "./AvailableList";
 import Vesting from "./Vesting";
 import s from "./TokenBalance.module.scss";
 
-interface Props {
-  balance: Balance[];
-  vesting: Vesting[];
-  address: string;
-}
-
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
 
-const TokenBalance = ({ balance, vesting, address }: Props) => {
+const TokenBalance = ({ address }: { address: string }) => {
   const tokens = useTokenBalance(address);
-  const nativeBlanace = balance.filter(({ denom }) => !isIbcDenom(denom));
-  const ibcBalance = balance.filter(({ denom }) => isIbcDenom(denom));
+  const { data: balance } = useInitialBankBalance(address);
+  const nativeBlanace = balance?.filter(({ denom }) => !isIbcDenom(denom));
+  const ibcBalance = balance?.filter(({ denom }) => isIbcDenom(denom));
 
   return (
     <>
       <Card title="Coins" bordered headerClassName={s.cardTitle}>
-        {nativeBlanace.length ? (
+        {nativeBlanace?.length ? (
           <div className={s.cardBodyContainer}>
             <AvailableList list={nativeBlanace} />
           </div>
@@ -42,13 +40,13 @@ const TokenBalance = ({ balance, vesting, address }: Props) => {
       </Card>
 
       {tokens?.list?.filter(t => t.balance !== "0").length ||
-      ibcBalance.length ? (
+      ibcBalance?.length ? (
         <Card title="Tokens" bordered headerClassName={s.cardTitle}>
           <div className={s.cardBodyContainer}>
-            {ibcBalance.map((balance, key) => (
+            {ibcBalance?.map((balance, key) => (
               <Available
                 denom={balance.denom}
-                available={balance.available}
+                amount={balance.amount.toString()}
                 key={key}
               />
             ))}
@@ -65,33 +63,43 @@ const TokenBalance = ({ balance, vesting, address }: Props) => {
               ))}
           </div>
         </Card>
-      ) : undefined}
+      ) : null}
 
-      {vesting.length > 0 && (
-        <Card
-          title={
-            <Flex>
-              Vesting&nbsp;
-              <Pop
-                tooltip={{
-                  content: TOOLTIP,
-                  contentStyle: { whiteSpace: "pre" }
-                }}
+      <WithFetch
+        url={`/v1/bank/${address}`}
+        loading={<Loading />}
+        renderError={() => null}
+      >
+        {({ vesting }: Account) => (
+          <>
+            {vesting.length > 0 && (
+              <Card
+                title={
+                  <Flex>
+                    Vesting&nbsp;
+                    <Pop
+                      tooltip={{
+                        content: TOOLTIP,
+                        contentStyle: { whiteSpace: "pre" }
+                      }}
+                    >
+                      <Icon name="info" className={s.icon} />
+                    </Pop>
+                  </Flex>
+                }
+                bordered
+                headerClassName={s.cardTitle}
               >
-                <Icon name="info" className={s.icon} />
-              </Pop>
-            </Flex>
-          }
-          bordered
-          headerClassName={s.cardTitle}
-        >
-          <div className={s.cardBodyContainer}>
-            {vesting.map((v, i) => (
-              <Vesting {...v} key={i} />
-            ))}
-          </div>
-        </Card>
-      )}
+                <div className={s.cardBodyContainer}>
+                  {vesting.map((v, i) => (
+                    <Vesting {...v} key={i} />
+                  ))}
+                </div>
+              </Card>
+            )}
+          </>
+        )}
+      </WithFetch>
     </>
   );
 };
