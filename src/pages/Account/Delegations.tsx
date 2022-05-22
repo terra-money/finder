@@ -56,7 +56,12 @@ const Delegations = ({ address }: { address: string }) => {
   const head = [`Validator`, `Status`, `Amount`, `Rewards`];
 
   return delegations.length ? (
-    <Card title="Delegations" bordered headerClassName={s.cardTitle}>
+    <Card
+      title="Delegations"
+      bordered
+      headerClassName={s.cardTitle}
+      bodyClassName={s.cardBodyContainer}
+    >
       <FlexTable
         head={head}
         body={data.map(delegation => delegation)}

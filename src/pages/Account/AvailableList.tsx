@@ -1,3 +1,4 @@
+import { Coin } from "@terra-money/terra.js";
 import { useRecoilValue } from "recoil";
 import { useDenoms } from "../../components/SelectCurrency";
 import { useFCDURL } from "../../contexts/ChainsContext";
@@ -6,7 +7,7 @@ import { DEFAULT_CURRENCY } from "../../scripts/utility";
 import { Currency } from "../../store/CurrencyStore";
 import Available from "./Available";
 
-const AvailableList = ({ list }: { list: Balance[] }) => {
+const AvailableList = ({ list }: { list: Coin[] }) => {
   const currency = useRecoilValue(Currency);
   const denoms = useDenoms();
   const denom = denoms?.includes(currency) ? currency : DEFAULT_CURRENCY;
@@ -18,9 +19,17 @@ const AvailableList = ({ list }: { list: Balance[] }) => {
   const props = { data, isLoading, currency };
   return (
     <>
-      {list.map((a, i) => (
-        <Available {...a} key={i} response={props} />
-      ))}
+      {list.map((coin, i) => {
+        const { denom, amount } = coin;
+        return (
+          <Available
+            denom={denom}
+            amount={amount.toString()}
+            key={i}
+            response={props}
+          />
+        );
+      })}
     </>
   );
 };
