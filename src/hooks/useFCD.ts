@@ -1,4 +1,4 @@
-import { useFCDURL } from "../contexts/ChainsContext";
+import { useCurrentChain, useFCDURL } from "../contexts/ChainsContext";
 import useRequest from "./useRequest";
 
 const useFCD = <T>(
@@ -8,8 +8,10 @@ const useFCD = <T>(
   address?: string
 ) => {
   const params = { offset, limit: limit, account: address };
+  const { name } = useCurrentChain();
   const fcdURL = useFCDURL();
-  return useRequest<T>({ url: fcdURL + url, params });
+  const queryURL = name === "localterra" ? "http://localhost:3060" : fcdURL;
+  return useRequest<T>({ url: queryURL + url, params });
 };
 
 export default useFCD;

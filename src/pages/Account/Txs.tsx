@@ -5,6 +5,7 @@ import {
   getTxAmounts,
   createLogMatcherForAmounts
 } from "@terra-money/log-finder-ruleset";
+import { TxInfo } from "@terra-money/terra.js";
 import Pagination from "../../components/Pagination";
 import FlexTable from "../../components/FlexTable";
 import Card from "../../components/Card";
@@ -20,19 +21,11 @@ import {
   splitCoinData
 } from "../../scripts/utility";
 import format from "../../scripts/format";
-import { plus } from "../../scripts/math";
 import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
 import useFCD from "../../hooks/useFCD";
 import TxAmount from "../Tx/TxAmount";
+import { transformTx } from "../Tx/transform";
 import s from "./Txs.module.scss";
-
-type Fee = {
-  denom: string;
-  amount: string;
-};
-
-const getTxFee = (prop: Fee) =>
-  prop && `${format.amount(prop.amount)} ${format.denom(prop.denom)}`;
 
 const getRenderAmount = (
   amountList: string[] | undefined,
@@ -49,67 +42,23 @@ const getRenderAmount = (
   });
 };
 
-const getMultiSendAmount = (
-  matchedLogs: LogFinderAmountResult[],
-  address: string,
-  amountIn: JSX.Element[],
-  amountOut: JSX.Element[]
-) => {
-  const amountInMap = new Map<string, string>();
-  const amountOutMap = new Map<string, string>();
-
-  matchedLogs.forEach(log => {
-    const recipient = log.match[0].value;
-    const coin = log.match[1].value.split(",").map(splitCoinData);
-
-    coin.forEach(data => {
-      if (data) {
-        const { amount, denom } = data;
-        const amountInStack = amountInMap.get(denom);
-        const amountOutStack = amountOutMap.get(denom);
-
-        const inStack = amountInStack ? plus(amountInStack, amount) : amount;
-        const outStack = amountOutStack ? plus(amountOutStack, amount) : amount;
-
-        if (recipient === address) {
-          amountInMap.set(denom, inStack);
-        } else {
-          amountOutMap.set(denom, outStack);
-        }
-      }
-    });
-  });
-
-  amountInMap.forEach((amount, denom) =>
-    amountIn.push(<Coin amount={amount} denom={denom} />)
-  );
-
-  amountOutMap.forEach((amount, denom) =>
-    amountOut.push(<Coin amount={amount} denom={denom} />)
-  );
-};
-
 const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
   matchedMsg?.forEach(matchedLog => {
-    if (matchedLog && matchedLog[0]?.transformed?.type === "multiSend") {
-      getMultiSendAmount(matchedLog, address, amountIn, amountOut);
-    } else {
-      matchedLog?.forEach(log => {
-        const amounts = log.transformed?.amount?.split(",");
-        const sender = log.transformed?.sender;
-        const recipient = log.transformed?.recipient;
+    matchedLog?.forEach(log => {
+      const amounts = log.transformed?.amount?.split(",");
+      const sender = log.transformed?.sender;
+      const recipient = log.transformed?.recipient;
 
-        if (address === sender) {
-          getRenderAmount(amounts, amountOut);
-        }
+      if (address === sender) {
+        getRenderAmount(amounts, amountOut);
+      }
 
-        if (address === recipient) {
-          getRenderAmount(amounts, amountIn);
-        }
-      });
-    }
+      if (address === recipient) {
+        getRenderAmount(amounts, amountIn);
+      }
+    });
   });
 
   //amount row limit
@@ -120,12 +69,11 @@ const Txs = ({ address }: { address: string }) => {
   const { chainID } = useCurrentChain();
   const [offset, setOffset] = useState<number>(0);
 
-  const { data, isLoading } = useFCD<{ next: number; txs: TxResponse[] }>(
-    "/v1/txs",
-    offset,
-    100,
-    address
-  );
+  const { data, isLoading } = useFCD<{
+    next: number;
+    txs: TxInfo[];
+  }>("/v1/txs", offset, 100, address);
+
   const [txsRow, setTxsRow] = useState<JSX.Element[][]>([]);
 
   const ruleSet = useLogfinderAmountRuleSet();
@@ -137,12 +85,14 @@ const Txs = ({ address }: { address: string }) => {
   useEffect(() => {
     if (data?.txs) {
       const txRow = data.txs.map(tx => {
+        const txData: TxResponse = transformTx(tx);
+        console.log(txData);
         const matchedLogs = getTxAmounts(
-          JSON.stringify(tx),
+          JSON.stringify(txData),
           logMatcher,
           address
         );
-        return getRow(tx, chainID, address, matchedLogs);
+        return getRow(txData, chainID, address, matchedLogs);
       });
       setTxsRow(stack => [...stack, ...txRow]);
     }
@@ -201,8 +151,7 @@ const getRow = (
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg);
-  const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
-  const feeData = fee?.split(" ");
+  const fee = txBody?.value?.fee?.amount?.[0];
 
   return [
     <span>
@@ -219,8 +168,8 @@ const getRow = (
     </span>,
     <span className="type">{sliceMsgType(txBody.value.msg[0].type)}</span>,
     <span>
-      <Finder q="blocks" network={network} v={height}>
-        {height}
+      <Finder q="blocks" network={network} v={String(height)}>
+        {String(height)}
       </Finder>
       <span>({chainId})</span>
     </span>,
@@ -247,8 +196,6 @@ const getRow = (
         : "-"}
     </span>,
     <span>{fromISOTime(timestamp.toString())}</span>,
-    <span>
-      {<TxAmount amount={feeData?.[0]} denom={feeData?.[1]} isFormatAmount />}
-    </span>
+    <span>{<TxAmount amount={fee.amount} denom={fee.denom} />}</span>
   ];
 };

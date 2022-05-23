@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { get, last, isEmpty } from "lodash";
+import { get, last } from "lodash";
 import c from "classnames";
 import {
   getTxAllCanonicalMsgs,
   createLogMatcherForActions
 } from "@terra-money/log-finder-ruleset";
+import { TxInfo } from "@terra-money/terra.js";
 import { formatDistanceToNowStrict } from "date-fns";
 import apiClient from "../../apiClient";
 import Finder from "../../components/Finder";
@@ -20,12 +21,8 @@ import Pending from "./Pending";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import TxTax from "./TxTax";
+import { transformTx } from "./transform";
 import s from "./Tx.module.scss";
-
-type Coin = {
-  amount: string;
-  denom: string;
-};
 
 const TxComponent = ({ hash }: { hash: string }) => {
   const ruleSet = useLogfinderActionRuleSet();
@@ -39,14 +36,13 @@ const TxComponent = ({ hash }: { hash: string }) => {
     return <Searching state={progressState} hash={hash} />;
   }
 
-  const isPending = !response?.height;
-  const matchedMsg = getTxAllCanonicalMsgs(
-    JSON.stringify(response),
-    logMatcher
-  );
+  const tx = transformTx(response);
 
-  const fee: Coin[] = get(response, "tx.value.fee.amount");
-  const tax: string[] = response.logs
+  const isPending = !response?.height;
+  const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);
+
+  const fee: Amount[] = get(tx, "tx.value.fee.amount");
+  const tax: string[] | undefined = response.logs
     ?.map(log => get(log, "log.tax"))
     .filter(data => typeof data === "string" && data !== "")
     .flat();
@@ -54,7 +50,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
   // status settings
   const status = isPending ? (
     <span className={c(s.status, s.pending)}>Pending</span>
-  ) : !response.code ? (
+  ) : !tx.code ? (
     <span className={c(s.status, s.success)}>Success</span>
   ) : (
     <span className={c(s.status, s.fail)}>Failed</span>
@@ -71,18 +67,15 @@ const TxComponent = ({ hash }: { hash: string }) => {
           })}
         </span>
         <span className={c(s.date, s.txTime)}>
-          {format.date(response.timestamp.toString())}
+          {format.date(tx.timestamp.toString())}
         </span>
       </div>
 
-      {isPending && <Pending timestamp={response.timestamp} />}
-      {response.code && (
+      {isPending && <Pending timestamp={tx.timestamp} />}
+      {tx.code && (
         <div className={s.failedMsg}>
           <Icon name="error" size={18} className={s.icon} />
-          <p>
-            {get(last(response.logs), "log.message") ||
-              get(response, "raw_log")}
-          </p>
+          <p>{get(last(tx.logs), "log.message") || get(tx, "raw_log")}</p>
         </div>
       )}
 
@@ -91,9 +84,9 @@ const TxComponent = ({ hash }: { hash: string }) => {
           <div className={s.head}>Tx Hash</div>
           <div className={s.body}>
             <div>
-              {response.txhash}
+              {tx.txhash}
               <Copy
-                text={response.txhash}
+                text={tx.txhash}
                 style={{ display: "inline-block", position: "absolute" }}
               />
             </div>
@@ -102,7 +95,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
 
         <div className={s.row}>
           <div className={s.head}>Network</div>
-          <div className={s.body}>{response.chainId}</div>
+          <div className={s.body}>{tx.chainId}</div>
         </div>
 
         {isPending ? (
@@ -111,8 +104,8 @@ const TxComponent = ({ hash }: { hash: string }) => {
           <div className={s.row}>
             <div className={s.head}>Block</div>
             <div className={s.body}>
-              <Finder q="blocks" v={response.height}>
-                {response.height}
+              <Finder q="blocks" v={String(tx.height)}>
+                {String(tx.height)}
               </Finder>
             </div>
           </div>
@@ -131,21 +124,21 @@ const TxComponent = ({ hash }: { hash: string }) => {
           <></>
         )}
 
-        {!isEmpty(tax) && (
+        {tax && tax.length ? (
           <div className={s.row}>
             <div className={s.head}>Tax</div>
             <div className={s.body}>
               <TxTax tax={tax} />
             </div>
           </div>
-        )}
+        ) : null}
 
         {!isPending && (
           <div className={s.row}>
             <div className={s.head}>Gas (Used/Requested)</div>
             <div className={s.body}>
-              {parseInt(response.gas_used).toLocaleString()}/
-              {parseInt(response.gas_wanted).toLocaleString()}
+              {parseInt(String(tx.gas_used)).toLocaleString()}/
+              {parseInt(String(tx.gas_wanted)).toLocaleString()}
             </div>
           </div>
         )}
@@ -153,12 +146,12 @@ const TxComponent = ({ hash }: { hash: string }) => {
         <div className={s.row}>
           <div className={s.head}>Memo</div>
           <div className={s.body}>
-            {response.tx.value.memo ? response.tx.value.memo : "-"}
+            {tx.tx.value?.memo ? tx.tx.value.memo : "-"}
           </div>
         </div>
       </div>
 
-      {response.tx.value.msg.map((msg, index) => {
+      {tx.tx.value.msg.map((msg, index) => {
         const msgInfo = matchedMsg?.[index];
 
         return (
@@ -192,7 +185,7 @@ const usePollTxHash = (txhash: string) => {
   const { chainID } = useCurrentChain();
   const fcdURL = useFCDURL();
 
-  const [stored, setStored] = useState<TxResponse>();
+  const [stored, setStored] = useState<TxInfo>();
   const [progress, setProgress] = useState<number>(0);
 
   /* polling tx */
@@ -201,10 +194,12 @@ const usePollTxHash = (txhash: string) => {
   /* polling mempool tx */
   const [refetchMempool, setRefetchMempool] = useState<boolean>(false);
 
+  const queryURL = chainID === "localterra" ? "http://localhost:3060" : fcdURL;
+
   /* query: tx */
   const txQuery = useQuery(
     [chainID, txhash, "tx"],
-    () => apiClient.get<TxResponse>(fcdURL + `/v1/tx/${txhash}`),
+    () => apiClient.get<TxInfo>(queryURL + `/v1/tx/${txhash}`),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
@@ -216,7 +211,7 @@ const usePollTxHash = (txhash: string) => {
   /* query: mempool tx */
   const mempoolQuery = useQuery(
     [chainID, txhash, "mempool"],
-    () => apiClient.get<TxResponse>(fcdURL + `/v1/mempool/${txhash}`),
+    () => apiClient.get<TxInfo>(queryURL + `/v1/mempool/${txhash}`),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
