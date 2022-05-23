@@ -86,7 +86,6 @@ const Txs = ({ address }: { address: string }) => {
     if (data?.txs) {
       const txRow = data.txs.map(tx => {
         const txData: TxResponse = transformTx(tx);
-        console.log(txData);
         const matchedLogs = getTxAmounts(
           JSON.stringify(txData),
           logMatcher,

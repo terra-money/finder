@@ -14,7 +14,7 @@ const Delegations = ({ address }: { address: string }) => {
   const { data: validators } = useValidators();
   const { data: rewards } = useStakingRewards(address);
 
-  if (!delegation || !validators) {
+  if (!delegation || !validators || !rewards) {
     return null;
   }
 
@@ -25,7 +25,7 @@ const Delegations = ({ address }: { address: string }) => {
     const moniker = getFindMoniker(validators)(validator_address);
     const amount = readAmount(balance.amount.toString(), { comma: true });
     const denom = readDenom(balance.denom);
-    const stakingRewards = rewards?.rewards[validator_address].toArray();
+    const stakingRewards = rewards.rewards[validator_address].toArray();
 
     return [
       <span>

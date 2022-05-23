@@ -32,7 +32,7 @@ export const useStakingRewards = (address: string) => {
   const lcd = useLCDClient();
 
   return useQuery(
-    ["stakingRewards", address],
+    ["stakingRewards", lcd.config, address],
     async () => {
       if (!address) return { total: new Coins(), rewards: {} };
       return await lcd.distribution.rewards(address);
