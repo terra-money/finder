@@ -15,7 +15,8 @@ import MsgBox from "../../components/MsgBox";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
 import { useLogfinderActionRuleSet } from "../../hooks/useLogfinder";
-import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
+import { useCurrentChain } from "../../contexts/ChainsContext";
+import { useGetQueryURL } from "../../queries/query";
 import format from "../../scripts/format";
 import Pending from "./Pending";
 import Searching from "./Searching";
@@ -184,7 +185,6 @@ const INTERVAL = 1000;
 
 const usePollTxHash = (txhash: string) => {
   const { chainID } = useCurrentChain();
-  const fcdURL = useFCDURL();
 
   const [stored, setStored] = useState<TxInfo>();
   const [progress, setProgress] = useState<number>(0);
@@ -195,12 +195,12 @@ const usePollTxHash = (txhash: string) => {
   /* polling mempool tx */
   const [refetchMempool, setRefetchMempool] = useState<boolean>(false);
 
-  const queryURL = chainID === "localterra" ? "http://localhost:3060" : fcdURL;
+  const txURL = useGetQueryURL(`/v1/tx/${txhash}`);
 
   /* query: tx */
   const txQuery = useQuery(
     [chainID, txhash, "tx"],
-    () => apiClient.get<TxInfo>(queryURL + `/v1/tx/${txhash}`),
+    () => apiClient.get<TxInfo>(txURL),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,
@@ -209,10 +209,12 @@ const usePollTxHash = (txhash: string) => {
     }
   );
 
+  const mempoolURL = useGetQueryURL(`/v1/mempool/${txhash}`);
+
   /* query: mempool tx */
   const mempoolQuery = useQuery(
     [chainID, txhash, "mempool"],
-    () => apiClient.get<TxInfo>(queryURL + `/v1/mempool/${txhash}`),
+    () => apiClient.get<TxInfo>(mempoolURL),
     {
       refetchInterval: INTERVAL,
       refetchOnWindowFocus: false,

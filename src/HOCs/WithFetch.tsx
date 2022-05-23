@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import FetchError from "../components/FetchError";
-import { useCurrentChain, useFCDURL } from "../contexts/ChainsContext";
 import useRequest from "../hooks/useRequest";
+import { useGetQueryURL } from "../queries/query";
 
 type Props = FetchProps & {
   loading?: ReactNode;
@@ -11,18 +11,8 @@ type Props = FetchProps & {
 
 const WithFetch = (props: Props) => {
   const { url, params, loading, renderError, children } = props;
-  const fcdURL = useFCDURL();
-  const { name } = useCurrentChain();
-
-  const queryURL =
-    name === "localterra" && url.startsWith("/v1")
-      ? "http://localhost:3060"
-      : fcdURL;
-
-  const { data, isLoading, isError } = useRequest({
-    url: queryURL + url,
-    params
-  });
+  const queryURL = useGetQueryURL(url);
+  const { data, isLoading, isError } = useRequest({ url: queryURL, params });
 
   const render = () =>
     typeof children === "function" ? children(data) : children;
