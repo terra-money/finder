@@ -21,7 +21,6 @@ import format from "../../scripts/format";
 import Pending from "./Pending";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
-import TxTax from "./TxTax";
 import { transformTx } from "./transform";
 import s from "./Tx.module.scss";
 
@@ -44,10 +43,6 @@ const TxComponent = ({ hash }: { hash: string }) => {
   const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);
 
   const fee: Amount[] = get(tx, "tx.value.fee.amount");
-  const tax: string[] | undefined = response.logs
-    ?.map(log => get(log, "log.tax"))
-    .filter(data => typeof data === "string" && data !== "")
-    .flat();
 
   // status settings
   const status = isPending ? (
@@ -125,15 +120,6 @@ const TxComponent = ({ hash }: { hash: string }) => {
         ) : (
           <></>
         )}
-
-        {tax && tax.length ? (
-          <div className={s.row}>
-            <div className={s.head}>Tax</div>
-            <div className={s.body}>
-              <TxTax tax={tax} />
-            </div>
-          </div>
-        ) : null}
 
         {!isPending && (
           <div className={s.row}>
