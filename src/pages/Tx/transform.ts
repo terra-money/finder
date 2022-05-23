@@ -5,7 +5,12 @@ interface Transaction extends TxInfo {
   chainId: string;
 }
 
-export const transformTx = (tx: any): TxResponse => {
+export const transformTx = (tx: any, network: string): TxResponse => {
+  if (network.startsWith("columbus")) {
+    // old fcd
+    return tx;
+  }
+
   try {
     const intermediate = pickBy(
       pick(tx, [

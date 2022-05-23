@@ -30,13 +30,14 @@ const TxComponent = ({ hash }: { hash: string }) => {
     () => createLogMatcherForActions(ruleSet),
     [ruleSet]
   );
+  const { chainID } = useCurrentChain();
   const { data: response, progressState } = usePollTxHash(hash);
 
   if (!response) {
     return <Searching state={progressState} hash={hash} />;
   }
 
-  const tx = transformTx(response);
+  const tx = transformTx(response, chainID);
 
   const isPending = !response?.height;
   const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);

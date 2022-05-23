@@ -8,9 +8,10 @@ import { fromNow, sliceMsgType } from "../../scripts/utility";
 import TxAmount from "../Tx/TxAmount";
 import { transformTx } from "../Tx/transform";
 import s from "./Txs.module.scss";
+import { useCurrentChain } from "../../contexts/ChainsContext";
 
-const getRow = (response: TxInfo) => {
-  const transformed = transformTx(response);
+const getRow = (response: TxInfo, chainID: string) => {
+  const transformed = transformTx(response, chainID);
   const { txhash, tx, height, timestamp } = transformed;
   const fee = get(tx, `value.fee.amount[0]`);
 
@@ -39,11 +40,11 @@ const getRow = (response: TxInfo) => {
 
 const Txs = ({ txs }: { txs: TxInfo[] }) => {
   const head = [`TxHash`, `Type`, `Fee`, `Height`, `Time`];
-
+  const { chainID } = useCurrentChain();
   return (
     <div className={s.tableContainer}>
       {txs.length ? (
-        <FlexTable head={head} body={txs.map(getRow)} />
+        <FlexTable head={head} body={txs.map(tx => getRow(tx, chainID))} />
       ) : (
         <Card>
           <Info icon="info_outline" title="">
