@@ -165,7 +165,7 @@ const getRow = (
         )}
       </div>
     </span>,
-    <span className="type">{sliceMsgType(txBody.value.msg[0].type)}</span>,
+    <span className="type">{sliceMsgType(txBody?.value?.msg[0].type)}</span>,
     <span>
       <Finder q="blocks" network={network} v={String(height)}>
         {String(height)}
@@ -195,6 +195,6 @@ const getRow = (
         : "-"}
     </span>,
     <span>{fromISOTime(timestamp.toString())}</span>,
-    <span>{<TxAmount amount={fee.amount} denom={fee.denom} />}</span>
+    <span>{<TxAmount amount={fee?.amount} denom={fee?.denom} />}</span>
   ];
 };

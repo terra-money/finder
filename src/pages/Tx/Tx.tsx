@@ -69,12 +69,12 @@ const TxComponent = ({ hash }: { hash: string }) => {
       </div>
 
       {isPending && <Pending timestamp={tx.timestamp} />}
-      {tx.code && (
+      {tx.code ? (
         <div className={s.failedMsg}>
           <Icon name="error" size={18} className={s.icon} />
           <p>{get(last(tx.logs), "log.message") || get(tx, "raw_log")}</p>
         </div>
-      )}
+      ) : null}
 
       <div className={s.list}>
         <div className={s.row}>
@@ -139,7 +139,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
         </div>
       </div>
 
-      {tx.tx.value.msg.map((msg, index) => {
+      {tx.tx?.value?.msg.map((msg, index) => {
         const msgInfo = matchedMsg?.[index];
 
         return (

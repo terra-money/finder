@@ -21,7 +21,7 @@ const getRow = (response: TxInfo, chainID: string) => {
         {txhash}
       </Finder>
     </span>,
-    <span className="type">{sliceMsgType(tx.value.msg[0].type)}</span>,
+    <span className="type">{sliceMsgType(tx?.value?.msg[0].type)}</span>,
     <span>
       {isEmpty(fee) ? (
         "0 Luna"
