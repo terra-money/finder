@@ -12,7 +12,7 @@ export const useTerraAPIURL = (network?: string) => {
   const { name } = useCurrentChain();
   return {
     mainnet: "https://api.terra.dev",
-    testnet: "https://bombay-api.terra.dev"
+    testnet: "https://pisco-api.terra.dev"
   }[network ?? name];
 };
 

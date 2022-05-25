@@ -1,19 +1,21 @@
 import { Coin } from "@terra-money/terra.js";
 import { useRecoilValue } from "recoil";
-import { useDenoms } from "../../components/SelectCurrency";
-import { useFCDURL } from "../../contexts/ChainsContext";
+import { useFCDURL, useIsClassic } from "../../contexts/ChainsContext";
 import useRequest from "../../hooks/useRequest";
+import { useDenoms } from "../../queries/oracle";
 import { DEFAULT_CURRENCY } from "../../scripts/utility";
 import { Currency } from "../../store/CurrencyStore";
 import Available from "./Available";
 
 const AvailableList = ({ list }: { list: Coin[] }) => {
   const currency = useRecoilValue(Currency);
-  const denoms = useDenoms();
+  const { data: denoms } = useDenoms();
   const denom = denoms?.includes(currency) ? currency : DEFAULT_CURRENCY;
   const fcdURL = useFCDURL();
+  const isClassic = useIsClassic();
   const { data, isLoading } = useRequest<CurrencyData[]>({
-    url: `${fcdURL}/v1/market/swaprate/${denom}`
+    url: `${fcdURL}/v1/market/swaprate/${denom}`,
+    enabled: isClassic
   });
 
   const props = { data, isLoading, currency };

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import useLCDClient from "../hooks/useLCD";
-import useRequest from "../hooks/useRequest";
+import { useDenoms } from "../queries/oracle";
 import { getCookie } from "../scripts/cookie";
 import { DEFAULT_CURRENCY, getDefaultCurrency } from "../scripts/utility";
 import { Currency } from "../store/CurrencyStore";
@@ -13,7 +12,7 @@ type Props = {
 
 const SelectCurrency = (props: Props) => {
   const [currency, setCurrency] = useRecoilState(Currency);
-  const denoms = useDenoms();
+  const { data: denoms } = useDenoms();
   const denom = denoms?.includes(currency) ? currency : DEFAULT_CURRENCY;
 
   useEffect(() => {
@@ -43,12 +42,3 @@ const SelectCurrency = (props: Props) => {
 };
 
 export default SelectCurrency;
-
-export const useDenoms = () => {
-  const lcd = useLCDClient();
-  const { data: response }: ActiveDenom = useRequest({
-    url: lcd.config.URL + `/oracle/denoms/actives`
-  });
-
-  return response?.result;
-};
