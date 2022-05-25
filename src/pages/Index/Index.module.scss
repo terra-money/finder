@@ -69,27 +69,6 @@
   }
 }
 
-.networks {
-  position: absolute;
-  top: 20px;
-  right: 130px;
-  padding: 0;
-  margin: 0;
-  display: block;
-  @media (max-width: $breakpoint) {
-    right: 110px;
-  }
-}
-
-.currency {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 0;
-  margin: 0;
-  display: block;
-}
-
 .search {
   margin-bottom: -130px;
   width: 640px;

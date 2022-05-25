@@ -33,3 +33,8 @@ export const useFCDURL = () => {
   const { lcd } = useCurrentChain();
   return lcd.replace("lcd", "fcd");
 };
+
+export const useIsClassic = () => {
+  const { chainID } = useCurrentChain();
+  return chainID.startsWith("columbus");
+};

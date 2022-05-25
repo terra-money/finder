@@ -1,11 +1,10 @@
 import React from "react";
 import s from "./Header.module.scss";
 import Search from "../components/Search";
-import SelectNetworks from "../components/SelectNetworks";
 
 import { Link } from "react-router-dom";
-import SelectCurrency from "../components/SelectCurrency";
 import logo from "../images/logo.svg";
+import SelectOptions from "../components/SelectOptions";
 
 const Header = () => (
   <div className={s.header}>
@@ -16,8 +15,7 @@ const Header = () => (
         </Link>
       </div>
       <Search className={s.search} />
-      <SelectNetworks className={s.networks} />
-      <SelectCurrency className={s.currency} />
+      <SelectOptions />
     </div>
   </div>
 );

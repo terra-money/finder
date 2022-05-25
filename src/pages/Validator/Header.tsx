@@ -88,16 +88,18 @@ const Header = ({ address }: { address: string }) => {
             </p>
           </article>
 
-          <article className="col">
-            <h1>
-              Uptime <span className="desktop">(Last 10k blocks)</span>
-            </h1>
-            <p>
-              {readPercent(terraValidator.time_weighted_uptime ?? 0, {
-                fixed: 2
-              })}
-            </p>
-          </article>
+          {terraValidator?.time_weighted_uptime ? (
+            <article className="col">
+              <h1>
+                Uptime <span className="desktop">(Last 10k blocks)</span>
+              </h1>
+              <p>
+                {readPercent(terraValidator.time_weighted_uptime ?? 0, {
+                  fixed: 2
+                })}
+              </p>
+            </article>
+          ) : null}
         </div>
       )}
     </Card>
