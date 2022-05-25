@@ -16,7 +16,7 @@ type Props = {
 
 type Contract = Dictionary<Contracts>;
 
-const renderDenom = (str: string, whitelist: Tokens, contracts: Contract) => {
+const renderDenom = (str: string, whitelist?: Tokens, contracts?: Contract) => {
   const list = whitelist?.[str];
   const contract = contracts?.[str];
   if (isTerraAddress(str) && (list || contract)) {
@@ -49,10 +49,7 @@ const Amount = (props: Props) => {
         .{decimal}
         {data
           ? ` ${format.denom(data.base_denom)}`
-          : denom &&
-            whitelist &&
-            contracts &&
-            ` ${renderDenom(denom, whitelist, contracts)}`}
+          : denom && ` ${renderDenom(denom, whitelist, contracts)}`}
       </small>
     </span>
   );

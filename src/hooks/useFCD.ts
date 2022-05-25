@@ -1,4 +1,4 @@
-import { useFCDURL } from "../contexts/ChainsContext";
+import { useGetQueryURL } from "../queries/query";
 import useRequest from "./useRequest";
 
 const useFCD = <T>(
@@ -8,8 +8,8 @@ const useFCD = <T>(
   address?: string
 ) => {
   const params = { offset, limit: limit, account: address };
-  const fcdURL = useFCDURL();
-  return useRequest<T>({ url: fcdURL + url, params });
+  const queryURL = useGetQueryURL(url);
+  return useRequest<T>({ url: queryURL, params });
 };
 
 export default useFCD;

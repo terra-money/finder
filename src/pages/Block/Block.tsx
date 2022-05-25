@@ -1,10 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import c from "classnames";
-import TxList from "../Txs";
+import Txs from "../Txs";
 import Loading from "../../components/Loading";
 import Finder from "../../components/Finder";
 import { useCurrentChain } from "../../contexts/ChainsContext";
 import { fromISOTime } from "../../scripts/utility";
+import NotFound from "../../components/NotFound";
 import WithFetch from "../../HOCs/WithFetch";
 import s from "./Block.module.scss";
 
@@ -39,41 +40,48 @@ const Block = () => {
       url={`/v1/blocks/${height}?chainId=${chainID}`}
       loading={<Loading />}
     >
-      {(blockData: Block) => (
-        <>
-          <h2 className="title">
-            Block<span>#{height}</span>
-          </h2>
-          <div className={c(s.list, s.blockInfo)}>
-            <div className={s.row}>
-              <div className={s.head}>Chain ID</div>
-              <div className={s.body}>{blockData.chainId}</div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Block height</div>
-              <div className={s.body}>{heightButton(blockData.height)}</div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Timestamp</div>
-              <div className={s.body}>{fromISOTime(blockData.timestamp)}</div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Transactions</div>
-              <div className={s.body}>{txsCount(blockData.txs.length)}</div>
-            </div>
-            <div className={s.row}>
-              <div className={s.head}>Proposer</div>
-              <div className={s.body}>
-                <Finder q={"validator"} v={blockData.proposer.operatorAddress}>
-                  {blockData.proposer.moniker}
-                </Finder>
+      {blockData =>
+        blockData ? (
+          <>
+            <h2 className="title">
+              Block<span>#{height}</span>
+            </h2>
+            <div className={c(s.list, s.blockInfo)}>
+              <div className={s.row}>
+                <div className={s.head}>Chain ID</div>
+                <div className={s.body}>{chainID}</div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Block height</div>
+                <div className={s.body}>{heightButton(blockData.height)}</div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Timestamp</div>
+                <div className={s.body}>{fromISOTime(blockData.timestamp)}</div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Transactions</div>
+                <div className={s.body}>{txsCount(blockData.txs.length)}</div>
+              </div>
+              <div className={s.row}>
+                <div className={s.head}>Proposer</div>
+                <div className={s.body}>
+                  <Finder
+                    q={"validator"}
+                    v={blockData.proposer.operatorAddress}
+                  >
+                    {blockData.proposer.moniker}
+                  </Finder>
+                </div>
               </div>
             </div>
-          </div>
 
-          <TxList txs={blockData.txs} />
-        </>
-      )}
+            <Txs txs={blockData.txs} />
+          </>
+        ) : (
+          <NotFound keyword={height} />
+        )
+      }
     </WithFetch>
   );
 };

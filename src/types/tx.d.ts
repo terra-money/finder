@@ -1,6 +1,5 @@
 interface Log {
-  msg_index: string;
-  success: boolean;
+  msg_index: number;
   events: Events[];
   // log can be empty string with success
   log:
@@ -56,8 +55,7 @@ interface Signature {
 interface Value {
   msg: Msg[];
   fee: Fee;
-  signatures: Signature[];
-  memo: string;
+  memo?: string;
 }
 
 interface Tx {
@@ -66,15 +64,13 @@ interface Tx {
 }
 
 interface TxResponse {
-  id: number;
   height: string;
   txhash: string;
   code?: number;
   raw_log: string;
-  logs: Log[];
-  gas_wanted: string;
-  gas_used: string;
-  tags: Tag[];
+  logs?: Log[];
+  gas_wanted: number;
+  gas_used: number;
   tx: Tx;
   timestamp: string;
   chainId?: string;

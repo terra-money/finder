@@ -72,31 +72,33 @@ const TokenBalance = ({ address }: { address: string }) => {
       >
         {({ vesting }: Account) => (
           <>
-            {vesting.length > 0 && (
-              <Card
-                title={
-                  <Flex>
-                    Vesting&nbsp;
-                    <Pop
-                      tooltip={{
-                        content: TOOLTIP,
-                        contentStyle: { whiteSpace: "pre" }
-                      }}
-                    >
-                      <Icon name="info" className={s.icon} />
-                    </Pop>
-                  </Flex>
-                }
-                bordered
-                headerClassName={s.cardTitle}
-              >
-                <div className={s.cardBodyContainer}>
-                  {vesting.map((v, i) => (
-                    <Vesting {...v} key={i} />
-                  ))}
-                </div>
-              </Card>
-            )}
+            {vesting
+              ? vesting.length > 0 && (
+                  <Card
+                    title={
+                      <Flex>
+                        Vesting&nbsp;
+                        <Pop
+                          tooltip={{
+                            content: TOOLTIP,
+                            contentStyle: { whiteSpace: "pre" }
+                          }}
+                        >
+                          <Icon name="info" className={s.icon} />
+                        </Pop>
+                      </Flex>
+                    }
+                    bordered
+                    headerClassName={s.cardTitle}
+                  >
+                    <div className={s.cardBodyContainer}>
+                      {vesting.map((v, i) => (
+                        <Vesting {...v} key={i} />
+                      ))}
+                    </div>
+                  </Card>
+                )
+              : null}
           </>
         )}
       </WithFetch>
