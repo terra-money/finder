@@ -41,7 +41,7 @@ export const transformTx = (tx: any, network: string): TxResponse => {
     const { auth_info, body } = tx.tx;
 
     const amount: any = auth_info.fee.amount;
-    const fee = { denom: amount[0].denom, amount: amount[0].amount };
+    const fee = { denom: amount[0]?.denom, amount: amount[0]?.amount };
     return {
       ...intermediate,
       height: String(intermediate.height),
