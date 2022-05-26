@@ -13,6 +13,8 @@ import Available from "./Available";
 import AvailableList from "./AvailableList";
 import Vesting from "./Vesting";
 import s from "./TokenBalance.module.scss";
+import { useIsClassic } from "../../contexts/ChainsContext";
+import NewVesting from "./NewVesting";
 
 const TOOLTIP = `This displays your investment with Terra.
 Vested Luna can be delegated in the meantime.`;
@@ -22,6 +24,8 @@ const TokenBalance = ({ address }: { address: string }) => {
   const { data: balance } = useInitialBankBalance(address);
   const nativeBlanace = balance?.filter(({ denom }) => !isIbcDenom(denom));
   const ibcBalance = balance?.filter(({ denom }) => isIbcDenom(denom));
+
+  const isClassic = useIsClassic();
 
   return (
     <>
@@ -65,43 +69,65 @@ const TokenBalance = ({ address }: { address: string }) => {
         </Card>
       ) : null}
 
-      <WithFetch
-        url={`/v1/bank/${address}`}
-        loading={<Loading />}
-        renderError={() => null}
-      >
-        {({ vesting }: Account) => (
-          <>
-            {vesting
-              ? vesting.length > 0 && (
-                  <Card
-                    title={
-                      <Flex>
-                        Vesting&nbsp;
-                        <Pop
-                          tooltip={{
-                            content: TOOLTIP,
-                            contentStyle: { whiteSpace: "pre" }
-                          }}
-                        >
-                          <Icon name="info" className={s.icon} />
-                        </Pop>
-                      </Flex>
-                    }
-                    bordered
-                    headerClassName={s.cardTitle}
-                  >
-                    <div className={s.cardBodyContainer}>
-                      {vesting.map((v, i) => (
-                        <Vesting {...v} key={i} />
-                      ))}
-                    </div>
-                  </Card>
-                )
-              : null}
-          </>
-        )}
-      </WithFetch>
+      {isClassic ? (
+        <WithFetch
+          url={`/v1/bank/${address}`}
+          loading={<Loading />}
+          renderError={() => null}
+        >
+          {({ vesting }: Account) => (
+            <>
+              {vesting
+                ? vesting.length > 0 && (
+                    <Card
+                      title={
+                        <Flex>
+                          Vesting&nbsp;
+                          <Pop
+                            tooltip={{
+                              content: TOOLTIP,
+                              contentStyle: { whiteSpace: "pre" }
+                            }}
+                          >
+                            <Icon name="info" className={s.icon} />
+                          </Pop>
+                        </Flex>
+                      }
+                      bordered
+                      headerClassName={s.cardTitle}
+                    >
+                      <div className={s.cardBodyContainer}>
+                        {vesting.map((v, i) => (
+                          <Vesting {...v} key={i} />
+                        ))}
+                      </div>
+                    </Card>
+                  )
+                : null}
+            </>
+          )}
+        </WithFetch>
+      ) : (
+        <Card
+          title={
+            <Flex>
+              Vesting&nbsp;
+              <Pop
+                tooltip={{
+                  content: TOOLTIP,
+                  contentStyle: { whiteSpace: "pre" }
+                }}
+              >
+                <Icon name="info" className={s.icon} />
+              </Pop>
+            </Flex>
+          }
+          bordered
+          headerClassName={s.cardTitle}
+        >
+          <NewVesting address={address} />
+        </Card>
+      )}
     </>
   );
 };

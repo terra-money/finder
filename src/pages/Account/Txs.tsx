@@ -84,7 +84,7 @@ const Txs = ({ address }: { address: string }) => {
 
   useEffect(() => {
     if (data?.txs) {
-      const txRow = data.txs.map(tx => {
+      const txRow = data.txs.map((tx: any) => {
         const txData: TxResponse = transformTx(tx, chainID);
         const matchedLogs = getTxAmounts(
           JSON.stringify(txData),
