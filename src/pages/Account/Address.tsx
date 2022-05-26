@@ -4,12 +4,13 @@ import { isTnsName, useTns } from "../../libs/tns";
 import { getEndpointByKeyword } from "../../scripts/utility";
 import { useCurrentChain } from "../../contexts/ChainsContext";
 import Loading from "../../components/Loading";
-import WithFetch from "../../HOCs/WithFetch";
+import useContractInfo from "../../queries/wasm";
 import Account from "./Account";
 import Contract from "./Contract";
 
 const Address = () => {
   const { address = "" } = useParams();
+  const { data: contractInfo, isLoading } = useContractInfo(address);
   const [resolvedAddress, setResolvedAddress] = useState("");
   const { name } = useCurrentChain();
   const navigate = useNavigate();
@@ -35,14 +36,12 @@ const Address = () => {
 
   if (resolvedAddress !== address) return <Loading />;
 
-  return (
-    <WithFetch
-      url={`/wasm/contracts/${address}`}
-      loading={<Loading />}
-      renderError={() => <Account />}
-    >
-      {data => <Contract {...data.result} />}
-    </WithFetch>
+  return isLoading ? (
+    <Loading />
+  ) : contractInfo ? (
+    <Contract {...contractInfo} />
+  ) : (
+    <Account />
   );
 };
 

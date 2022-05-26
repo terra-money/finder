@@ -36,6 +36,7 @@ const ContractInfo = ({ address }: { address: string }) => {
       url={`/wasm/contracts/${address}/store?query_msg={"token_info":{}}`}
       loading={<Loading />}
       renderError={() => null}
+      lcd
     >
       {({ result: { name, symbol } }) => (
         <section className={s.wrapper}>
