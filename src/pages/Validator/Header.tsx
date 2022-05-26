@@ -18,7 +18,7 @@ const Header = ({ address }: { address: string }) => {
   const { data: validator } = useValidator(address);
 
   const { data: votingPowerRate } = useVotingPowerRate(
-    terraValidator?.consensus_pubkey?.key ?? ""
+    terraValidator?.operator_address ?? ""
   );
 
   return (
