@@ -10,46 +10,43 @@ import {
 import { BondStatus } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking";
 import { bondStatusFromJSON } from "@terra-money/terra.proto/cosmos/staking/v1beta1/staking";
 import { useDelegation } from "./staking";
-import { useValidatorSet } from "./tendermint";
+import { useTerraValidators } from "./TerraAPI";
+import { TerraValidator } from "../types/validator";
 
-export const useVotingPowerRate = (pubKey: string) => {
-  const { data: validators, ...state } = useValidatorSet();
-
+export const useVotingPowerRate = (address: string) => {
+  const { data: TerraValidators, ...state } = useTerraValidators();
   const calcRate = useMemo(() => {
-    if (!validators) {
+    if (!TerraValidators) {
       return undefined;
     }
-    return getCalcVotingPowerRate(validators, pubKey);
-  }, [validators, pubKey]);
+    return getCalcVotingPowerRate(TerraValidators);
+  }, [TerraValidators]);
 
   const data = useMemo(() => {
     if (!calcRate) {
       return undefined;
     }
-    return calcRate();
-  }, [calcRate]);
+    return calcRate(address);
+  }, [address, calcRate]);
 
   return { data, ...state };
 };
 
-export const getCalcVotingPowerRate = (
-  validators: DelegateValidator[],
-  pubKey: string
-) => {
+export const getCalcVotingPowerRate = (TerraValidators: TerraValidator[]) => {
   const total = BigNumber.sum(
-    ...validators.map(validator => validator.voting_power)
+    ...TerraValidators.map(({ voting_power = 0 }) => voting_power)
   ).toNumber();
 
-  return () => {
-    const validator = validators.find(
-      validator => validator.pub_key.key === pubKey
+  return (address: string) => {
+    const validator = TerraValidators.find(
+      ({ operator_address }) => operator_address === address
     );
 
     if (!validator) {
       return undefined;
     }
     const { voting_power } = validator;
-    return voting_power ? Number(voting_power) / total : undefined;
+    return voting_power ? Number(validator.voting_power) / total : undefined;
   };
 };
 
