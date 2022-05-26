@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react";
-import format from "../../scripts/format";
+import { useParams } from "react-router-dom";
+import { ContractInfo as Props } from "@terra-money/terra.js";
 import Flex from "../../components/Flex";
 import Card from "../../components/Card";
 import Table from "../../components/Table";
-import ExtLink from "../../components/ExtLink";
 import WasmMsg from "../../components/WasmMsg";
 import ModalWithButton from "../../components/ModalWithButton";
 import Txs from "./Txs";
@@ -15,13 +15,8 @@ import ContractInfo from "./ContractInfo";
 import TokenBalance from "./TokenBalance";
 import s from "./Contract.module.scss";
 
-const Contract = ({ address, admin, code, info, ...data }: Contract) => {
-  const { init_msg, migrate_msg, timestamp, migratable, code_id } = data;
-  const link = code?.info.url && (
-    <ExtLink href={code?.info.url}>{code?.info.url}</ExtLink>
-  );
-
-  const migratableValue = migratable !== undefined && String(migratable);
+const Contract = ({ admin, code_id, init_msg, label }: Props) => {
+  const { address = "" } = useParams();
 
   return (
     <>
@@ -41,22 +36,12 @@ const Contract = ({ address, admin, code, info, ...data }: Contract) => {
         <h3 className={s.h3}>Code</h3>
         {renderTable([
           { th: "ID", td: code_id },
-          { th: "Name", td: code?.info.name },
-          { th: "Description", td: code?.info.description },
-          { th: "Repo URL", td: link }
+          { th: "Label", td: label }
         ])}
 
         <h3 className={s.h3}>Contract</h3>
         {renderTable([
-          { th: "Name", td: info?.name },
-          { th: "Description", td: info?.description },
           { th: "InitMsg", td: init_msg && <WasmMsg msg={init_msg} /> },
-          {
-            th: "MigrateMsg",
-            td: migrate_msg && <WasmMsg msg={migrate_msg} />
-          },
-          { th: "Timestamp", td: timestamp && format.date(timestamp) },
-          { th: "Migratable", td: migratableValue },
           { th: "Admin", td: admin }
         ])}
       </Card>

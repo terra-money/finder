@@ -16,26 +16,12 @@ const ContractInfo = ({ address }: { address: string }) => {
   const whitelist = token || contract || nft;
   const icon = whitelist?.icon;
 
-  return whitelist ? (
-    <section className={s.wrapper}>
-      <Image url={icon} className={s.icon} />
-      {token ? (
-        <span className={s.name}>
-          {`${token.protocol} ${token.symbol} Token `}
-          <span className={s.vertical} />
-          <span className={s.symbol}>{token.symbol}</span>
-        </span>
-      ) : (
-        <span className={s.name}>
-          {nft?.name || `${contract?.protocol} ${contract?.name}`}
-        </span>
-      )}
-    </section>
-  ) : (
+  return (
     <WithFetch
       url={`/wasm/contracts/${address}/store?query_msg={"token_info":{}}`}
       loading={<Loading />}
       renderError={() => null}
+      lcd
     >
       {({ result: { name, symbol } }) => (
         <section className={s.wrapper}>

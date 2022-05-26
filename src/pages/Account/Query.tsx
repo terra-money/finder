@@ -8,10 +8,10 @@ import AceEditor from "react-ace";
 import c from "classnames";
 import apiClient from "../../apiClient";
 import { isJson } from "../../scripts/utility";
-import { useFCDURL } from "../../contexts/ChainsContext";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
 import s from "./Query.module.scss";
+import useLCDClient from "../../hooks/useLCD";
 
 const ACE_PROPS = {
   mode: "json",
@@ -32,7 +32,7 @@ const Query = () => {
   const [data, setData] = useState<string>();
   const [error, setError] = useState<Error>();
 
-  const fcdURL = useFCDURL();
+  const lcd = useLCDClient();
 
   const reset = () => {
     setError(undefined);
@@ -44,7 +44,7 @@ const Query = () => {
     e.preventDefault();
 
     try {
-      const url = `${fcdURL}/wasm/contracts/${address}/store`;
+      const url = `${lcd.config.URL}/wasm/contracts/${address}/store`;
       const params = query && { query_msg: JSON.parse(query) };
       const { data } = await apiClient.get<{ result: any }>(url, { params });
       const result = JSON.stringify(data.result, null, 2);
