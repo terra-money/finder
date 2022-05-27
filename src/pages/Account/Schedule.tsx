@@ -7,7 +7,7 @@ import Icon from "../../components/Icon";
 import s from "./Schedule.module.scss";
 
 const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
-  const { amount, startTime, endTime, ratio, freedRate, delayed } = schedule;
+  const { amount, startTime, endTime, ratio, freedRate } = schedule;
   const width = percent(freedRate ?? 0);
   const now = new Date().getTime();
   const status = endTime < now ? -1 : !startTime ? 1 : startTime < now ? 0 : 1;
@@ -27,9 +27,7 @@ const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
           </div>
         </section>
 
-        {!delayed ? (
-          <section className={s.percent}>{percent(ratio)}</section>
-        ) : null}
+        <section className={s.percent}>{percent(ratio)}</section>
       </section>
 
       <header className={s.header}>
