@@ -12,7 +12,7 @@ interface Schedule {
   amount: string;
   startTime?: number;
   endTime: number;
-  ratio: number;
+  ratio: string;
   freedRate?: string;
   denom: string;
   delayed?: boolean;

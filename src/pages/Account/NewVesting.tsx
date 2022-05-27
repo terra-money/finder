@@ -8,6 +8,7 @@ import format from "../../scripts/format";
 import getVesting from "../../scripts/vesting";
 import AmountCard from "./AmountCard";
 import Schedule from "./Schedule";
+import VestingCard from "./VestingCard";
 import s from "./Vesting.module.scss";
 
 const NewVesting = ({ address }: { address: string }) => {
@@ -30,28 +31,31 @@ const NewVesting = ({ address }: { address: string }) => {
 
   const vestingInfo = getVesting(info, block);
 
-  if (!vestingInfo) return null;
+  if (!vestingInfo) {
+    return null;
+  }
 
-  const { total, vestingSchedules } = vestingInfo;
-  const { amount, denom } = total;
+  const { total, denom, schedules } = vestingInfo;
   return (
-    <AmountCard
-      denom={format.denom(denom)}
-      amount={amount}
-      button={
-        <button onClick={toggle} className={s.button}>
-          <Icon name={isOpen ? "keyboard_arrow_up" : "keyboard_arrow_down"} />
-        </button>
-      }
-    >
-      {isOpen && (
-        <section className={s.schedules}>
-          {vestingSchedules.map((s, i) => (
-            <Schedule {...s} denom={denom} key={i} />
-          ))}
-        </section>
-      )}
-    </AmountCard>
+    <VestingCard>
+      <AmountCard
+        denom={format.denom(denom)}
+        amount={total}
+        button={
+          <button onClick={toggle} className={s.button}>
+            <Icon name={isOpen ? "keyboard_arrow_up" : "keyboard_arrow_down"} />
+          </button>
+        }
+      >
+        {isOpen && (
+          <section className={s.schedules}>
+            {schedules.map((s, i) => (
+              <Schedule {...s} denom={denom} key={i} />
+            ))}
+          </section>
+        )}
+      </AmountCard>
+    </VestingCard>
   );
 };
 
