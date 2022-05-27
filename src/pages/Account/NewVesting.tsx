@@ -44,7 +44,7 @@ const NewVesting = ({ address }: { address: string }) => {
       >
         {isOpen && (
           <>
-            {totalReleased ? (
+            {Number(totalReleased) > 0 ? (
               <h1>
                 Total Released: <Amount denom={denom}>{totalReleased}</Amount>
               </h1>
