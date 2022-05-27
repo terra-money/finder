@@ -25,6 +25,9 @@ export const ceil = (n: BN.Value): string =>
 export const floor = (n: BN.Value): string =>
   new BN(n).integerValue(BN.ROUND_FLOOR).toString();
 
+export const mul = (a: BN.Value, b: BN.Value): string =>
+  new BN(a).multipliedBy(b).toString();
+
 /* format */
 export const percent = (n: BN.Value, f: number = 2): string =>
   new BN(times(n, 100)).toFixed(f) + "%";

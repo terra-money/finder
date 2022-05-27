@@ -6,11 +6,25 @@ import Amount from "../../components/Amount";
 import Icon from "../../components/Icon";
 import s from "./Schedule.module.scss";
 
-const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
-  const { amount, startTime, endTime, ratio, freedRate } = schedule;
-  const width = percent(freedRate);
+interface Props extends Schedule {
+  denom: string;
+  totalReleased?: string;
+}
+
+const Schedule = ({ denom, totalReleased, ...schedule }: Props) => {
+  const { amount, startTime, endTime, ratio, freedRate, delayed, released } =
+    schedule;
+  const width = percent(freedRate ?? 0);
   const now = new Date().getTime();
-  const status = endTime < now ? -1 : startTime < now ? 0 : 1;
+  const status =
+    Number(endTime) < now
+      ? -1
+      : !startTime
+      ? 1
+      : Number(startTime) < now
+      ? 0
+      : 1;
+
   const text: { [key: string]: string } = {
     "-1": "Released",
     "0": "Releasing",
@@ -26,7 +40,9 @@ const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
           </div>
         </section>
 
-        <section className={s.percent}>{percent(ratio)}</section>
+        {!delayed ? (
+          <section className={s.percent}>{percent(ratio)}</section>
+        ) : null}
       </section>
 
       <header className={s.header}>
@@ -38,17 +54,26 @@ const Schedule = ({ denom, ...schedule }: Schedule & { denom: string }) => {
 
         <p>
           <strong>{text[String(status)]}</strong>
+          {released && text[String(status)] === "Releasing" ? (
+            <strong>
+              {" "}
+              (Released: <Amount denom={denom}>{String(released)}</Amount>)
+            </strong>
+          ) : null}
           <br />
-          {[startTime, endTime].map(t => `${toISO(t)}`).join("\n ~ ")}
+          {[startTime, endTime]
+            .map(t => (t ? `${toISO(Number(t))}` : null))
+            .join("\n ~ ")}
         </p>
-
-        <div className={s.track}>
-          <div
-            className={c(s.progress, status === 0 && s.active)}
-            style={{ width }}
-            title={width}
-          />
-        </div>
+        {!delayed ? (
+          <div className={s.track}>
+            <div
+              className={c(s.progress, status === 0 && s.active)}
+              style={{ width }}
+              title={width}
+            />
+          </div>
+        ) : null}
       </header>
     </article>
   );

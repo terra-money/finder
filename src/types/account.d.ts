@@ -10,17 +10,20 @@ interface Balance {
 
 interface Schedule {
   amount: string;
-  startTime: any;
-  endTime: any;
-  ratio: number;
-  freedRate: number;
+  startTime?: string;
+  endTime: string;
+  ratio: string;
+  freedRate?: string;
   denom: string;
+  delayed?: boolean;
+  released?: string;
 }
 
 interface Vesting {
   denom: string;
   total: string;
   schedules: Schedule[];
+  totalReleased?: string;
 }
 
 interface Delegation {

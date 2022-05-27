@@ -1,27 +1,23 @@
 import Card from "../../components/Card";
-import Flex from "../../components/Flex";
-import Icon from "../../components/Icon";
 import Info from "../../components/Info";
-import Pop from "../../components/Pop";
-import Loading from "../../components/Loading";
-import WithFetch from "../../HOCs/WithFetch";
+import { useIsClassic } from "../../contexts/ChainsContext";
 import { useInitialBankBalance } from "../../queries/bank";
 import useTokenBalance from "../../hooks/cw20/useTokenBalance";
 import { isIbcDenom } from "../../scripts/utility";
 import AmountCard from "./AmountCard";
 import Available from "./Available";
 import AvailableList from "./AvailableList";
-import Vesting from "./Vesting";
+import NewVesting from "./NewVesting";
+import OldVesting from "./OldVesting";
 import s from "./TokenBalance.module.scss";
-
-const TOOLTIP = `This displays your investment with Terra.
-Vested Luna can be delegated in the meantime.`;
 
 const TokenBalance = ({ address }: { address: string }) => {
   const tokens = useTokenBalance(address);
   const { data: balance } = useInitialBankBalance(address);
   const nativeBlanace = balance?.filter(({ denom }) => !isIbcDenom(denom));
   const ibcBalance = balance?.filter(({ denom }) => isIbcDenom(denom));
+
+  const isClassic = useIsClassic();
 
   return (
     <>
@@ -64,44 +60,11 @@ const TokenBalance = ({ address }: { address: string }) => {
           </div>
         </Card>
       ) : null}
-
-      <WithFetch
-        url={`/v1/bank/${address}`}
-        loading={<Loading />}
-        renderError={() => null}
-      >
-        {({ vesting }: Account) => (
-          <>
-            {vesting
-              ? vesting.length > 0 && (
-                  <Card
-                    title={
-                      <Flex>
-                        Vesting&nbsp;
-                        <Pop
-                          tooltip={{
-                            content: TOOLTIP,
-                            contentStyle: { whiteSpace: "pre" }
-                          }}
-                        >
-                          <Icon name="info" className={s.icon} />
-                        </Pop>
-                      </Flex>
-                    }
-                    bordered
-                    headerClassName={s.cardTitle}
-                  >
-                    <div className={s.cardBodyContainer}>
-                      {vesting.map((v, i) => (
-                        <Vesting {...v} key={i} />
-                      ))}
-                    </div>
-                  </Card>
-                )
-              : null}
-          </>
-        )}
-      </WithFetch>
+      {isClassic ? (
+        <OldVesting address={address} />
+      ) : (
+        <NewVesting address={address} />
+      )}
     </>
   );
 };
