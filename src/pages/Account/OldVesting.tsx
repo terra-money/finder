@@ -24,7 +24,7 @@ const OldVesting = ({ address }: { address: string }) => {
 
   return (
     <VestingCard>
-      {vesting.map(vesting => {
+      {vesting.map((vesting, key) => {
         const { denom, total, schedules } = vesting;
         return (
           <AmountCard
@@ -37,6 +37,7 @@ const OldVesting = ({ address }: { address: string }) => {
                 />
               </button>
             }
+            key={key}
           >
             {isOpen && (
               <section className={s.schedules}>
