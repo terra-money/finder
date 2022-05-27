@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import Icon from "../../components/Icon";
+import Amount from "../../components/Amount";
 import useLCDClient from "../../hooks/useLCD";
 import { useAccountInfo } from "../../queries/auth";
 import { RefetchOptions } from "../../queries/query";
@@ -16,16 +17,10 @@ const NewVesting = ({ address }: { address: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(isOpen => !isOpen);
 
-  const vestingTypes = [
-    "/cosmos.vesting.v1beta1.ContinuousVestingAccount",
-    "/cosmos.vesting.v1beta1.PeriodicVestingAccount",
-    "/cosmos.vesting.v1beta1.DelayedVestingAccount"
-  ];
-
   const { data: block } = useLatestBlock();
   const info = accountInfo?.toData();
 
-  if (!info || !block || !vestingTypes.includes(info["@type"])) {
+  if (!info || !block) {
     return null;
   }
 
@@ -35,7 +30,7 @@ const NewVesting = ({ address }: { address: string }) => {
     return null;
   }
 
-  const { total, denom, schedules } = vestingInfo;
+  const { total, denom, totalReleased, schedules } = vestingInfo;
   return (
     <VestingCard>
       <AmountCard
@@ -48,11 +43,18 @@ const NewVesting = ({ address }: { address: string }) => {
         }
       >
         {isOpen && (
-          <section className={s.schedules}>
-            {schedules.map((s, i) => (
-              <Schedule {...s} denom={denom} key={i} />
-            ))}
-          </section>
+          <>
+            {totalReleased ? (
+              <h1>
+                Total Released: <Amount denom={denom}>{totalReleased}</Amount>
+              </h1>
+            ) : null}
+            <section className={s.schedules}>
+              {schedules.map((s, i) => (
+                <Schedule {...s} denom={denom} key={i} />
+              ))}
+            </section>
+          </>
         )}
       </AmountCard>
     </VestingCard>

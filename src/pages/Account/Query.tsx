@@ -10,8 +10,8 @@ import apiClient from "../../apiClient";
 import { isJson } from "../../scripts/utility";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
-import s from "./Query.module.scss";
 import useLCDClient from "../../hooks/useLCD";
+import s from "./Query.module.scss";
 
 const ACE_PROPS = {
   mode: "json",
@@ -51,7 +51,7 @@ const Query = () => {
 
       setData(result);
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   };
 
