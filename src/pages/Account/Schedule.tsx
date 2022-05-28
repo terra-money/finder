@@ -14,6 +14,11 @@ interface Props extends Schedule {
 const Schedule = ({ denom, totalReleased, ...schedule }: Props) => {
   const { amount, startTime, endTime, ratio, freedRate, delayed, released } =
     schedule;
+
+  if (!amount) {
+    return null;
+  }
+
   const width = percent(freedRate ?? 0);
   const now = new Date().getTime();
   const status =

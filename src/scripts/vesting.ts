@@ -57,19 +57,18 @@ const getVesting = (
         calcStartTime = start;
 
         const [coin] = vesting.amount;
-        const { amount, denom } = coin;
 
         const freedRate = getFreedRate(start, end, blockTime);
-        const ratio = getRatio(total.amount, amount);
+        const ratio = getRatio(total.amount, coin?.amount);
         const percent = div(minus(start, now), minus(start, end));
-        const released = mul(amount, Number(percent) > 1 ? 1 : percent);
+        const released = mul(coin?.amount, Number(percent) > 1 ? 1 : percent);
         totalReleased = plus(totalReleased, released);
 
         return {
           startTime: mul(start, 1000),
           endTime: mul(end, 1000),
-          amount,
-          denom,
+          amount: coin?.amount,
+          denom: coin?.denom,
           freedRate,
           ratio,
           released

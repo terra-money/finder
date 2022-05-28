@@ -9,12 +9,12 @@ interface Balance {
 }
 
 interface Schedule {
-  amount: string;
+  amount?: string;
   startTime?: string;
   endTime: string;
   ratio: string;
   freedRate?: string;
-  denom: string;
+  denom?: string;
   delayed?: boolean;
   released?: string;
 }
