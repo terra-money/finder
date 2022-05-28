@@ -49,7 +49,7 @@ const Block = () => {
             <div className={c(s.list, s.blockInfo)}>
               <div className={s.row}>
                 <div className={s.head}>Chain ID</div>
-                <div className={s.body}>{blockData.height}</div>
+                <div className={s.body}>{blockData.chainId}</div>
               </div>
               <div className={s.row}>
                 <div className={s.head}>Block height</div>
