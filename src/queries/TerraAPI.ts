@@ -11,7 +11,8 @@ import { useOracleParams } from "./oracle";
 export const useTerraAPIURL = (network?: string) => {
   const { name } = useCurrentChain();
   return {
-    mainnet: "https://api.terra.dev",
+    mainnet: "https://phoenix-api.terra.dev",
+    classic: "https://api.terra.dev",
     testnet: "https://pisco-api.terra.dev"
   }[network ?? name];
 };
