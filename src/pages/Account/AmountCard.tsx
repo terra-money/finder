@@ -7,6 +7,7 @@ import { ASSET_URL } from "../../scripts/utility";
 import Image from "../../components/Image";
 import Card from "../../components/Card";
 import Amount from "../../components/Amount";
+import { useIsClassic } from "../../contexts/ChainsContext";
 import s from "./AmountCard.module.scss";
 
 type Props = {
@@ -33,8 +34,11 @@ const AmountCard = (props: Props) => {
     response,
     decimals
   } = props;
-  const iconLink = `${ASSET_URL}/icon/60/${denom}.png`;
-
+  const isClassic = useIsClassic();
+  const iconLink =
+    !isClassic && denom === "Luna"
+      ? `${ASSET_URL}/icon/svg/${denom.toUpperCase()}.png`
+      : `${ASSET_URL}/icon/60/${denom}.png`;
   const iconRender = (
     <div className={s.icon}>
       <Image url={icon || iconLink} size={30} />
