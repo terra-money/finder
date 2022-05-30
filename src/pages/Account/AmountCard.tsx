@@ -84,7 +84,6 @@ const renderCurreny = (
   if (!denoms.includes(denom) || !data) return "";
 
   const renderData = find(data, obj => denom === format.denom(obj.denom));
-  console.log(renderData);
   const result =
     renderData && new BigNumber(amount).dividedBy(renderData.swaprate);
 
