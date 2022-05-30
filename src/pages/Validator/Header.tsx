@@ -12,7 +12,6 @@ import s from "./Header.module.scss";
 import { ReactComponent as Terra } from "../../Terra.svg";
 import { useValidator } from "../../queries/staking";
 import { useIsClassic } from "../../contexts/ChainsContext";
-import format from "../../scripts/format";
 
 const thumbnail = { className: s.thumbnail, width: 80, height: 80 };
 const Header = ({ address }: { address: string }) => {
@@ -69,7 +68,7 @@ const Header = ({ address }: { address: string }) => {
                 decimals: 0,
                 comma: true
               })}{" "}
-              <small> {format.denom("uluna", isClassic)}</small>
+              <small> {isClassic ? "Lunc" : "Luna"}</small>
             </span>
           </article>
 
