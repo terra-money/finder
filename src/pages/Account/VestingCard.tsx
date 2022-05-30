@@ -6,7 +6,7 @@ import Pop from "../../components/Pop";
 import s from "./TokenBalance.module.scss";
 
 const TOOLTIP = `This displays your investment with Terra.
-Vested Luna can be delegated in the meantime.`;
+Vested Luna or Lunc can be delegated in the meantime.`;
 
 const VestingCard = ({ children }: { children: ReactNode }) => (
   <Card
