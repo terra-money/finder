@@ -11,11 +11,13 @@ import s from "./Header.module.scss";
 
 import { ReactComponent as Terra } from "../../Terra.svg";
 import { useValidator } from "../../queries/staking";
+import { useIsClassic } from "../../contexts/ChainsContext";
 
 const thumbnail = { className: s.thumbnail, width: 80, height: 80 };
 const Header = ({ address }: { address: string }) => {
   const { data: terraValidator } = useTerraValidator(address);
   const { data: validator } = useValidator(address);
+  const isClassic = useIsClassic();
 
   const { data: votingPowerRate } = useVotingPowerRate(
     terraValidator?.operator_address ?? ""
@@ -66,7 +68,7 @@ const Header = ({ address }: { address: string }) => {
                 decimals: 0,
                 comma: true
               })}{" "}
-              <small>Luna</small>
+              <small> {isClassic ? "Lunc" : "Luna"}</small>
             </span>
           </article>
 

@@ -3,6 +3,7 @@ import Card from "../../components/Card";
 import FlexTable from "../../components/FlexTable";
 import ValidatorStatus from "../../components/ValidatorStatus";
 import Finder from "../../components/Finder";
+import { useIsClassic } from "../../contexts/ChainsContext";
 import { fromISOTime } from "../../scripts/utility";
 import { getFindMoniker } from "../../queries/validator";
 import { useUndelegations, useValidators } from "../../queries/staking";
@@ -11,6 +12,7 @@ import s from "./Account.module.scss";
 const Undelegations = ({ address }: { address: string }) => {
   const { data: validators } = useValidators();
   const { data: undelegations } = useUndelegations(address);
+  const isClassic = useIsClassic();
 
   if (!undelegations || !validators) {
     return null;
@@ -31,7 +33,8 @@ const Undelegations = ({ address }: { address: string }) => {
     const release = <span>{fromISOTime(completion_time.toString())}</span>;
     const amount = (
       <span>
-        {readAmount(balance.toString(), { comma: true })} <small>Luna</small>
+        {readAmount(balance.toString(), { comma: true })}{" "}
+        <small>{isClassic ? "Lunc" : "Luna"}</small>
       </span>
     );
     return [moniker, status, block, amount, release];

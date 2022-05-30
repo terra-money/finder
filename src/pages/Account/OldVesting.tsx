@@ -29,7 +29,8 @@ const OldVesting = ({ address }: { address: string }) => {
         //OldVesting component is using only classic chain
         return (
           <AmountCard
-            denom={format.denom(denom, true)}
+            isClassic={true}
+            denom={format.denom(denom)}
             amount={total}
             button={
               <button onClick={toggle} className={s.button}>
