@@ -1,4 +1,5 @@
 import React from "react";
+import { useIsClassic } from "../../contexts/ChainsContext";
 import format from "../../scripts/format";
 import { isIbcDenom } from "../../scripts/utility";
 import AmountCard from "./AmountCard";
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const Available = ({ denom, amount, response }: Props) => {
+  const isClassic = useIsClassic();
   if (isIbcDenom(denom)) {
     return <IBCUnit denom={denom} available={amount} />;
   }
@@ -18,6 +20,7 @@ const Available = ({ denom, amount, response }: Props) => {
   return (
     <AmountCard
       denom={format.denom(denom)}
+      isClassic={isClassic}
       amount={amount}
       response={response}
     />

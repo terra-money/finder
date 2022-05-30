@@ -26,9 +26,10 @@ const OldVesting = ({ address }: { address: string }) => {
     <VestingCard>
       {vesting.map((vesting, key) => {
         const { denom, total, schedules } = vesting;
+        //OldVesting component is using only classic chain
         return (
           <AmountCard
-            denom={format.denom(denom)}
+            denom={format.denom(denom, true)}
             amount={total}
             button={
               <button onClick={toggle} className={s.button}>

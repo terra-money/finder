@@ -1,4 +1,4 @@
-import { readAmount, readDenom } from "@terra.kitchen/utils";
+import { readAmount } from "@terra.kitchen/utils";
 import { getFindMoniker } from "../../queries/validator";
 import { useDelegations, useValidators } from "../../queries/staking";
 import { useStakingRewards } from "../../queries/distribution";
@@ -8,11 +8,14 @@ import Card from "../../components/Card";
 import Finder from "../../components/Finder";
 import Amount from "../../components/Amount";
 import s from "./Account.module.scss";
+import format from "../../scripts/format";
+import { useIsClassic } from "../../contexts/ChainsContext";
 
 const Delegations = ({ address }: { address: string }) => {
   const { data: delegation } = useDelegations(address);
   const { data: validators } = useValidators();
   const { data: rewards } = useStakingRewards(address);
+  const isClassic = useIsClassic();
 
   if (!delegation || !validators || !rewards) {
     return null;
@@ -24,7 +27,7 @@ const Delegations = ({ address }: { address: string }) => {
     const { validator_address, balance } = validator;
     const moniker = getFindMoniker(validators)(validator_address);
     const amount = readAmount(balance.amount.toString(), { comma: true });
-    const denom = readDenom(balance.denom);
+    const denom = format.denom(balance.denom, isClassic);
     const stakingRewards = rewards.rewards[validator_address].toArray();
 
     return [

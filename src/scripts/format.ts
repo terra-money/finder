@@ -10,7 +10,7 @@ const formatAmount = (amount: BigNumber.Value, decimals = 6): string =>
     .decimalPlaces(6, BigNumber.ROUND_DOWN)
     .toFormat(6);
 
-const formatDenom = (denom: string): string => {
+const formatDenom = (denom: string, isClassic?: boolean): string => {
   if (!denom) {
     return "";
   }
@@ -19,10 +19,10 @@ const formatDenom = (denom: string): string => {
     const f = denom.slice(1);
 
     if (f.length > 3) {
-      return f === "luna" ? "Luna" : f.toUpperCase();
+      return f === "luna" ? (isClassic ? "Lunc" : "Luna") : f.toUpperCase();
     }
 
-    return f.slice(0, 2).toUpperCase() + "T";
+    return f.slice(0, 2).toUpperCase() + `T${isClassic ? "C" : ""}`;
   }
 
   return denom;

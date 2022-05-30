@@ -1,3 +1,4 @@
+import { useIsClassic } from "../../contexts/ChainsContext";
 import useDenomTrace from "../../hooks/useDenomTrace";
 import format from "../../scripts/format";
 
@@ -10,6 +11,7 @@ interface Props {
 
 const TxAmount = ({ index, amount, denom, isFormatAmount }: Props) => {
   const data = useDenomTrace(denom);
+  const isClassic = useIsClassic();
 
   if (!amount || !denom) {
     return <>0 Luna</>;
@@ -19,7 +21,7 @@ const TxAmount = ({ index, amount, denom, isFormatAmount }: Props) => {
   if (data) {
     return (
       <>
-        {renderAmount} {format.denom(data.base_denom)}
+        {renderAmount} {format.denom(data.base_denom, isClassic)}
       </>
     );
   }
@@ -27,7 +29,7 @@ const TxAmount = ({ index, amount, denom, isFormatAmount }: Props) => {
   return (
     <>
       {!!index && ", "}
-      {renderAmount} {format.denom(denom)}
+      {renderAmount} {format.denom(denom, isClassic)}
     </>
   );
 };
