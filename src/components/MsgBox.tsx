@@ -7,11 +7,11 @@ import {
   isValidatorAddress,
   sliceMsgType
 } from "../scripts/utility";
-import format from "../scripts/format";
 import Action from "../pages/Tx/Action";
 import Address from "./Address";
 import WasmMsg from "./WasmMsg";
 import Icon from "./Icon";
+import Denom from "./Denom";
 import s from "./Msg.module.scss";
 
 const getContent = (msg: Msg, key: string) => {
@@ -26,7 +26,7 @@ const getContent = (msg: Msg, key: string) => {
       <CoinComponent {...msg.value[key]} />
     );
   } else if (key === "ask_denom" || key === "denom") {
-    return format.denom(msg.value[key]);
+    return <Denom denom={msg.value[key]} />;
   } else if (key === "execute_msg") {
     return <WasmMsg msg={msg.value[key]} />;
   } else {
