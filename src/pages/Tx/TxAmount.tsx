@@ -14,7 +14,7 @@ const TxAmount = ({ index, amount, denom, isFormatAmount }: Props) => {
   const isClassic = useIsClassic();
 
   if (!amount || !denom) {
-    return <>0 {format.denom("uluna", isClassic)}</>;
+    return <>0 {isClassic ? "Lunc" : "Luna"}</>;
   }
 
   const renderAmount = isFormatAmount ? amount : format.amount(amount);
