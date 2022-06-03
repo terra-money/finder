@@ -10,6 +10,7 @@ import apiClient from "../../apiClient";
 import { isJson } from "../../scripts/utility";
 import Copy from "../../components/Copy";
 import Icon from "../../components/Icon";
+import { useIsClassic } from "../../contexts/ChainsContext";
 import useLCDClient from "../../hooks/useLCD";
 import s from "./Query.module.scss";
 
@@ -33,6 +34,7 @@ const Query = () => {
   const [error, setError] = useState<Error>();
 
   const lcd = useLCDClient();
+  const isClassic = useIsClassic();
 
   const reset = () => {
     setError(undefined);
@@ -43,10 +45,15 @@ const Query = () => {
     e.preventDefault();
 
     try {
-      const url = `${lcd.config.URL}/wasm/contracts/${address}/store`;
-      const params = query && { query_msg: JSON.parse(query) };
+      const url = isClassic
+        ? `${lcd.config.URL}/wasm/contracts/${address}/store`
+        : `${lcd.config.URL}/cosmwasm/wasm/v1/contract/${address}/smart/${btoa(
+            query ?? ""
+          )}`;
+      const params = query && isClassic && { query_msg: JSON.parse(query) };
+
       const { data } = await apiClient.get<{ result: any }>(url, { params });
-      const result = JSON.stringify(data.result, null, 2);
+      const result = JSON.stringify(isClassic ? data.result : data, null, 2);
 
       setData(result);
     } catch (error) {
