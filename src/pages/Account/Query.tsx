@@ -36,7 +36,6 @@ const Query = () => {
 
   const reset = () => {
     setError(undefined);
-    setQuery(undefined);
     setData(undefined);
   };
 
@@ -105,10 +104,13 @@ const Query = () => {
 
           <AceEditor
             {...ACE_PROPS}
-            onChange={setQuery}
+            defaultValue={query}
+            onChange={value => setQuery(value)}
             onLoad={editor => {
               editor.renderer.setPadding(15);
               editor.renderer.setScrollMargin(15, 15, 15, 15);
+              editor.focus();
+              editor.selectAll();
             }}
           />
 
