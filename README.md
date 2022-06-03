@@ -26,7 +26,7 @@ REACT_APP_DEFAULT_NETWORK=localterra
 ```
 
 `REACT_APP_DEFAULT_NETWORK` is the default selected network that finder will use.
-See `src/config/networks.ts` for the list of available networks.
+See [https://assets.terra.money/chains.json](https://assets.terra.money/chains.json) for the list of available networks.
 
 
 ### Compiles and hot-reloads for development
