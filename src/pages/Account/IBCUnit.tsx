@@ -29,7 +29,7 @@ const IBCUnit = ({ denom, available }: Props) => {
 export default IBCUnit;
 
 /* hook */
-const useIBCWhitelist = () => {
+export const useIBCWhitelist = () => {
   const chainID = useCurrentChain();
   const { data } = useQuery(["IBCWhitelist"], () =>
     axios.get(`${ASSET_URL}/ibc/tokens.json`)

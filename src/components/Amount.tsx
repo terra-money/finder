@@ -5,6 +5,7 @@ import { isTerraAddress } from "../scripts/utility";
 import format from "../scripts/format";
 import useDenomTrace from "../hooks/useDenomTrace";
 import { useIsClassic } from "../contexts/ChainsContext";
+import { useIBCWhitelist } from "../pages/Account/IBCUnit";
 
 type Props = {
   estimated?: boolean;
@@ -38,9 +39,12 @@ const Amount = (props: Props) => {
   const { estimated, fontSize, className, denom, children, decimals } = props;
   const whitelist = useWhitelist();
   const contracts = useContracts();
+  const ibcWhitelist = useIBCWhitelist();
   const isClassic = useIsClassic();
 
-  const tokenDecimals = denom ? whitelist?.[denom]?.decimals : decimals;
+  const hash = denom?.replace("ibc/", "");
+  const tokenDecimals =
+    whitelist?.[denom ?? ""]?.decimals ?? ibcWhitelist?.[hash ?? ""]?.decimals;
 
   const [integer, decimal] = format
     .amount(children || "0", tokenDecimals ?? decimals)
