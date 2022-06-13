@@ -21,10 +21,9 @@ const IBCUnit = ({ denom, available }: Props) => {
       path={tokenInfo.path}
       icon={tokenInfo.icon}
       denom={tokenInfo.symbol}
+      decimals={tokenInfo.decimals}
     />
-  ) : (
-    <></>
-  );
+  ) : null;
 };
 
 export default IBCUnit;
