@@ -31,9 +31,9 @@ export default IBCUnit;
 /* hook */
 export const useIBCWhitelist = () => {
   const chainID = useCurrentChain();
-  const { data } = useQuery(["IBCWhitelist"], () =>
+  const { data } = useQuery(["IBCWhitelist", chainID], () =>
     axios.get(`${ASSET_URL}/ibc/tokens.json`)
   );
 
-  return data?.data[chainID.name];
+  return data?.data?.[chainID.name];
 };
