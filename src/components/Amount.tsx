@@ -43,7 +43,7 @@ const Amount = (props: Props) => {
   const tokenDecimals = denom ? whitelist?.[denom]?.decimals : decimals;
 
   const [integer, decimal] = format
-    .amount(children || "0", tokenDecimals)
+    .amount(children || "0", tokenDecimals ?? decimals)
     .split(".");
 
   const data = useDenomTrace(denom);
