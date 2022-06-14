@@ -44,7 +44,8 @@ const NewVesting = ({ address }: { address: string }) => {
         >
           {Number(totalReleased) > 1 ? (
             <h1 className={s.released}>
-              Released: <Amount denom={denom}>{totalReleased}</Amount> |{" "}
+              <span className={s.text}>Released:</span>{" "}
+              <Amount denom={denom}>{totalReleased}</Amount> |{" "}
               {percent(releasedPercent)}
             </h1>
           ) : null}

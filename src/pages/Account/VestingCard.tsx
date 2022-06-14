@@ -19,7 +19,7 @@ const VestingCard = ({ children }: { children: ReactNode }) => (
             contentStyle: { whiteSpace: "pre" }
           }}
         >
-          <Icon name="info" className={s.icon} />
+          <Icon name="info" className={s.icon} size={16} />
         </Pop>
       </Flex>
     }

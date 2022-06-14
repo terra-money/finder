@@ -27,7 +27,7 @@
 
 .wrapper {
   @include flex(space-between, flex-end);
-  margin-top: 15px;
+  margin-top: 8px;
 }
 
 .rowReverse {
@@ -36,4 +36,9 @@
 
 .released {
   text-align: end;
+}
+
+.text {
+  font-size: 12px;
+  font-weight: 400;
 }
