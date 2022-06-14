@@ -2,9 +2,11 @@
 @import "../../styles/mixins";
 @import "../../styles/variables";
 
-$border: #cdd5ee;
+$border: #ebeff8;
+$releasing: #459cf4;
 
 .component {
+  margin-top: 5px;
   @media (min-width: $breakpoint) {
     @include flex(flex-start, stretch);
   }
@@ -16,13 +18,7 @@ $border: #cdd5ee;
 
 .component:not(:last-child) {
   > :last-child {
-    @media (max-width: $breakpoint - 1) {
-      padding-bottom: 40px;
-    }
-
-    @media (min-width: $breakpoint) {
-      padding-bottom: 60px;
-    }
+    padding-bottom: 20px;
   }
 
   @media (min-width: $breakpoint) {
@@ -31,11 +27,11 @@ $border: #cdd5ee;
       content: "";
       display: block;
       background: $border;
-      width: 2px;
+      width: 1px;
 
       position: absolute;
       top: 20px;
-      bottom: 0;
+      bottom: -5px;
       left: math.div(20px - 2px, 2);
       z-index: 0;
     }
@@ -44,10 +40,6 @@ $border: #cdd5ee;
 
 .status {
   display: flex;
-
-  @media (max-width: $breakpoint - 1) {
-    margin-bottom: 10px;
-  }
 }
 
 .dot {
@@ -58,38 +50,31 @@ $border: #cdd5ee;
 .circle {
   @include flex();
   border-radius: 50%;
-  color: white;
   width: 20px;
   height: 20px;
 
-  &:not(:empty) {
-    background: $brand;
-  }
-
-  &:empty {
-    border: 2px solid $border;
-  }
+  border: 2px solid $border;
+  background-color: $border;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .percent {
-  font-size: 13px;
-  font-weight: bold;
+  margin-left: 10px;
+  font-size: 14px;
   width: 70px;
 }
 
+.amount {
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
 .header {
-  h1 {
-    line-height: 1;
-    margin-bottom: 10px;
-  }
+  @include flex(space-between);
 
-  p {
+  .releaseInfo {
     font-size: 12px;
-    margin-bottom: 10px;
-
-    @media (max-width: $breakpoint - 1) {
-      white-space: pre-line;
-    }
   }
 
   strong {
@@ -97,40 +82,26 @@ $border: #cdd5ee;
   }
 }
 
-.track,
+.marginBottom {
+  margin-bottom: 10px;
+}
+
+.icon {
+  margin-right: 5px;
+  margin-top: 2px;
+}
+
+.releasing {
+  font-weight: 500;
+  color: $releasing;
+}
+
 .progress {
-  height: 5px;
-  border-radius: 2.5px;
+  margin-right: 5px;
+  margin-top: 4px;
+  color: $releasing;
 }
 
-.track {
-  background-color: #d2d9f0;
-}
-
-.progress {
-  background-color: $brand;
-}
-
-@keyframes progressing {
-  from {
-    background-position: 16px 0;
-  }
-  to {
-    background-position: 0 0;
-  }
-}
-
-.progress.active {
-  animation: progressing 2s linear infinite;
-  background-image: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.4) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0.4) 75%,
-    transparent 75%,
-    transparent
-  );
-  background-size: 16px 16px;
+.state {
+  margin-right: 5px;
 }

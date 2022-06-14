@@ -1,25 +1,25 @@
-import React from "react";
-import c from "classnames";
+import { CircularProgress } from "@material-ui/core";
+import { format } from "date-fns";
+import c from "classnames/bind";
 import { percent } from "../../scripts/math";
-import format from "../../scripts/format";
 import Amount from "../../components/Amount";
 import Icon from "../../components/Icon";
 import s from "./Schedule.module.scss";
 
+const cx = c.bind(s);
+
 interface Props extends Schedule {
-  denom: string;
-  totalReleased?: string;
+  index: number;
+  isPeriodicVestingAccount?: boolean;
 }
 
-const Schedule = ({ denom, totalReleased, ...schedule }: Props) => {
-  const { amount, startTime, endTime, ratio, freedRate, delayed, released } =
-    schedule;
+const Schedule = ({ index, isPeriodicVestingAccount, ...schedule }: Props) => {
+  const { amount, startTime, endTime, ratio } = schedule;
 
   if (!amount) {
     return null;
   }
 
-  const width = percent(freedRate ?? 0);
   const now = new Date().getTime();
   const status =
     Number(endTime) < now
@@ -36,48 +36,52 @@ const Schedule = ({ denom, totalReleased, ...schedule }: Props) => {
     "1": "Release on"
   };
 
+  const state = text[String(status)];
+
   return (
     <article className={s.component}>
-      <section className={s.status}>
-        <section className={s.dot}>
-          <div className={s.circle}>
-            {status === -1 && <Icon name="check" size={13} />}
-          </div>
-        </section>
+      {isPeriodicVestingAccount ? (
+        <section className={s.status}>
+          <section className={s.dot}>
+            <div className={s.circle}>{index + 1}</div>
+          </section>
 
-        {!delayed ? (
           <section className={s.percent}>{percent(ratio)}</section>
-        ) : null}
-      </section>
+        </section>
+      ) : null}
 
       <header className={s.header}>
-        <h1>
-          <Amount denom={denom} fontSize={20}>
-            {amount}
-          </Amount>
-        </h1>
-
-        <p>
-          <strong>{text[String(status)]}</strong>
-          {released && text[String(status)] === "Releasing" ? (
-            <strong>
-              {" "}
-              (Released: <Amount denom={denom}>{String(released)}</Amount>)
-            </strong>
-          ) : null}
-          <br />
-          {[startTime, endTime]
-            .map(t => (t ? `${toISO(Number(t))}` : null))
-            .join("\n ~ ")}
-        </p>
-        {!delayed ? (
-          <div className={s.track}>
-            <div
-              className={c(s.progress, status === 0 && s.active)}
-              style={{ width }}
-              title={width}
+        <div
+          className={cx(s.status, s.releaseInfo, {
+            marginBottom: isPeriodicVestingAccount
+          })}
+        >
+          {state === "Released" ? (
+            <Icon name="check_circle" size={13} className={s.icon} />
+          ) : state === "Releasing" ? (
+            <CircularProgress
+              size={10}
+              thickness={5}
+              color="inherit"
+              className={s.progress}
             />
-          </div>
+          ) : null}
+          <span>
+            <span className={cx({ releasing: state === "Releasing" }, s.state)}>
+              {state}
+            </span>{" "}
+            <strong>
+              {[startTime, endTime]
+                .filter(Boolean)
+                .map(t => (t ? `${toISO(new Date(Number(t)))}` : null))
+                .join("\n ~ ")}
+            </strong>
+          </span>
+        </div>
+        {isPeriodicVestingAccount ? (
+          <span className={s.amount}>
+            <Amount fontSize={18}>{amount}</Amount>
+          </span>
         ) : null}
       </header>
     </article>
@@ -87,4 +91,4 @@ const Schedule = ({ denom, totalReleased, ...schedule }: Props) => {
 export default Schedule;
 
 /* helpers */
-const toISO = (date: number) => format.date(new Date(date).toISOString());
+const toISO = (date: Date) => format(date, "MMM dd, yyyy");

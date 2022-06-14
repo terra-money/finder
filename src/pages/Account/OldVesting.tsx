@@ -26,6 +26,8 @@ const OldVesting = ({ address }: { address: string }) => {
     <VestingCard>
       {vesting.map((vesting, key) => {
         const { denom, total, schedules } = vesting;
+        const isPeriodicVestingAccount = schedules.length > 1;
+
         //OldVesting component is using only classic chain
         return (
           <AmountCard
@@ -44,7 +46,13 @@ const OldVesting = ({ address }: { address: string }) => {
             {isOpen && (
               <section className={s.schedules}>
                 {schedules.map((s, i) => (
-                  <Schedule {...s} denom={denom} key={i} />
+                  <Schedule
+                    index={i}
+                    {...s}
+                    denom={denom}
+                    key={i}
+                    isPeriodicVestingAccount={isPeriodicVestingAccount}
+                  />
                 ))}
               </section>
             )}

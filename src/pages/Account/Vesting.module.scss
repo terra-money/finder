@@ -24,3 +24,16 @@
   width: 24px;
   height: 24px;
 }
+
+.wrapper {
+  @include flex(space-between, flex-end);
+  margin-top: 15px;
+}
+
+.rowReverse {
+  flex-direction: row-reverse;
+}
+
+.released {
+  text-align: end;
+}
