@@ -6,6 +6,16 @@ interface Whitelist {
   decimals?: number;
 }
 
+interface IBCWhitelist {
+  denom: string;
+  path: string;
+  base_denom: string;
+  symbol: string;
+  name: string;
+  icon: string;
+  decimals?: number;
+}
+
 interface Contracts {
   protocol: string;
   name: string;

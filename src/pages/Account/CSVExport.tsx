@@ -16,7 +16,11 @@ import {
   fromISOTime
 } from "../../scripts/utility";
 import { plus } from "../../scripts/math";
-import { useContracts, useWhitelist } from "../../hooks/useTerraAssets";
+import {
+  useContracts,
+  useIBCWhitelist,
+  useWhitelist
+} from "../../hooks/useTerraAssets";
 import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
 import { renderDenom } from "../../components/Amount";
 import { transformTx } from "../Tx/transform";
@@ -209,6 +213,7 @@ const getTxInfo = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
 const CsvExport = ({ address }: { address: string }) => {
   const whitelist = useWhitelist();
   const contracts = useContracts();
+  const ibcWhitelist = useIBCWhitelist();
   const [txs, setTxs] = useState<TxResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -230,7 +235,7 @@ const CsvExport = ({ address }: { address: string }) => {
       // max tx number = fetchLimit * 100
       let fetchCount = 0;
 
-      // fetch all transactions until some next transactions are available
+      // fetch latest fetchLimit * 100 transactions
       while (fetchCount < fetchLimit) {
         const params: Params = { offset, limit, account: address };
         try {
@@ -304,7 +309,7 @@ const CsvExport = ({ address }: { address: string }) => {
 
     if (amountsIn.length === 0 && amountsOut.length === 0) {
       // For example MsgVote does not transfer any value. Sometimes also MsgExecuteContract
-      const msg = sliceMsgType(txBody.value.msg[0].type);
+      const msg = sliceMsgType(txBody?.value?.msg[0]?.type);
       rows.push({
         ...baseTxData,
         currency: "",
@@ -317,12 +322,14 @@ const CsvExport = ({ address }: { address: string }) => {
 
     // Loop over amountsOut and amountsIn and add a new row for every single currency amount
     amountsIn.forEach((amountData, i) => {
-      const { denom, amount } = amountData;
-      const tokenDecimals = whitelist?.[denom]?.decimals;
+      const { denom = "", amount } = amountData;
+      const hash = denom.replace("ibc/", "");
+      const tokenDecimals =
+        whitelist?.[denom]?.decimals || ibcWhitelist?.[hash]?.decimals;
 
       rows.push({
         ...baseTxData,
-        currency: renderDenom(denom, whitelist, contracts) ?? "",
+        currency: renderDenom(denom, whitelist, contracts, ibcWhitelist) ?? "",
         amount: format.amount(amount, tokenDecimals), // amount in is positive (received)
         txType: txTypesIn[i],
         sender: sendersIn[i],
@@ -331,12 +338,14 @@ const CsvExport = ({ address }: { address: string }) => {
     });
 
     amountsOut.forEach((amountData, i) => {
-      const { denom, amount } = amountData;
-      const tokenDecimals = whitelist?.[denom]?.decimals;
+      const { denom = "", amount } = amountData;
+      const hash = denom.replace("ibc/", "");
+      const tokenDecimals =
+        whitelist?.[denom]?.decimals || ibcWhitelist?.[hash]?.decimals;
 
       rows.push({
         ...baseTxData,
-        currency: renderDenom(denom, whitelist, contracts) ?? "",
+        currency: renderDenom(denom, whitelist, contracts, ibcWhitelist) ?? "",
         amount: `-${format.amount(amount, tokenDecimals)}`, // amount in is negative (spent)
         txType: txTypesOut[i],
         sender: sendersOut[i],

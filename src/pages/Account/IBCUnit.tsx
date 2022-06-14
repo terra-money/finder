@@ -1,7 +1,4 @@
-import axios from "axios";
-import { useQuery } from "react-query";
-import { useCurrentChain } from "../../contexts/ChainsContext";
-import { ASSET_URL } from "../../scripts/utility";
+import { useIBCWhitelist } from "../../hooks/useTerraAssets";
 import AmountCard from "./AmountCard";
 
 type Props = {
@@ -9,7 +6,7 @@ type Props = {
   available: string;
 };
 
-const IBCUnit = ({ denom, available }: Props) => {
+const IBCUnit = ({ denom = "", available }: Props) => {
   const hash = denom.replace("ibc/", "");
   const data = useIBCWhitelist();
   const tokenInfo = data?.[hash];
@@ -27,13 +24,3 @@ const IBCUnit = ({ denom, available }: Props) => {
 };
 
 export default IBCUnit;
-
-/* hook */
-export const useIBCWhitelist = () => {
-  const chainID = useCurrentChain();
-  const { data } = useQuery(["IBCWhitelist", chainID], () =>
-    axios.get(`${ASSET_URL}/ibc/tokens.json`)
-  );
-
-  return data?.data?.[chainID.name];
-};
