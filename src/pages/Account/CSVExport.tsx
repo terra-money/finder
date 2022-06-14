@@ -7,7 +7,11 @@ import {
 } from "@terra-money/log-finder-ruleset";
 import format from "../../scripts/format";
 import s from "./CSVExport.module.scss";
-import { useCurrentChain, useFCDURL } from "../../contexts/ChainsContext";
+import {
+  useCurrentChain,
+  useFCDURL,
+  useIsClassic
+} from "../../contexts/ChainsContext";
 import apiClient from "../../apiClient";
 import { getTxFee } from "./Txs";
 import {
@@ -214,12 +218,13 @@ const CsvExport = ({ address }: { address: string }) => {
   const whitelist = useWhitelist();
   const contracts = useContracts();
   const ibcWhitelist = useIBCWhitelist();
+  const isClassic = useIsClassic();
   const [txs, setTxs] = useState<TxResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const fcdURL = useFCDURL();
   const { chainID } = useCurrentChain();
-  const fetchLimit = 10;
+  const fetchLimit = 5;
 
   // fetch all transactions for a given address
   const fetchTxs = async (address: string) => {
@@ -270,7 +275,8 @@ const CsvExport = ({ address }: { address: string }) => {
   const getCsvRow = (
     response: TxResponse,
     address: string,
-    matchedMsg?: LogFinderAmountResult[][]
+    matchedMsg?: LogFinderAmountResult[][],
+    isClassic?: boolean
   ): CSV[] | null => {
     const { tx: txBody, txhash, timestamp } = response;
     const isSuccess = !response.code;
@@ -290,7 +296,7 @@ const CsvExport = ({ address }: { address: string }) => {
     } = getTxInfo(address, matchedMsg);
 
     // Fee
-    const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
+    const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
     const feeData = fee?.split(" ");
 
     const feeAmount = feeData ? feeData[0] : "";
@@ -329,7 +335,9 @@ const CsvExport = ({ address }: { address: string }) => {
 
       rows.push({
         ...baseTxData,
-        currency: renderDenom(denom, whitelist, contracts, ibcWhitelist) ?? "",
+        currency:
+          renderDenom(denom, whitelist, contracts, ibcWhitelist, isClassic) ??
+          "",
         amount: format.amount(amount, tokenDecimals), // amount in is positive (received)
         txType: txTypesIn[i],
         sender: sendersIn[i],
@@ -345,7 +353,9 @@ const CsvExport = ({ address }: { address: string }) => {
 
       rows.push({
         ...baseTxData,
-        currency: renderDenom(denom, whitelist, contracts, ibcWhitelist) ?? "",
+        currency:
+          renderDenom(denom, whitelist, contracts, ibcWhitelist, isClassic) ??
+          "",
         amount: `-${format.amount(amount, tokenDecimals)}`, // amount in is negative (spent)
         txType: txTypesOut[i],
         sender: sendersOut[i],
@@ -370,7 +380,12 @@ const CsvExport = ({ address }: { address: string }) => {
         logMatcher,
         address
       );
-      const rowsForSingleTx = getCsvRow(transaction, address, matchedLogs);
+      const rowsForSingleTx = getCsvRow(
+        transaction,
+        address,
+        matchedLogs,
+        isClassic
+      );
       if (rowsForSingleTx) {
         rowsForSingleTx.forEach(row => {
           data.push(row);

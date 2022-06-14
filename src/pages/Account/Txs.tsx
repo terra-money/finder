@@ -14,7 +14,7 @@ import Icon from "../../components/Icon";
 import Finder from "../../components/Finder";
 import Loading from "../../components/Loading";
 import Coin from "../../components/Coin";
-import { useCurrentChain } from "../../contexts/ChainsContext";
+import { useCurrentChain, useIsClassic } from "../../contexts/ChainsContext";
 import {
   fromISOTime,
   sliceMsgType,
@@ -33,8 +33,9 @@ type Fee = {
   amount: string;
 };
 
-export const getTxFee = (prop: Fee) =>
-  prop && `${format.amount(prop.amount)} ${format.denom(prop.denom)}`;
+export const getTxFee = (prop: Fee, isClassic?: boolean) =>
+  prop &&
+  `${format.amount(prop.amount)} ${format.denom(prop.denom, isClassic)}`;
 
 const getRenderAmount = (
   amountList: string[] | undefined,
@@ -82,6 +83,7 @@ const getAmount = (
 const Txs = ({ address }: { address: string }) => {
   const { chainID } = useCurrentChain();
   const [offset, setOffset] = useState<number>(0);
+  const isClassic = useIsClassic();
 
   const { data, isLoading } = useFCD<{
     next: number;
@@ -105,7 +107,7 @@ const Txs = ({ address }: { address: string }) => {
           logMatcher,
           address
         );
-        return getRow(txData, chainID, address, matchedLogs);
+        return getRow(txData, chainID, address, matchedLogs, isClassic);
       });
       setTxsRow(stack => [...stack, ...txRow]);
     }
@@ -163,12 +165,14 @@ const getRow = (
   response: TxResponse,
   network: string,
   address: string,
-  matchedMsg?: LogFinderAmountResult[][]
+  matchedMsg?: LogFinderAmountResult[][],
+  isClassic?: boolean
 ) => {
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
-  const fee = getTxFee(txBody?.value?.fee?.amount?.[0]);
+  const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
+  const feeData = fee.split(" ");
 
   return [
     <span>
@@ -213,6 +217,12 @@ const getRow = (
         : "-"}
     </span>,
     <span>{fromISOTime(timestamp.toString())}</span>,
-    <span>{<TxAmount amount={fee?.[0]} denom={fee?.[1]} />}</span>
+    <span>
+      <TxAmount
+        amount={feeData?.[0]}
+        denom={feeData?.[1]}
+        isFormatAmount={true}
+      />
+    </span>
   ];
 };
