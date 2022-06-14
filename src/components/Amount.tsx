@@ -16,9 +16,9 @@ type Props = {
   decimals?: number;
 };
 
-type Contract = Dictionary<Contracts>;
+export type Contract = Dictionary<Contracts>;
 
-const renderDenom = (
+export const renderDenom = (
   str: string,
   whitelist?: Tokens,
   contracts?: Contract,

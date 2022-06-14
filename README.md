@@ -9,6 +9,10 @@ The Terra Finder is a tool to search through blocks, transactions, and accounts 
 The Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explorer).
 
 ## Project setup
+
+```
+** NOTE: Make sure you are using Node 16 **
+```
 ```
 npm install
 ```
