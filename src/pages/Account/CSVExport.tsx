@@ -226,200 +226,207 @@ const CsvExport = ({ address }: { address: string }) => {
   const { chainID } = useCurrentChain();
   const fetchLimit = 5;
 
-  // fetch all transactions for a given address
-  const fetchTxs = async (address: string) => {
-    if (!loading) {
-      setLoading(true);
-      setError(false);
-      setTxs([]);
-
-      const limit = 100; // Either 100 or 10
-      let offset: number | undefined = 0;
-      let allTxs: TxResponse[] = [];
-
-      // max tx number = fetchLimit * 100
-      let fetchCount = 0;
-
-      // fetch latest fetchLimit * 100 transactions
-      while (fetchCount < fetchLimit) {
-        const params: Params = { offset, limit, account: address };
-        try {
-          const result = await apiClient.get(fcdURL + "/v1/txs", {
-            params: params
-          });
-
-          if (result.data === null) {
-            setError(true);
-            fetchCount++;
-          } else {
-            allTxs = allTxs.concat(result.data.txs);
-            offset = result.data.next;
-            fetchCount = offset ? fetchCount + 1 : (fetchCount = fetchLimit);
-          }
-        } catch {
-          setError(true);
-          fetchCount = fetchLimit;
-        }
-      }
-
-      if (!error) {
-        setTxs(allTxs);
-      }
-      setLoading(false);
-    }
-  };
-
   const rules = useLogfinderAmountRuleSet();
   const logMatcher = useMemo(() => createLogMatcherForAmounts(rules), [rules]);
 
-  const getCsvRow = (
-    response: TxResponse,
-    address: string,
-    matchedMsg?: LogFinderAmountResult[][],
-    isClassic?: boolean
-  ): CSV[] | null => {
-    const { tx: txBody, txhash, timestamp } = response;
-    const isSuccess = !response.code;
+  try {
+    // fetch all transactions for a given address
+    const fetchTxs = async (address: string) => {
+      if (!loading) {
+        setLoading(true);
+        setError(false);
+        setTxs([]);
 
-    // Don't include unsuccessful transactions in CSV
-    if (!isSuccess) return null;
+        const limit = 100; // Either 100 or 10
+        let offset: number | undefined = 0;
+        let allTxs: TxResponse[] = [];
 
-    const {
-      amountsIn,
-      amountsOut,
-      txTypesIn,
-      txTypesOut,
-      sendersIn,
-      sendersOut,
-      recipientsIn,
-      recipientsOut
-    } = getTxInfo(address, matchedMsg);
+        // max tx number = fetchLimit * 100
+        let fetchCount = 0;
 
-    // Fee
-    const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
-    const feeData = fee?.split(" ");
+        // fetch latest fetchLimit * 100 transactions
+        while (fetchCount < fetchLimit) {
+          const params: Params = { offset, limit, account: address };
+          try {
+            const result = await apiClient.get(fcdURL + "/v1/txs", {
+              params: params
+            });
 
-    const feeAmount = feeData ? feeData[0] : "";
-    const feeCurrency = feeData ? feeData[1] : "";
+            if (result.data === null) {
+              setError(true);
+              fetchCount++;
+            } else {
+              allTxs = allTxs.concat(result.data.txs);
+              offset = result.data.next;
+              fetchCount = offset ? fetchCount + 1 : (fetchCount = fetchLimit);
+            }
+          } catch {
+            setError(true);
+            fetchCount = fetchLimit;
+          }
+        }
 
-    // TX data that is the same for both amounts in and amounts out
-    const baseTxData = {
-      timestamp: fromISOTime(timestamp.toString()),
-      trackedAddress: address,
-      txHash: txhash,
-      feeAmount,
-      feeCurrency
+        if (!error) {
+          setTxs(allTxs);
+        }
+        setLoading(false);
+      }
     };
 
-    const rows: CSV[] = [];
+    const getCsvRow = (
+      response: TxResponse,
+      address: string,
+      matchedMsg?: LogFinderAmountResult[][],
+      isClassic?: boolean
+    ): CSV[] | null => {
+      const { tx: txBody, txhash, timestamp } = response;
+      const isSuccess = !response.code;
 
-    if (amountsIn.length === 0 && amountsOut.length === 0) {
-      // For example MsgVote does not transfer any value. Sometimes also MsgExecuteContract
-      const msg = sliceMsgType(txBody?.value?.msg[0]?.type);
-      rows.push({
-        ...baseTxData,
-        currency: "",
-        amount: "0",
-        txType: msg,
-        sender: "",
-        recipient: ""
-      });
-    }
+      // Don't include unsuccessful transactions in CSV
+      if (!isSuccess) return null;
 
-    // Loop over amountsOut and amountsIn and add a new row for every single currency amount
-    amountsIn.forEach((amountData, i) => {
-      const { denom = "", amount } = amountData;
-      const hash = denom.replace("ibc/", "");
-      const tokenDecimals =
-        whitelist?.[denom]?.decimals || ibcWhitelist?.[hash]?.decimals;
+      const {
+        amountsIn,
+        amountsOut,
+        txTypesIn,
+        txTypesOut,
+        sendersIn,
+        sendersOut,
+        recipientsIn,
+        recipientsOut
+      } = getTxInfo(address, matchedMsg);
 
-      rows.push({
-        ...baseTxData,
-        currency:
-          renderDenom(denom, whitelist, contracts, ibcWhitelist, isClassic) ??
-          "",
-        amount: format.amount(amount, tokenDecimals), // amount in is positive (received)
-        txType: txTypesIn[i],
-        sender: sendersIn[i],
-        recipient: recipientsIn[i]
-      });
-    });
+      // Fee
+      const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
+      const feeData = fee?.split(" ");
 
-    amountsOut.forEach((amountData, i) => {
-      const { denom = "", amount } = amountData;
-      const hash = denom.replace("ibc/", "");
-      const tokenDecimals =
-        whitelist?.[denom]?.decimals || ibcWhitelist?.[hash]?.decimals;
+      const feeAmount = feeData ? feeData[0] : "";
+      const feeCurrency = feeData ? feeData[1] : "";
 
-      rows.push({
-        ...baseTxData,
-        currency:
-          renderDenom(denom, whitelist, contracts, ibcWhitelist, isClassic) ??
-          "",
-        amount: `-${format.amount(amount, tokenDecimals)}`, // amount in is negative (spent)
-        txType: txTypesOut[i],
-        sender: sendersOut[i],
-        recipient: recipientsOut[i]
-      });
-    });
+      // TX data that is the same for both amounts in and amounts out
+      const baseTxData = {
+        timestamp: fromISOTime(timestamp.toString()),
+        trackedAddress: address,
+        txHash: txhash,
+        feeAmount,
+        feeCurrency
+      };
 
-    return rows;
-  };
+      const rows: CSV[] = [];
 
-  const processTxsForCSV = (
-    txs: TxResponse[],
-    address: string,
-    network: string
-  ) => {
-    const data = new Array<CSV>();
-
-    txs.forEach(tx => {
-      const transaction = transformTx(tx, network);
-      const matchedLogs = getTxAmounts(
-        JSON.stringify(transaction),
-        logMatcher,
-        address
-      );
-      const rowsForSingleTx = getCsvRow(
-        transaction,
-        address,
-        matchedLogs,
-        isClassic
-      );
-      if (rowsForSingleTx) {
-        rowsForSingleTx.forEach(row => {
-          data.push(row);
+      if (amountsIn.length === 0 && amountsOut.length === 0) {
+        // For example MsgVote does not transfer any value. Sometimes also MsgExecuteContract
+        const msg = sliceMsgType(txBody?.value?.msg[0]?.type);
+        rows.push({
+          ...baseTxData,
+          currency: "",
+          amount: "0",
+          txType: msg,
+          sender: "",
+          recipient: ""
         });
       }
-    });
 
-    return data;
-  };
+      // Loop over amountsOut and amountsIn and add a new row for every single currency amount
+      amountsIn.forEach((amountData, i) => {
+        const { denom = "", amount } = amountData;
+        const hash = denom.replace("ibc/", "");
+        const tokenDecimals =
+          whitelist?.[denom]?.decimals || ibcWhitelist?.[hash]?.decimals;
 
-  return (
-    <>
-      {loading ? (
-        <span className={s.loading}>loading...</span>
-      ) : txs.length ? (
-        <CSVLink
-          className={s.exportCsvButton}
-          data={processTxsForCSV(txs, address, chainID)}
-          headers={csvHeaders}
-          filename={getCSVFilename(address)}
-        >
-          Download CSV
-        </CSVLink>
-      ) : (
-        <button className={s.exportCsvButton} onClick={() => fetchTxs(address)}>
-          Request CSV Report
-        </button>
-      )}
-      {error && !loading && (
-        <span className={s.error}>(Something went wrong...)</span>
-      )}
-      <span> (Latest {fetchLimit * 100} transactions)</span>
-    </>
-  );
+        rows.push({
+          ...baseTxData,
+          currency:
+            renderDenom(denom, whitelist, contracts, ibcWhitelist, isClassic) ??
+            "",
+          amount: format.amount(amount, tokenDecimals), // amount in is positive (received)
+          txType: txTypesIn[i],
+          sender: sendersIn[i],
+          recipient: recipientsIn[i]
+        });
+      });
+
+      amountsOut.forEach((amountData, i) => {
+        const { denom = "", amount } = amountData;
+        const hash = denom.replace("ibc/", "");
+        const tokenDecimals =
+          whitelist?.[denom]?.decimals || ibcWhitelist?.[hash]?.decimals;
+
+        rows.push({
+          ...baseTxData,
+          currency:
+            renderDenom(denom, whitelist, contracts, ibcWhitelist, isClassic) ??
+            "",
+          amount: `-${format.amount(amount, tokenDecimals)}`, // amount in is negative (spent)
+          txType: txTypesOut[i],
+          sender: sendersOut[i],
+          recipient: recipientsOut[i]
+        });
+      });
+
+      return rows;
+    };
+
+    const processTxsForCSV = (
+      txs: TxResponse[],
+      address: string,
+      network: string
+    ) => {
+      const data = new Array<CSV>();
+
+      txs.forEach(tx => {
+        const transaction = transformTx(tx, network);
+        const matchedLogs = getTxAmounts(
+          JSON.stringify(transaction),
+          logMatcher,
+          address
+        );
+        const rowsForSingleTx = getCsvRow(
+          transaction,
+          address,
+          matchedLogs,
+          isClassic
+        );
+        if (rowsForSingleTx) {
+          rowsForSingleTx.forEach(row => {
+            data.push(row);
+          });
+        }
+      });
+
+      return data;
+    };
+
+    return (
+      <>
+        {loading ? (
+          <span className={s.loading}>loading...</span>
+        ) : txs.length ? (
+          <CSVLink
+            className={s.exportCsvButton}
+            data={processTxsForCSV(txs, address, chainID)}
+            headers={csvHeaders}
+            filename={getCSVFilename(address)}
+          >
+            Download CSV
+          </CSVLink>
+        ) : (
+          <button
+            className={s.exportCsvButton}
+            onClick={() => fetchTxs(address)}
+          >
+            Request CSV Report
+          </button>
+        )}
+        {error && !loading && (
+          <span className={s.error}>(Something went wrong...)</span>
+        )}
+        <span> (Latest {fetchLimit * 100} transactions)</span>
+      </>
+    );
+  } catch {
+    return <span className={s.error}>(Something went wrong...)</span>;
+  }
 };
 
 export default CsvExport;

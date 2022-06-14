@@ -25,8 +25,8 @@ import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
 import useFCD from "../../hooks/useFCD";
 import TxAmount from "../Tx/TxAmount";
 import { transformTx } from "../Tx/transform";
-import s from "./Txs.module.scss";
 import CsvExport from "./CSVExport";
+import s from "./Txs.module.scss";
 
 type Fee = {
   denom: string;
@@ -126,9 +126,11 @@ const Txs = ({ address }: { address: string }) => {
 
   return (
     <Card title="Transactions" bordered headerClassName={s.cardTitle}>
-      <div className={s.exportCsvWrapper}>
-        <CsvExport address={address} />
-      </div>
+      {!isEmpty(txsRow) ? (
+        <div className={s.exportCsvWrapper}>
+          <CsvExport address={address} />
+        </div>
+      ) : null}
 
       <Pagination
         next={data?.next}
