@@ -76,7 +76,10 @@ const getAmount = (
   });
 
   //amount row limit
-  if (rowLimit) return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
+  if (rowLimit) {
+    return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
+  }
+
   return [amountIn, amountOut];
 };
 
