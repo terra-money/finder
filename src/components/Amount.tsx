@@ -1,11 +1,15 @@
 import { Dictionary } from "ramda";
 import { Tokens } from "../hooks/cw20/useTokenBalance";
-import { useContracts, useWhitelist } from "../hooks/useTerraAssets";
+import {
+  IBCTokenList,
+  useContracts,
+  useIBCWhitelist,
+  useWhitelist
+} from "../hooks/useTerraAssets";
 import { isTerraAddress } from "../scripts/utility";
 import format from "../scripts/format";
 import useDenomTrace from "../hooks/useDenomTrace";
 import { useIsClassic } from "../contexts/ChainsContext";
-import { useIBCWhitelist } from "../pages/Account/IBCUnit";
 
 type Props = {
   estimated?: boolean;
@@ -16,18 +20,26 @@ type Props = {
   decimals?: number;
 };
 
-type Contract = Dictionary<Contracts>;
+export type Contract = Dictionary<Contracts>;
 
-const renderDenom = (
+export const renderDenom = (
   str: string,
   whitelist?: Tokens,
   contracts?: Contract,
+  ibcWhitelist?: IBCTokenList,
   isClassic?: boolean
 ) => {
   const list = whitelist?.[str];
   const contract = contracts?.[str];
-  if (isTerraAddress(str) && (list || contract)) {
-    return list?.symbol ? list?.symbol : contract?.name;
+  const hash = str.replace("ibc/", "");
+  const ibc = ibcWhitelist?.[hash];
+
+  if (
+    (isTerraAddress(str) || str.startsWith("ibc")) &&
+    (list || contract || ibc)
+  ) {
+    const symbol = list?.symbol || contract?.name || ibc?.symbol;
+    return symbol;
   } else if (format.denom(str).length >= 40) {
     return "Token";
   } else {
@@ -60,7 +72,14 @@ const Amount = (props: Props) => {
         .{decimal}
         {data
           ? ` ${format.denom(data.base_denom, isClassic)}`
-          : denom && ` ${renderDenom(denom, whitelist, contracts, isClassic)}`}
+          : denom &&
+            ` ${renderDenom(
+              denom,
+              whitelist,
+              contracts,
+              ibcWhitelist,
+              isClassic
+            )}`}
       </small>
     </span>
   );

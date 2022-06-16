@@ -14,7 +14,7 @@ import Icon from "../../components/Icon";
 import Finder from "../../components/Finder";
 import Loading from "../../components/Loading";
 import Coin from "../../components/Coin";
-import { useCurrentChain } from "../../contexts/ChainsContext";
+import { useCurrentChain, useIsClassic } from "../../contexts/ChainsContext";
 import {
   fromISOTime,
   sliceMsgType,
@@ -25,7 +25,17 @@ import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
 import useFCD from "../../hooks/useFCD";
 import TxAmount from "../Tx/TxAmount";
 import { transformTx } from "../Tx/transform";
+import CsvExport from "./CSVExport";
 import s from "./Txs.module.scss";
+
+type Fee = {
+  denom: string;
+  amount: string;
+};
+
+export const getTxFee = (prop: Fee, isClassic?: boolean) =>
+  prop &&
+  `${format.amount(prop.amount)} ${format.denom(prop.denom, isClassic)}`;
 
 const getRenderAmount = (
   amountList: string[] | undefined,
@@ -42,7 +52,11 @@ const getRenderAmount = (
   });
 };
 
-const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
+const getAmount = (
+  address: string,
+  matchedMsg?: LogFinderAmountResult[][],
+  rowLimit?: number
+) => {
   const amountIn: JSX.Element[] = [];
   const amountOut: JSX.Element[] = [];
   matchedMsg?.forEach(matchedLog => {
@@ -62,12 +76,17 @@ const getAmount = (address: string, matchedMsg?: LogFinderAmountResult[][]) => {
   });
 
   //amount row limit
-  return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
+  if (rowLimit) {
+    return [amountIn.slice(0, 3), amountOut.slice(0, 3)];
+  }
+
+  return [amountIn, amountOut];
 };
 
 const Txs = ({ address }: { address: string }) => {
   const { chainID } = useCurrentChain();
   const [offset, setOffset] = useState<number>(0);
+  const isClassic = useIsClassic();
 
   const { data, isLoading } = useFCD<{
     next: number;
@@ -91,7 +110,7 @@ const Txs = ({ address }: { address: string }) => {
           logMatcher,
           address
         );
-        return getRow(txData, chainID, address, matchedLogs);
+        return getRow(txData, chainID, address, matchedLogs, isClassic);
       });
       setTxsRow(stack => [...stack, ...txRow]);
     }
@@ -110,6 +129,12 @@ const Txs = ({ address }: { address: string }) => {
 
   return (
     <Card title="Transactions" bordered headerClassName={s.cardTitle}>
+      {!isEmpty(txsRow) ? (
+        <div className={s.exportCsvWrapper}>
+          <CsvExport address={address} />
+        </div>
+      ) : null}
+
       <Pagination
         next={data?.next}
         title="transaction"
@@ -145,12 +170,14 @@ const getRow = (
   response: TxResponse,
   network: string,
   address: string,
-  matchedMsg?: LogFinderAmountResult[][]
+  matchedMsg?: LogFinderAmountResult[][],
+  isClassic?: boolean
 ) => {
   const { tx: txBody, txhash, height, timestamp, chainId } = response;
   const isSuccess = !response.code;
-  const [amountIn, amountOut] = getAmount(address, matchedMsg);
-  const fee = txBody?.value?.fee?.amount?.[0];
+  const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
+  const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
+  const feeData = fee.split(" ");
 
   return [
     <span>
@@ -195,6 +222,12 @@ const getRow = (
         : "-"}
     </span>,
     <span>{fromISOTime(timestamp.toString())}</span>,
-    <span>{<TxAmount amount={fee?.amount} denom={fee?.denom} />}</span>
+    <span>
+      <TxAmount
+        amount={feeData?.[0]}
+        denom={feeData?.[1]}
+        isFormatAmount={true}
+      />
+    </span>
   ];
 };

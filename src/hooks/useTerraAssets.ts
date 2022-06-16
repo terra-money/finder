@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { Dictionary } from "lodash";
 import { useCurrentChain } from "../contexts/ChainsContext";
+import { ASSET_URL } from "../scripts/utility";
 
 const config = { baseURL: "https://assets.terra.money" };
 
@@ -14,8 +15,18 @@ const useTerraAssets = <T = any>(path: string) =>
 export default useTerraAssets;
 
 export type TokenList = Dictionary<Whitelist>;
+export type IBCTokenList = Dictionary<IBCWhitelist>;
 export type ContractList = Dictionary<Contracts>;
 export type NFTContractList = Dictionary<NFTContracts>;
+
+export const useIBCWhitelist = (): IBCTokenList => {
+  const chainID = useCurrentChain();
+  const { data } = useQuery(["IBCWhitelist", chainID], () =>
+    axios.get(`${ASSET_URL}/ibc/tokens.json`)
+  );
+
+  return data?.data?.[chainID.name];
+};
 
 export const useWhitelist = () => {
   const { name } = useCurrentChain();
