@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import c from "classnames/bind";
+import { AccAddress, ValAddress } from "@terra-money/terra.js";
 import { LogFinderActionResult } from "@terra-money/log-finder-ruleset";
 import CoinComponent from "../components/Coin";
-import {
-  isTerraAddress,
-  isValidatorAddress,
-  sliceMsgType
-} from "../scripts/utility";
+import { sliceMsgType } from "../scripts/utility";
 import Action from "../pages/Tx/Action";
 import Address from "./Address";
 import WasmMsg from "./WasmMsg";
@@ -15,7 +12,10 @@ import Denom from "./Denom";
 import s from "./Msg.module.scss";
 
 const getContent = (msg: Msg, key: string) => {
-  if (isTerraAddress(msg.value[key]) || isValidatorAddress(msg.value[key])) {
+  if (
+    AccAddress.validate(msg.value[key]) ||
+    ValAddress.validate(msg.value[key])
+  ) {
     return <Address address={msg.value[key]} />;
   } else if (key === "amount" || key === "offer_coin") {
     return Array.isArray(msg.value[key]) ? (
@@ -39,7 +39,7 @@ const getContent = (msg: Msg, key: string) => {
 };
 
 const renderAddress = (str: string) =>
-  isTerraAddress(str) || isValidatorAddress(str) ? (
+  AccAddress.validate(str) || ValAddress.validate(str) ? (
     <Address address={str} />
   ) : (
     str
