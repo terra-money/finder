@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 
 interface Item {
+  address: string;
   contract: string;
   msg: object;
   isClassic?: boolean;
@@ -8,7 +9,7 @@ interface Item {
 
 const stringify = (msg: object) => JSON.stringify(msg).replace(/"/g, '\\"');
 
-const aliasItem = ({ contract, msg, isClassic }: Item) =>
+const aliasItem = ({ contract, msg, isClassic, address }: Item) =>
   isClassic
     ? `
     ${contract}: WasmContractsContractAddressStore(
@@ -23,7 +24,7 @@ const aliasItem = ({ contract, msg, isClassic }: Item) =>
         contractAddress: "${contract}"
         query: {
           balance: {
-            address: "${contract}"
+            address: "${address}"
           }
         }
       )
