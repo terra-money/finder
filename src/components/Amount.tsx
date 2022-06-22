@@ -1,4 +1,5 @@
 import { Dictionary } from "ramda";
+import { AccAddress } from "@terra-money/terra.js";
 import { Tokens } from "../hooks/cw20/useTokenBalance";
 import {
   IBCTokenList,
@@ -6,7 +7,6 @@ import {
   useIBCWhitelist,
   useWhitelist
 } from "../hooks/useTerraAssets";
-import { isTerraAddress } from "../scripts/utility";
 import format from "../scripts/format";
 import useDenomTrace from "../hooks/useDenomTrace";
 import { useIsClassic } from "../contexts/ChainsContext";
@@ -35,7 +35,7 @@ export const renderDenom = (
   const ibc = ibcWhitelist?.[hash];
 
   if (
-    (isTerraAddress(str) || str.startsWith("ibc")) &&
+    (AccAddress.validate(str) || str.startsWith("ibc")) &&
     (list || contract || ibc)
   ) {
     const symbol = list?.symbol || contract?.name || ibc?.symbol;

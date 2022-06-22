@@ -177,7 +177,7 @@ const getRow = (
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
   const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
-  const feeData = fee.split(" ");
+  const feeData = fee?.split(" ");
 
   return [
     <span>

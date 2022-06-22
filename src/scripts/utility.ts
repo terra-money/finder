@@ -48,24 +48,6 @@ export function sliceMsgType(msg: string) {
   return slashIndex > -1 ? msgResult.slice(slashIndex + 1) : msgResult;
 }
 
-export function isTerraAddress(keyword: string) {
-  if (keyword && keyword.length === 44 && keyword.indexOf("terra") > -1) {
-    return true;
-  }
-  return false;
-}
-
-export function isValidatorAddress(keyword: string) {
-  if (
-    keyword &&
-    keyword.length === 51 &&
-    keyword.indexOf("terravaloper") > -1
-  ) {
-    return true;
-  }
-  return false;
-}
-
 export function prependProtocol(url: string) {
   if (url.indexOf("http") > -1) {
     return url;
