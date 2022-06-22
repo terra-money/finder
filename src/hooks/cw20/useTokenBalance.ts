@@ -69,7 +69,8 @@ const useTokenBalance = (
             Object.entries(whitelist).map(([key]) => ({
               contract: key,
               msg: { balance: { address } },
-              isClassic
+              isClassic,
+              address
             }))
           );
 
