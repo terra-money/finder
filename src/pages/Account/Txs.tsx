@@ -22,7 +22,8 @@ import {
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
-import useFCD from "../../hooks/useFCD";
+import useRequest from "../../hooks/useRequest";
+import { useGetQueryURL } from "../../queries/query";
 import TxAmount from "../Tx/TxAmount";
 import { transformTx } from "../Tx/transform";
 import CsvExport from "./CSVExport";
@@ -88,10 +89,12 @@ const Txs = ({ address }: { address: string }) => {
   const [offset, setOffset] = useState<number>(0);
   const isClassic = useIsClassic();
 
-  const { data, isLoading } = useFCD<{
+  const params = { offset, limit: 100, account: address };
+  const url = useGetQueryURL("/v1/txs");
+  const { data, isLoading } = useRequest<{
     next: number;
     txs: TxInfo[];
-  }>("/v1/txs", offset, 100, address);
+  }>({ url, params });
 
   const [txsRow, setTxsRow] = useState<JSX.Element[][]>([]);
 
