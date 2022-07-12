@@ -8,7 +8,7 @@ export const useInitialBankBalance = (address: string) => {
   const lcd = useLCDClient();
   const isClassic = useIsClassic();
   return useQuery(
-    ["bankBalance", address],
+    ["bankBalance", address, isClassic, lcd.config],
     async () => {
       if (isClassic) {
         const [coins] = await lcd.bank.balance(address);
