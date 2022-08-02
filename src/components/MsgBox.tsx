@@ -27,7 +27,7 @@ const getContent = (msg: Msg, key: string) => {
     );
   } else if (key === "ask_denom" || key === "denom") {
     return <Denom denom={msg.value[key]} />;
-  } else if (key === "execute_msg") {
+  } else if (key === "execute_msg" || key === "msg" || key === "msgs") {
     return <WasmMsg msg={msg.value[key]} />;
   } else {
     return Array.isArray(msg.value[key])
