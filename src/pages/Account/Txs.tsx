@@ -53,7 +53,7 @@ const getRenderAmount = (
   });
 };
 
-export const getAmount = (
+const getAmount = (
   address: string,
   matchedMsg?: LogFinderAmountResult[][],
   rowLimit?: number
