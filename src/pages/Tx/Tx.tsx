@@ -47,10 +47,11 @@ const TxComponent = ({ hash }: { hash: string }) => {
   const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);
 
   const fee: Amount[] = get(tx, "tx.value.fee.amount");
-  const tax =
-    splitCoinData(
-      get(tx, "logs[1].log.tax") || (get(tx, "logs[0].log.tax") as string)
-    ) || "0";
+  const tax = isClassic
+    ? splitCoinData(
+        get(tx, "logs[1].log.tax") || (get(tx, "logs[0].log.tax") as string)
+      ) || "0"
+    : "0";
 
   // status settings
   const status = isPending ? (
