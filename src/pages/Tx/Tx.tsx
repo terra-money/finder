@@ -23,6 +23,9 @@ import Searching from "./Searching";
 import TxAmount from "./TxAmount";
 import { transformTx } from "./transform";
 import s from "./Tx.module.scss";
+import { useIsClassic } from "../../contexts/ChainsContext";
+import { splitCoinData } from "../../scripts/utility";
+import Coin from "../../components/Coin";
 
 const TxComponent = ({ hash }: { hash: string }) => {
   const ruleSet = useLogfinderActionRuleSet();
@@ -30,6 +33,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
     () => createLogMatcherForActions(ruleSet),
     [ruleSet]
   );
+  const isClassic = useIsClassic();
   const { chainID } = useCurrentChain();
   const { data: response, progressState } = usePollTxHash(hash);
 
@@ -43,6 +47,10 @@ const TxComponent = ({ hash }: { hash: string }) => {
   const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);
 
   const fee: Amount[] = get(tx, "tx.value.fee.amount");
+  const tax =
+    splitCoinData(
+      get(tx, "logs[1].log.tax") || (get(tx, "logs[0].log.tax") as string)
+    ) || "0";
 
   // status settings
   const status = isPending ? (
@@ -115,6 +123,17 @@ const TxComponent = ({ hash }: { hash: string }) => {
               {fee.map((fee, key) => (
                 <TxAmount index={key} {...fee} key={key} />
               ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {isClassic && tax !== "0" ? (
+          <div className={s.row}>
+            <div className={s.head}>Burn Tax</div>
+            <div className={s.body}>
+              <Coin amount={tax.amount} denom={tax.denom} />
             </div>
           </div>
         ) : (

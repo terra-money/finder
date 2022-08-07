@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { isEmpty } from "lodash";
+import { get, isEmpty } from "lodash";
 import {
   LogFinderAmountResult,
   getTxAmounts,
@@ -53,7 +53,7 @@ const getRenderAmount = (
   });
 };
 
-const getAmount = (
+export const getAmount = (
   address: string,
   matchedMsg?: LogFinderAmountResult[][],
   rowLimit?: number
@@ -127,7 +127,8 @@ const Txs = ({ address }: { address: string }) => {
     `Amount (Out)`,
     `Amount (In)`,
     `Timestamp`,
-    `Fee`
+    `Fee`,
+    isClassic ? "Burn Tax" : ""
   ];
 
   return (
@@ -176,11 +177,15 @@ const getRow = (
   matchedMsg?: LogFinderAmountResult[][],
   isClassic?: boolean
 ) => {
-  const { tx: txBody, txhash, height, timestamp, chainId } = response;
+  const { tx: txBody, txhash, height, timestamp, chainId, logs } = response;
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
   const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
   const feeData = fee?.split(" ");
+  const tax =
+    splitCoinData(
+      get(logs, "[1].log.tax") || (get(logs, "[0].log.tax") as string)
+    ) || "0";
 
   return [
     <span>
@@ -231,6 +236,15 @@ const getRow = (
         denom={feeData?.[1]}
         isFormatAmount={true}
       />
+    </span>,
+    <span className={s.amount}>
+      {tax !== "0" ? (
+        <span>
+          <Coin amount={tax.amount} denom={tax.denom} />
+        </span>
+      ) : (
+        ""
+      )}
     </span>
   ];
 };
