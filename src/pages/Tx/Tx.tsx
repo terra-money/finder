@@ -132,7 +132,7 @@ const TxComponent = ({ hash }: { hash: string }) => {
 
         {isClassic && tax !== "0" ? (
           <div className={s.row}>
-            <div className={s.head}>Burn Tax</div>
+            <div className={s.head}>Tax</div>
             <div className={s.body}>
               <Coin amount={tax.amount} denom={tax.denom} />
             </div>

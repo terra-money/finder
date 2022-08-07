@@ -128,7 +128,7 @@ const Txs = ({ address }: { address: string }) => {
     `Amount (In)`,
     `Timestamp`,
     `Fee`,
-    isClassic ? "Burn Tax" : ""
+    isClassic ? "Tax" : ""
   ];
 
   return (
