@@ -236,7 +236,7 @@ const getRow = (
       />
     </span>,
     <span className={s.amount}>
-      {taxData ? (
+      {taxData && isClassic ? (
         <span>
           <Coin amount={taxData.amount} denom={taxData.denom} />
         </span>
