@@ -24,7 +24,7 @@ import TxAmount from "./TxAmount";
 import { transformTx } from "./transform";
 import s from "./Tx.module.scss";
 import { useIsClassic } from "../../contexts/ChainsContext";
-import { splitCoinData } from "../../scripts/utility";
+import { getTaxData } from "../../scripts/utility";
 import Coin from "../../components/Coin";
 
 const TxComponent = ({ hash }: { hash: string }) => {
@@ -47,11 +47,8 @@ const TxComponent = ({ hash }: { hash: string }) => {
   const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);
 
   const fee: Amount[] = get(tx, "tx.value.fee.amount");
-  const tax = isClassic
-    ? splitCoinData(
-        get(tx, "logs[1].log.tax") || (get(tx, "logs[0].log.tax") as string)
-      ) || "0"
-    : "0";
+  const tax = get(tx, "logs[1].log.tax") || get(tx, "logs[0].log.tax");
+  const taxData = getTaxData(tax);
 
   // status settings
   const status = isPending ? (
@@ -130,11 +127,11 @@ const TxComponent = ({ hash }: { hash: string }) => {
           <></>
         )}
 
-        {isClassic && tax !== "0" ? (
+        {isClassic && taxData ? (
           <div className={s.row}>
             <div className={s.head}>Tax</div>
             <div className={s.body}>
-              <Coin amount={tax.amount} denom={tax.denom} />
+              <Coin amount={taxData.amount} denom={taxData.denom} />
             </div>
           </div>
         ) : (

@@ -160,3 +160,12 @@ export const compareIs = (k: string) => (a: string, b: string) =>
 
 export const compareIsDenomIBC = (a: string, b: string) =>
   Number(isDenomIBC(a)) - Number(isDenomIBC(b));
+
+export const getTaxData = (tax: string | undefined) => {
+  if (tax) {
+    const taxData = splitCoinData(tax);
+    return taxData;
+  } else {
+    return "";
+  }
+};

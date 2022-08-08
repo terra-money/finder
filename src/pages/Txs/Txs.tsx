@@ -4,7 +4,7 @@ import FlexTable from "../../components/FlexTable";
 import Info from "../../components/Info";
 import Card from "../../components/Card";
 import Finder from "../../components/Finder";
-import { fromNow, sliceMsgType, splitCoinData } from "../../scripts/utility";
+import { fromNow, sliceMsgType, getTaxData } from "../../scripts/utility";
 import TxAmount from "../Tx/TxAmount";
 import { transformTx } from "../Tx/transform";
 import { useCurrentChain, useIsClassic } from "../../contexts/ChainsContext";
@@ -15,11 +15,9 @@ const getRow = (response: TxInfo, chainID: string, isClassic?: boolean) => {
   const transformed = transformTx(response, chainID);
   const { txhash, tx, height, timestamp, logs } = transformed;
   const fee = get(tx, `value.fee.amount[0]`);
-  const tax = isClassic
-    ? splitCoinData(
-        get(logs, "[1].log.tax") || (get(logs, "[0].log.tax") as string)
-      ) || "0"
-    : "0";
+  const tax = get(logs, "[1].log.tax") || get(logs, "[0].log.tax");
+  const taxData = getTaxData(tax);
+
   return [
     <span>
       <Finder q="tx" v={txhash}>
@@ -35,20 +33,14 @@ const getRow = (response: TxInfo, chainID: string, isClassic?: boolean) => {
       )}
     </span>,
     <span>
+      {taxData ? <Coin amount={taxData.amount} denom={taxData.denom} /> : ""}
+    </span>,
+    <span>
       <Finder q="blocks" v={String(height)}>
         {String(height)}
       </Finder>
     </span>,
-    <span>{fromNow(timestamp.toString())}</span>,
-    <span className={s.amount}>
-      {tax !== "0" ? (
-        <span>
-          <Coin amount={tax.amount} denom={tax.denom} />
-        </span>
-      ) : (
-        ""
-      )}
-    </span>
+    <span>{fromNow(timestamp.toString())}</span>
   ];
 };
 
@@ -58,9 +50,9 @@ const Txs = ({ txs }: { txs: TxInfo[] }) => {
     `TxHash`,
     `Type`,
     `Fee`,
+    isClassic ? `Tax` : null,
     `Height`,
-    `Time`,
-    isClassic ? `Tax` : ``
+    `Time`
   ];
   const { chainID } = useCurrentChain();
   return (

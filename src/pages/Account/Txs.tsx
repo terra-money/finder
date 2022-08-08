@@ -18,7 +18,8 @@ import { useCurrentChain, useIsClassic } from "../../contexts/ChainsContext";
 import {
   fromISOTime,
   sliceMsgType,
-  splitCoinData
+  splitCoinData,
+  getTaxData
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
@@ -182,11 +183,8 @@ const getRow = (
   const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
   const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
   const feeData = fee?.split(" ");
-  const tax =
-    splitCoinData(
-      get(logs, "[1].log.tax") || (get(logs, "[0].log.tax") as string)
-    ) || "0";
-
+  const tax = get(logs, "[1].log.tax") || get(logs, "[0].log.tax");
+  const taxData = getTaxData(tax);
   return [
     <span>
       <div className={s.wrapper}>
@@ -238,9 +236,9 @@ const getRow = (
       />
     </span>,
     <span className={s.amount}>
-      {tax !== "0" ? (
+      {taxData ? (
         <span>
-          <Coin amount={tax.amount} denom={tax.denom} />
+          <Coin amount={taxData.amount} denom={taxData.denom} />
         </span>
       ) : (
         ""
