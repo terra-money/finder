@@ -29,11 +29,7 @@ const getRow = (response: TxInfo, chainID: string, isClassic?: boolean) => {
         <TxAmount amount={fee.amount} denom={fee.denom} />
       )}
     </span>,
-    <span>
-      <Finder q="blocks" v={String(height)}>
-        {String(height)}
-      </Finder>
-    </span>,
+    <span>{height}</span>,
     <span>{fromNow(timestamp.toString())}</span>
   ];
 };
