@@ -27,7 +27,7 @@ const getContent = (msg: Msg, key: string) => {
     );
   } else if (key === "ask_denom" || key === "denom") {
     return <Denom denom={msg.value[key]} />;
-  } else if (key === "execute_msg" || key === "msg" || key === "msgs") {
+  } else if (typeof msg.value[key] === "object" || key === "execute_msg") {
     return <WasmMsg msg={msg.value[key]} />;
   } else {
     return Array.isArray(msg.value[key])
@@ -38,7 +38,7 @@ const getContent = (msg: Msg, key: string) => {
   }
 };
 
-const renderAddress = (str: string) =>
+const parseLog = (str: string) =>
   AccAddress.validate(str) || ValAddress.validate(str) ? (
     <Address address={str} />
   ) : (
@@ -58,7 +58,7 @@ const renderEventlog = (events: Events[]) => (
               <tr key={key} className={s.eventData}>
                 <th className={s.attrKey}>{attr.key}</th>
                 <td className={s.attrValue}>
-                  {attr.value && renderAddress(attr.value)}
+                  {attr.value && parseLog(attr.value)}
                 </td>
               </tr>
             ))}
