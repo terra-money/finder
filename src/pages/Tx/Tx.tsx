@@ -21,11 +21,10 @@ import format from "../../scripts/format";
 import Pending from "./Pending";
 import Searching from "./Searching";
 import TxAmount from "./TxAmount";
+import TaxRateAmount from "./TaxRateAmount";
 import { transformTx } from "./transform";
 import s from "./Tx.module.scss";
 import { useIsClassic } from "../../contexts/ChainsContext";
-import { getTaxData } from "../../scripts/utility";
-import Coin from "../../components/Coin";
 
 const TxComponent = ({ hash }: { hash: string }) => {
   const ruleSet = useLogfinderActionRuleSet();
@@ -47,8 +46,6 @@ const TxComponent = ({ hash }: { hash: string }) => {
   const matchedMsg = getTxAllCanonicalMsgs(JSON.stringify(tx), logMatcher);
 
   const fee: Amount[] = get(tx, "tx.value.fee.amount");
-  const tax = get(tx, "logs[1].log.tax") || get(tx, "logs[0].log.tax");
-  const taxData = getTaxData(tax);
 
   // status settings
   const status = isPending ? (
@@ -127,11 +124,11 @@ const TxComponent = ({ hash }: { hash: string }) => {
           <></>
         )}
 
-        {isClassic && taxData ? (
+        {isClassic ? (
           <div className={s.row}>
             <div className={s.head}>Tax</div>
             <div className={s.body}>
-              <Coin amount={taxData.amount} denom={taxData.denom} />
+              <TaxRateAmount logs={tx.logs} />
             </div>
           </div>
         ) : (

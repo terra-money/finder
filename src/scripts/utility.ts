@@ -162,10 +162,7 @@ export const compareIsDenomIBC = (a: string, b: string) =>
   Number(isDenomIBC(a)) - Number(isDenomIBC(b));
 
 export const getTaxData = (tax: string | undefined) => {
-  if (tax) {
-    const taxData = splitCoinData(tax);
-    return taxData;
-  } else {
-    return "";
-  }
+  const defaultTax = "";
+  return splitCoinData(tax || defaultTax) as CoinData;
+
 };
