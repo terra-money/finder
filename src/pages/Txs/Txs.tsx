@@ -30,9 +30,7 @@ const getRow = (response: TxInfo, chainID: string, isClassic?: boolean) => {
         <TxAmount amount={fee.amount} denom={fee.denom} />
       )}
     </span>,
-    <span>
-      <TaxRateAmount logs={logs} />
-    </span>,
+    <span>{isClassic ? <TaxRateAmount logs={logs} /> : ""}</span>,
     <span>
       <Finder q="blocks" v={String(height)}>
         {String(height)}
