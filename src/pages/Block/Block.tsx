@@ -21,16 +21,6 @@ const heightButton = (height: number) => (
   </span>
 );
 
-const txsCount = (txCount: number) => (
-  <span className={s.txs}>
-    {txCount > 0 ? (
-      <span>{txCount} Transactions</span>
-    ) : (
-      <span>0 Transactions</span>
-    )}
-  </span>
-);
-
 const Block = () => {
   const { height } = useParams();
   const { chainID } = useCurrentChain();
@@ -61,7 +51,7 @@ const Block = () => {
               </div>
               <div className={s.row}>
                 <div className={s.head}>Transactions</div>
-                <div className={s.body}>{txsCount(blockData.txs.length)}</div>
+                <div className={s.body}>{blockData.txs.length}</div>
               </div>
               <div className={s.row}>
                 <div className={s.head}>Proposer</div>

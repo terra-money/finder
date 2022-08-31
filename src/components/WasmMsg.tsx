@@ -1,5 +1,6 @@
 import isBase64 from "is-base64";
 import { decodeBase64 } from "../scripts/utility";
+import s from "./WasmMsg.module.scss";
 
 const isBase64Extended = (value: string) =>
   // we are only interested in json-alike base64's, which generally start with "ey" ('{')
@@ -28,6 +29,8 @@ type Prop = {
   msg: string | object;
 };
 
-const WasmMsg = (prop: Prop) => <pre>{prettifyWasmMsg(prop.msg)}</pre>;
+const WasmMsg = (prop: Prop) => (
+  <pre className={s.wrapper}>{prettifyWasmMsg(prop.msg)}</pre>
+);
 
 export default WasmMsg;

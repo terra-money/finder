@@ -36,6 +36,7 @@ const getRow = (response: TxInfo, chainID: string, isClassic?: boolean) => {
         {String(height)}
       </Finder>
     </span>,
+    <span>{height}</span>,
     <span>{fromNow(timestamp.toString())}</span>
   ];
 };
