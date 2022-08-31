@@ -25,8 +25,8 @@ type Props = {
 const AmountCard = ({ denom, icon, amount, path, hash, ...props }: Props) => {
   const { button, children, response, decimals, isClassic } = props;
   const iconLink =
-    !isClassic && denom === "Luna"
-      ? `${ASSET_URL}/icon/svg/${denom.toUpperCase()}.png`
+    denom === "Luna"
+      ? `${ASSET_URL}/icon/svg/${isClassic ? "LUNC" : denom}.svg`
       : `${ASSET_URL}/icon/60/${denom}.png`;
   const iconRender = (
     <div className={s.icon}>
