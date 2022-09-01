@@ -1,16 +1,16 @@
 import { useIsClassic } from "../../contexts/ChainsContext";
-import format from "../../scripts/format";
 import { getTaxData } from "../../scripts/utility";
 import { get } from "lodash";
+import Amount from "../../components/Amount";
 
 interface Props {
-  logs: Log[] | undefined
+  logs: Log[] | undefined;
 }
 
 const TaxRateAmount = ({ logs }: Props) => {
   const isClassic = useIsClassic();
 
-  if(!isClassic){
+  if (!isClassic) {
     return <></>;
   }
 
@@ -21,11 +21,7 @@ const TaxRateAmount = ({ logs }: Props) => {
     return <>-</>;
   }
 
-  return (
-    <>
-      {format.amount(amount)} {format.denom(denom, isClassic)}
-    </>
-  );
+  return <Amount denom={denom}>{amount}</Amount>;
 };
 
 export default TaxRateAmount;

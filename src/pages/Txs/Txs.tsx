@@ -31,11 +31,6 @@ const getRow = (response: TxInfo, chainID: string, isClassic?: boolean) => {
       )}
     </span>,
     <span>{isClassic ? <TaxRateAmount logs={logs} /> : ""}</span>,
-    <span>
-      <Finder q="blocks" v={String(height)}>
-        {String(height)}
-      </Finder>
-    </span>,
     <span>{height}</span>,
     <span>{fromNow(timestamp.toString())}</span>
   ];
