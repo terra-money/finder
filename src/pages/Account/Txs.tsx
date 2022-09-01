@@ -18,7 +18,7 @@ import { useCurrentChain, useIsClassic } from "../../contexts/ChainsContext";
 import {
   fromISOTime,
   sliceMsgType,
-  splitCoinData
+  splitCoinData,
 } from "../../scripts/utility";
 import format from "../../scripts/format";
 import { useLogfinderAmountRuleSet } from "../../hooks/useLogfinder";
@@ -26,6 +26,7 @@ import useRequest from "../../hooks/useRequest";
 import { useGetQueryURL } from "../../queries/query";
 import TxAmount from "../Tx/TxAmount";
 import { transformTx } from "../Tx/transform";
+import TaxRateAmount from "../Tx/TaxRateAmount";
 import CsvExport from "./CSVExport";
 import s from "./Txs.module.scss";
 
@@ -127,7 +128,8 @@ const Txs = ({ address }: { address: string }) => {
     `Amount (Out)`,
     `Amount (In)`,
     `Timestamp`,
-    `Fee`
+    `Fee`,
+    isClassic ? "Tax" : null
   ];
 
   return (
@@ -176,7 +178,7 @@ const getRow = (
   matchedMsg?: LogFinderAmountResult[][],
   isClassic?: boolean
 ) => {
-  const { tx: txBody, txhash, height, timestamp, chainId } = response;
+  const { tx: txBody, txhash, height, timestamp, chainId, logs } = response;
   const isSuccess = !response.code;
   const [amountIn, amountOut] = getAmount(address, matchedMsg, 3);
   const fee = getTxFee(txBody?.value?.fee?.amount?.[0], isClassic);
@@ -231,6 +233,9 @@ const getRow = (
         denom={feeData?.[1]}
         isFormatAmount={true}
       />
+    </span>,
+    <span>
+      <TaxRateAmount logs={logs} />
     </span>
   ];
 };

@@ -15,7 +15,7 @@ const useNetworkFromRouteMatch = () => {
 };
 
 export const useCurrentChain = () => {
-  const chains = useChains();
+  const chains:ChainOption[] = useChains();
   const network = useNetworkFromRouteMatch();
 
   const chain =
