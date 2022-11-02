@@ -2,11 +2,9 @@
 
 ![banner](./terra-finder.png)
 
-[![CircleCI](https://circleci.com/gh/terra-project/finder.svg?style=svg)](https://circleci.com/gh/terra-project/finder)
+Terra Finder is a tool to search through blocks, transactions, and accounts on the Terra blockchain.
 
-The Terra Finder is a tool to search through blocks, transactions, and accounts on the Terra blockchain.
-
-The Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explorer).
+Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explorer).
 
 ## Project setup
 
@@ -17,10 +15,10 @@ The Finder is derived from the [Cosmos Explorer](https://github.com/cosmos/explo
 npm install
 ```
 
-### Configure the environement variables
+### Configure the environment variables
 
 If required, edit `.env.development`.
-For local development you might want to use this configuration:
+For local development, you might want to use the following configuration:
 
 ```
 HOST=localhost
@@ -29,11 +27,11 @@ BROWSER=none
 REACT_APP_DEFAULT_NETWORK=localterra
 ```
 
-`REACT_APP_DEFAULT_NETWORK` is the default selected network that finder will use.
+`REACT_APP_DEFAULT_NETWORK` is the default selected network that Finder will use.
 See [https://assets.terra.money/chains.json](https://assets.terra.money/chains.json) for the list of available networks.
 
 
-### Compiles and hot-reloads for development
+### Run in Dev Mode with Hot Reloading
 ```
 npm start
 ```
