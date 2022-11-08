@@ -8,6 +8,7 @@ import { fromISOTime } from "../../scripts/utility";
 import { getFindMoniker } from "../../queries/validator";
 import { useUndelegations, useValidators } from "../../queries/staking";
 import s from "./Account.module.scss";
+import { ReactNode } from "react";
 
 const Undelegations = ({ address }: { address: string }) => {
   const { data: validators } = useValidators();
@@ -18,26 +19,30 @@ const Undelegations = ({ address }: { address: string }) => {
     return null;
   }
 
-  const data = undelegations.map(validator => {
-    const { entries, validator_address } = validator;
-    const [entry] = entries;
-    const { balance, completion_time, creation_height } = entry;
-    const moniker = (
-      <Finder q="validator" v={validator_address}>
-        {getFindMoniker(validators)(validator_address) ?? validator_address}
-      </Finder>
-    );
+  const data: ReactNode[][] = [];
 
-    const status = <ValidatorStatus validatorAddress={validator_address} />;
-    const block = <Finder q="block">{String(creation_height)}</Finder>;
-    const release = <span>{fromISOTime(completion_time.toString())}</span>;
-    const amount = (
-      <span>
-        {readAmount(balance.toString(), { comma: true })}{" "}
-        <small>{isClassic ? "Lunc" : "Luna"}</small>
-      </span>
-    );
-    return [moniker, status, block, amount, release];
+  undelegations.forEach(validator => {
+    const { entries, validator_address } = validator;
+
+    entries.forEach(entry => {
+      const { balance, completion_time, creation_height } = entry;
+      const moniker = (
+        <Finder q="validator" v={validator_address}>
+          {getFindMoniker(validators)(validator_address) ?? validator_address}
+        </Finder>
+      );
+
+      const status = <ValidatorStatus validatorAddress={validator_address} />;
+      const block = <Finder q="block">{String(creation_height)}</Finder>;
+      const release = <span>{fromISOTime(completion_time.toString())}</span>;
+      const amount = (
+        <span>
+          {readAmount(balance.toString(), { comma: true })}{" "}
+          <small>{isClassic ? "Lunc" : "Luna"}</small>
+        </span>
+      );
+      data.push([moniker, status, block, amount, release]);
+    });
   });
 
   const head = [`Validator`, `Status`, `Block`, `Amount`, `Release time`];
