@@ -28,7 +28,7 @@ const Delegations = ({ address }: { address: string }) => {
     const moniker = getFindMoniker(validators)(validator_address);
     const amount = readAmount(balance.amount.toString(), { comma: true });
     const denom = format.denom(balance.denom, isClassic);
-    const stakingRewards = rewards.rewards[validator_address].toArray();
+    const stakingRewards = rewards?.rewards[validator_address]?.toArray();
 
     return [
       <span>
@@ -43,7 +43,7 @@ const Delegations = ({ address }: { address: string }) => {
       </span>,
       <span>{[amount, denom].join(" ")}</span>,
       <div>
-        {Array.isArray(stakingRewards) && (
+        {stakingRewards && Array.isArray(stakingRewards) && (
           <ul>
             {stakingRewards.map(({ denom, amount }, index) => (
               <li key={index}>
