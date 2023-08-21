@@ -11,7 +11,7 @@ import { isTnsName } from "../libs/tns";
 
 export const DEFAULT_CURRENCY = `uusd`;
 export const BASE_DENOM = `uluna`;
-export const ASSET_URL = "https://assets.terra.money";
+export const ASSET_URL = "https://assets.terra.dev";
 export const TERRA_ADDRESS_REGEX = /(terra[0-9][a-z0-9]{38})/g;
 export const LOCALTERRA_FCD_URL = "http://localhost:3060";
 
@@ -164,5 +164,4 @@ export const compareIsDenomIBC = (a: string, b: string) =>
 export const getTaxData = (tax: string | undefined) => {
   const defaultTax = "";
   return splitCoinData(tax || defaultTax) as CoinData;
-
 };

@@ -28,7 +28,7 @@ REACT_APP_DEFAULT_NETWORK=localterra
 ```
 
 `REACT_APP_DEFAULT_NETWORK` is the default selected network that Finder will use.
-See [https://assets.terra.money/chains.json](https://assets.terra.money/chains.json) for the list of available networks.
+See [https://assets.terra.dev/chains.json](https://assets.terra.dev/chains.json) for the list of available networks.
 
 
 ### Run in Dev Mode with Hot Reloading

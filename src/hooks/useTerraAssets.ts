@@ -4,7 +4,7 @@ import { Dictionary } from "lodash";
 import { useCurrentChain } from "../contexts/ChainsContext";
 import { ASSET_URL } from "../scripts/utility";
 
-const config = { baseURL: "https://assets.terra.money" };
+const config = { baseURL: "https://assets.terra.dev" };
 
 const useTerraAssets = <T = any>(path: string) =>
   useQuery([path, config, "terraAssets"], async () => {
