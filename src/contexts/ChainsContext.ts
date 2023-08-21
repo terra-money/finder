@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { createContext } from "./createContext";
 
 export const getChains = () =>
-  fetch("https://assets.terra.money/chains.json")
+  fetch("https://assets.terra.dev/chains.json")
     .then(res => res.json())
     .then((data: Record<string, ChainOption>) => Object.values(data));
 
@@ -15,7 +15,7 @@ const useNetworkFromRouteMatch = () => {
 };
 
 export const useCurrentChain = () => {
-  const chains:ChainOption[] = useChains();
+  const chains: ChainOption[] = useChains();
   const network = useNetworkFromRouteMatch();
 
   const chain =
